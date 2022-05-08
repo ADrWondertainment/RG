@@ -12,9 +12,9 @@
 
 
     <groupId>ruangong.root</groupId>
-    <artifactId>controller</artifactId>
+    <artifactId>exception</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>controller</name>
+    <name>exception</name>
     <description>Demo project for Spring Boot</description>
 
 
@@ -26,23 +26,10 @@
     <dependencies>
         <dependency>
             <groupId>ruangong.root</groupId>
-            <artifactId>service</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>ruangong.root</groupId>
-            <artifactId>exception</artifactId>
+            <artifactId>bean</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>
