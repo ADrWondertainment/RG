@@ -18,6 +18,7 @@ public class UserController {
 
     @GetMapping
     public void test(){
+
         User byId = userService.getUserById(1);
         System.out.println(byId);
     }
