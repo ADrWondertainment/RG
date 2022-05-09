@@ -21,8 +21,11 @@
     <modules>
         <module>bean</module>
         <module>dao</module>
-        <module>service</module>
-        <module>controller</module>
+        <module>controller_xiao</module>
+        <module>controller_tao</module>
+        <module>service_xiao</module>
+        <module>service_tao</module>
+        <module>starter</module>
         <module>exception</module>
     </modules>
 
