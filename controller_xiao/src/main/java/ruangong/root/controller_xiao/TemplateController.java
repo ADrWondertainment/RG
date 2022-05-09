@@ -1,29 +1,35 @@
 package ruangong.root.controller_xiao;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ruangong.root.bean.Result;
 import ruangong.root.bean.Template;
 import ruangong.root.service_xiao.TemplateService;
 
+import javax.annotation.Resource;
+
 @RestController
 @RequestMapping("/templates")
 public class TemplateController {
-    @Autowired
+    @Resource
     private Result result;
 
-    @Autowired
+    @Resource
     private TemplateService templateService;
 
     @PostMapping
-    public Result createTemplate(@RequestBody Template template){
+    public Result createOrUpdateTemplate(@RequestBody Template template){
         result = templateService.createTemplateByBean(template);
         return result;
     }
+
+    @DeleteMapping("/{id}")
+    public Result deleteTemplateById(@PathVariable String id){
+        result = templateService.deleteTemplateById(Integer.parseInt(id));
+        return result;
+    }
+
+
 
 
 }

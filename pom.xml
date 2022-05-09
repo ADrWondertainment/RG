@@ -28,6 +28,7 @@
         <module>starter</module>
         <module>exception</module>
         <module>utils</module>
+        <module>config</module>
     </modules>
 
 
