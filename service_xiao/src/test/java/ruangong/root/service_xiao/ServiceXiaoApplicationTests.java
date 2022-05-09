@@ -10,27 +10,11 @@ import ruangong.root.bean.Template;
 
 import java.util.Date;
 
-@SpringBootTest(classes = ServiceXiaoApplicationTests.class)
-
+@SpringBootTest
 class ServiceXiaoApplicationTests {
-
-    @Autowired
-    private TemplateService templateService;
-
-    @Autowired
-    private Template template;
 
     @Test
     void contextLoads() {
-        template.setDescription("test");
-        template.setName("test");
-        template.setTime(new Date());
-        Integer[] ints = {1, 2, 3};
-        JSONObject object = JSONUtil.parseObj(ints);
-//        template.setData(object);
-        template.setType(0);
-
-        templateService.createTemplateByBean(template);
 
     }
 
