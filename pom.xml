@@ -27,6 +27,7 @@
         <module>service_tao</module>
         <module>starter</module>
         <module>exception</module>
+        <module>utils</module>
     </modules>
 
 
