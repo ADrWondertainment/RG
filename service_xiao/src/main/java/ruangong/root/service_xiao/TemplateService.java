@@ -10,8 +10,11 @@ import ruangong.root.bean.Template;
 @Service
 public interface TemplateService extends IService<Template> {
 
-    public Result createTemplateByBean(Template template);
+    public Result createOrUpdateTemplateByBean(Template template);
 
     public Result deleteTemplateById(Integer id);
+
+    public Result getTemplatesInPages(Integer id, Integer pageNum, Integer size);
+
 
 }

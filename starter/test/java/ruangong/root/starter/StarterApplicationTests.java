@@ -41,4 +41,9 @@ class StarterApplicationTests {
         System.out.println(JSONUtil.toJsonPrettyStr(result));
     }
 
+    @Test
+    void procedureTest(){
+
+    }
+
 }

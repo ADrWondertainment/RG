@@ -1,7 +1,11 @@
 package ruangong.root.service_xiao.impl;
 
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.mybatis.spring.annotation.MapperScan;
@@ -29,7 +33,7 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template> i
 
 
     @Override
-    public Result createTemplateByBean(Template template) {
+    public Result createOrUpdateTemplateByBean(Template template) {
 
         int dataCheck;
         dataCheck = (template.getData() == null || (template.getType() != 0 && template.getType() != 1) ? 0 : 1);
@@ -74,7 +78,7 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template> i
                 result,
                 ErrorCode.TEMPLATE_INSERT_SUCCESS,
                 "模板添加/修改成功了捏~",
-                1
+                JSONUtil.toJsonPrettyStr(JSONUtil.createObj().putOnce("isSuccess", true))
         );
 
         return result;
@@ -111,8 +115,31 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template> i
                 result,
                 ErrorCode.ALL_SET,
                 "您的模板删除成功捏~",
-                1
+                JSONUtil.toJsonPrettyStr(JSONUtil.createObj().putOnce("isSuccess", true))
         );
+
+        return result;
+    }
+
+    @Override
+    public Result getTemplatesInPages(Integer id, Integer pageNum, Integer size) {
+
+        IPage<Template> page = new Page(pageNum, size);
+
+        QueryWrapper<Template> query = Wrappers.query();
+        query.eq("id", id);
+        IPage<Template> templateIPage = templateMapper.selectPage(page, query);
+
+        JSONArray jsonArray = JSONUtil.parseArray(templateIPage);
+
+
+        ResultUtil.quickSet(
+                result,
+                ErrorCode.ALL_SET,
+                "查询成功",
+                JSONUtil.toJsonPrettyStr(jsonArray)
+        );
+
 
         return result;
     }
