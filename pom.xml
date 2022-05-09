@@ -29,6 +29,7 @@
         <module>exception</module>
         <module>utils</module>
         <module>config</module>
+        <module>interceptor</module>
     </modules>
 
 
