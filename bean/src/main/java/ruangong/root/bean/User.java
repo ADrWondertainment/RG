@@ -16,6 +16,7 @@ import java.lang.annotation.Target;
 @Data
 @Component
 @Scope("prototype")
+
 public class User {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
