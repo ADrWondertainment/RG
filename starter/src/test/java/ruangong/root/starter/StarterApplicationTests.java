@@ -6,8 +6,11 @@ import org.junit.jupiter.api.Test;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import ruangong.root.bean.Result;
 import ruangong.root.bean.Template;
+import ruangong.root.bean.User;
 import ruangong.root.dao.TemplateMapper;
+import ruangong.root.service_tao.UserService;
 import ruangong.root.service_xiao.TemplateService;
 import ruangong.root.service_xiao.impl.TemplateServiceImpl;
 
@@ -22,28 +25,16 @@ class StarterApplicationTests {
 //    @Autowired
 //    private Template template;
     @Autowired
-    private TemplateMapper templateMapper;
-
+    private UserService userService;
+    @Autowired
+    private Result result;
     @Test
-    void contextLoads() {
-
-//        Template template = new Template();
-//
-//        TemplateService templateService = new TemplateServiceImpl();
-//
-//        template.setDescription("test");
-//        template.setName("test");
-//        template.setTime(new Date());
-//
-//        JSONObject object = JSONUtil.createObj().putOnce("1", "1").putOnce("2", "2");
-//        template.setData(object);
-//        template.setType(0);
-//
-//        templateService.createTemplateByBean(template);
-        Template template = templateMapper.selectById(1);
-        System.out.println(template);
-
-
+    public void register() {
+        User user =new User();
+        user.setEmail("uiqtuf");
+        user.setPass("123");
+        result =userService.register(user);
+        System.out.println(result);
     }
 
 
