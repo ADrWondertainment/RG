@@ -1,10 +1,10 @@
 package ruangong.root.service_xiao.impl;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ruangong.root.bean.Result;
 import ruangong.root.bean.Template;
 import ruangong.root.dao.TemplateMapper;
@@ -12,8 +12,8 @@ import ruangong.root.exception.ErrorCode;
 import ruangong.root.service_xiao.TemplateService;
 import ruangong.root.utils.ResultUtil;
 
-
 @Service
+@Transactional
 public class TemplateServiceImpl implements TemplateService {
 
     @Autowired
@@ -31,12 +31,12 @@ public class TemplateServiceImpl implements TemplateService {
         dataCheck = (template.getData() == null || (template.getType() != 0 && template.getType() != 1) ? 0 : 1);
 
         QueryWrapper<Template> queryWrapper = Wrappers.query();
-        queryWrapper.eq("email", template.getName());
+        queryWrapper.eq("name", template.getName());
 
-        Long uniqueCheck = templateMapper.selectCount(queryWrapper);
+        Template uniqueCheck = templateMapper.selectOne(queryWrapper);
 
 
-        if (uniqueCheck != 0) {
+        if (uniqueCheck != null) {
             ResultUtil.quickSet(
                     result,
                     ErrorCode.TEMPLATE_NAME_DUPLICATED,

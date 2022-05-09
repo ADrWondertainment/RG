@@ -20,6 +20,6 @@ public class Template {
     private String description;
     private String name;
     private Date time;
-    private JSONObject data;
+    private String data;
     private Integer type;
 }

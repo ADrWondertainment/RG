@@ -21,6 +21,6 @@ public class User {
     private Integer id;
     private String email;
     private String pass;
-    private JSONObject templates;
-    private JSONObject sheets;
+    private String templates;
+    private String sheets;
 }
