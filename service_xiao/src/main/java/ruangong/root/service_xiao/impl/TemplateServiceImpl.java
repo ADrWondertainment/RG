@@ -88,7 +88,7 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template> i
 
         QueryWrapper<Template> queryWrapper = Wrappers.query();
         queryWrapper.eq("id", id);
-        Integer count = templateMapper.selectCount(queryWrapper);
+        Long count =  (long) templateMapper.selectCount(queryWrapper);
         if (count != 1) {
             ResultUtil.quickSet(
                     result,
