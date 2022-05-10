@@ -1,7 +1,6 @@
 package ruangong.root.controller_xiao;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,8 +20,7 @@ public class SheetController {
 
     @PostMapping
     public Result debutSheet(@RequestBody Sheet sheet){
-        Result result = sheetService.fastCreateSheet(sheet);
-        return result;
+        return sheetService.fastCreateSheet(sheet);
     }
 
     @PostMapping("/url")
