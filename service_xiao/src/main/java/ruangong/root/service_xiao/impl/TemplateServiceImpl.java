@@ -22,7 +22,6 @@ import javax.annotation.Resource;
 
 @Service
 @Transactional
-@MapperScan(basePackages = "ruangong.root.dao")
 public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template> implements TemplateService {
 
     @Resource

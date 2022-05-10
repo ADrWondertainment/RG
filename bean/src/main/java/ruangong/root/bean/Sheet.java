@@ -1,5 +1,6 @@
 package ruangong.root.bean;
 
+
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -9,18 +10,20 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
-
 @Data
-@TableName("templates")
+@TableName("sheets")
 @Component
 @Scope("prototype")
-public class Template {
+public class Sheet {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
-    private String description;
+    private Integer tid;
     private String name;
-    private Date time;
-    private String data;
+    private String description;
+    private Date start;
+    private Date end;
+    private String url;
+    private String table;
     private Integer type;
-    private Integer number;
+
 }
