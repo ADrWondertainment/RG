@@ -24,12 +24,12 @@
 
 
     <dependencies>
+
         <dependency>
             <groupId>ruangong.root</groupId>
             <artifactId>bean</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
-
 
     </dependencies>
 
