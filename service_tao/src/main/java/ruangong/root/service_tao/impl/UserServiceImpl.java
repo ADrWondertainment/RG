@@ -25,9 +25,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         String username = user.getEmail();
 
-        QueryWrapper<User> wrapper = new QueryWrapper<>();
-        wrapper.eq("email",username);
-        User user_result = userMapper.selectOne(wrapper);
+        Result temp_result = GetUserByEmail(username);
+        User user_result = (User) temp_result.getData();
 
         //重名出错
         if(user_result != null){
@@ -67,38 +66,30 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         String username = user.getEmail();
         String password = user.getPass();
 
-        QueryWrapper<User> wrapper = new QueryWrapper<>();
-        wrapper.eq("email",username);
-        User email_result = userMapper.selectOne(wrapper);
+        Result temp_result = GetUserByEmail(username);
+        User user_result = (User) temp_result.getData();
 
-        if(email_result ==null){
-            ResultUtil.quickSet(
-                    result,
-                    ErrorCode.USER_NAME_UNFINDED,
-                    "该用户不存在",
-                    null
-            );
+        if(user_result ==null){
             return result;
         }
-
-        String real_pass =email_result.getPass();
+        String real_pass =user_result.getPass();
         if(!real_pass.equals(password)){
             ResultUtil.quickSet(
-                    result,
+                    this.result,
                     ErrorCode.USER_PASSWORD_UNMATCH,
                     "密码错误，请重新输入",
                     null
             );
-            return result;
+            return this.result;
         }
 
         ResultUtil.quickSet(
-                result,
+                this.result,
                 ErrorCode.USER_LOGIN_SUCCESS,
                 "登录成功",
                 1
         );
-        return result;
+        return this.result;
     }
 
     @Override
