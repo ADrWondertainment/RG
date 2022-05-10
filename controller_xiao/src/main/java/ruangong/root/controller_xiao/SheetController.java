@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ruangong.root.bean.Result;
 import ruangong.root.bean.Sheet;
+import ruangong.root.bean.UrlResourcedLocation;
 import ruangong.root.service_xiao.SheetService;
 
 import javax.annotation.Resource;
@@ -18,14 +19,19 @@ public class SheetController {
     @Resource
     private SheetService sheetService;
 
+
     @PostMapping
-    public Result debutSheet(@RequestBody Sheet sheet){
+    public Result debutSheet(@RequestBody Sheet sheet) {
         return sheetService.fastCreateSheet(sheet);
     }
 
+
     @PostMapping("/url")
-    public Result enableSheetUrl(){
-        return null;
+    public Result enableSheetUrl(@RequestBody UrlResourcedLocation urlResourcedLocation) {
+        return sheetService.updateLocatedUrl(urlResourcedLocation);
+
     }
+
+
 
 }

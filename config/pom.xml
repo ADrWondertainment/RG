@@ -24,6 +24,11 @@
 
 
     <dependencies>
+        <dependency>
+            <groupId>ruangong.root</groupId>
+            <artifactId>interceptor</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
 

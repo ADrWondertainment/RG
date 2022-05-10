@@ -1,6 +1,7 @@
 package ruangong.root.service_xiao.impl;
 
 import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -11,6 +12,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ruangong.root.bean.JsonBeanTemplate;
 import ruangong.root.bean.Result;
 import ruangong.root.bean.Template;
 import ruangong.root.dao.TemplateMapper;
@@ -27,17 +29,20 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template> i
     @Resource
     private TemplateMapper templateMapper;
 
+
+
     @Resource
     private Result result;
 
 
     @Override
-    public Result createOrUpdateTemplateByBean(Template template) {
+    public Result createOrUpdateTemplateByBean(Template template, JsonBeanTemplate jsonBeanTemplate) {
 
-        int dataCheck;
-        dataCheck = (template.getData() == null || (template.getType() != 0 && template.getType() != 1) ? 0 : 1);
+        JSONObject data = JSONUtil.parseObj(template.getData());
+        int type = jsonBeanTemplate.getType();
 
-        if (dataCheck == 0) {
+
+        if (type != 0 && type != 1) {
             ResultUtil.quickSet(
                     result,
                     ErrorCode.TEMPLATE_DATA_NULL,
@@ -88,7 +93,7 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template> i
 
         QueryWrapper<Template> queryWrapper = Wrappers.query();
         queryWrapper.eq("id", id);
-        Long count =  (long) templateMapper.selectCount(queryWrapper);
+        long count = (long) templateMapper.selectCount(queryWrapper);
         if (count != 1) {
             ResultUtil.quickSet(
                     result,
@@ -126,7 +131,7 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template> i
         IPage<Template> page = new Page(pageNum, size);
 
         QueryWrapper<Template> query = Wrappers.query();
-        query.eq("id", id);
+        query.eq("uid", id);
         IPage<Template> templateIPage = templateMapper.selectPage(page, query);
 
         JSONArray jsonArray = JSONUtil.parseArray(templateIPage);
@@ -139,6 +144,23 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template> i
                 JSONUtil.toJsonPrettyStr(jsonArray)
         );
 
+
+        return result;
+    }
+
+    @Override
+    public Result getTemplateById(Integer id) {
+
+        QueryWrapper<Template> query = Wrappers.query();
+        query.eq("id", id);
+        Template template = templateMapper.selectOne(query);
+
+        ResultUtil.quickSet(
+                result,
+                ErrorCode.ALL_SET,
+                "获取成功",
+                JSONUtil.toJsonPrettyStr(template)
+        );
 
         return result;
     }

@@ -23,7 +23,8 @@ public class Sheet {
     private Date start;
     private Date end;
     private String url;
-    private String table;
+    private String data;
     private Integer type;
+    private Integer length;
 
 }

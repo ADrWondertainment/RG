@@ -17,10 +17,10 @@ import java.util.Date;
 public class Template {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
+    private Integer uid;
     private String description;
     private String name;
     private Date time;
     private String data;
-    private Integer type;
-    private Integer number;
+    private Integer length;
 }

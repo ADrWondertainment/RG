@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ruangong.root.bean.Result;
 import ruangong.root.bean.User;
 import ruangong.root.dao.UserMapper;
@@ -12,6 +13,7 @@ import ruangong.root.service_tao.UserService;
 import ruangong.root.utils.ResultUtil;
 
 @Service
+@Transactional
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
     @Autowired
