@@ -1,5 +1,8 @@
 package ruangong.root.controller_tao;
 
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ruangong.root.bean.Result;
@@ -10,6 +13,7 @@ import ruangong.root.utils.ResultUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -19,6 +23,8 @@ public class UserController {
     private UserService userService;
     @Autowired
     private Result result;
+    @Autowired
+    private User user;
 
     @PostMapping("/register")
     public Result reg(@RequestBody User user){
@@ -46,6 +52,16 @@ public class UserController {
                 "退出成功",
                 null
         );
+        return result;
+    }
+
+    @PostMapping("/changepass")
+    public Result changepassword(HttpServletRequest request,@RequestBody JSONObject pass){
+        String oldpass =(String) pass.get("oldpass");
+        String newpass =(String) pass.get("newpass");
+        user.setEmail((String) request.getSession().getAttribute("email"));
+        user.setPass(oldpass);
+        result = userService.changePassword(user,newpass);
         return result;
     }
 }
