@@ -32,9 +32,6 @@ public class UserController {
         if(result.getErrorCode() == ErrorCode.USER_LOGIN_SUCCESS){
             HttpSession session = request.getSession();
             session.setAttribute("email",user.getEmail());
-            session.setAttribute("id",user.getId());
-            session.setAttribute("templates",user.getTemplates());
-            session.setAttribute("sheets",user.getSheets());
         }
         return result;
     }
@@ -43,9 +40,6 @@ public class UserController {
     public Result logout(HttpServletRequest request){
         HttpSession session = request.getSession();
         session.removeAttribute("email");
-        session.removeAttribute("id");
-        session.removeAttribute("templates");
-        session.removeAttribute("sheets");
         ResultUtil.quickSet(
                 result,
                 ErrorCode.SUCCESS,

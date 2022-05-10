@@ -100,4 +100,27 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         );
         return result;
     }
+
+    @Override
+    public Result GetUserByEmail(String email) {
+        QueryWrapper<User> wrapper = new QueryWrapper<>();
+        wrapper.eq("email",email);
+        User user_result = userMapper.selectOne(wrapper);
+        if(user_result ==null){
+            ResultUtil.quickSet(
+                    result,
+                    ErrorCode.USER_NAME_UNFINDED,
+                    "该用户不存在",
+                    null
+            );
+            return result;
+        }
+        ResultUtil.quickSet(
+                result,
+                ErrorCode.SUCCESS,
+                "查询成功",
+                user_result
+        );
+        return result;
+    }
 }
