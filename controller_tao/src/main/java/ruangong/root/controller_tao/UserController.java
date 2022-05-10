@@ -9,8 +9,10 @@ import ruangong.root.service_tao.UserService;
 import ruangong.root.utils.ResultUtil;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 @RestController
+@RequestMapping("/users")
 public class UserController {
 
     @Autowired
@@ -28,14 +30,22 @@ public class UserController {
     public Result login(HttpServletRequest request, @RequestBody User user){
         result = userService.login(user);
         if(result.getErrorCode() == ErrorCode.USER_LOGIN_SUCCESS){
-            request.getSession().setAttribute("email",user.getEmail());
+            HttpSession session = request.getSession();
+            session.setAttribute("email",user.getEmail());
+            session.setAttribute("id",user.getId());
+            session.setAttribute("templates",user.getTemplates());
+            session.setAttribute("sheets",user.getSheets());
         }
         return result;
     }
 
     @PostMapping("/logout")
     public Result logout(HttpServletRequest request){
-        request.getSession().removeAttribute("email");
+        HttpSession session = request.getSession();
+        session.removeAttribute("email");
+        session.removeAttribute("id");
+        session.removeAttribute("templates");
+        session.removeAttribute("sheets");
         ResultUtil.quickSet(
                 result,
                 ErrorCode.SUCCESS,
