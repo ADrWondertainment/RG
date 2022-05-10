@@ -9,7 +9,8 @@ public class ErrorCode {
     public static final Integer USER_NAME_UNFINDED = 10030;
     public static final Integer USER_PASSWORD_UNMATCH = 10040;
     public static final Integer USER_LOGIN_SUCCESS = 10050;
-
+    public static final Integer USER_CHANGEPASS_FAILURE = 10060;
+    public static final Integer USER_CHANGEPASS_SUCCESS = 10070;
     public static final Integer SUCCESS = 1;
     public static final Integer FAIL = 0;
 

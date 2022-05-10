@@ -10,4 +10,6 @@ public interface UserService extends IService<User> {
     public Result login(User user);
 
     public Result GetUserByEmail(String email);
+
+    public Result changePassword(User user,String newpass);
 }

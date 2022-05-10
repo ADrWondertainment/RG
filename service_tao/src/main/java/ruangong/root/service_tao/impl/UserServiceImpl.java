@@ -70,26 +70,26 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         User user_result = (User) temp_result.getData();
 
         if(user_result ==null){
-            return result;
+            return temp_result;
         }
         String real_pass =user_result.getPass();
         if(!real_pass.equals(password)){
             ResultUtil.quickSet(
-                    this.result,
+                    result,
                     ErrorCode.USER_PASSWORD_UNMATCH,
                     "密码错误，请重新输入",
                     null
             );
-            return this.result;
+            return result;
         }
 
         ResultUtil.quickSet(
-                this.result,
+                result,
                 ErrorCode.USER_LOGIN_SUCCESS,
                 "登录成功",
                 1
         );
-        return this.result;
+        return result;
     }
 
     @Override
@@ -111,6 +111,50 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 ErrorCode.SUCCESS,
                 "查询成功",
                 user_result
+        );
+        return result;
+    }
+
+    @Override
+    public Result changePassword(User user, String newpass) {
+        String username =user.getEmail();
+        String oldpass =user.getPass();
+
+        Result temp_result = GetUserByEmail(username);
+        User user_result =(User) temp_result.getData();
+
+        if(user_result == null){
+            return temp_result;
+        }
+
+        if(!oldpass.equals(user_result.getPass())){
+            ResultUtil.quickSet(
+                    result,
+                    ErrorCode.USER_PASSWORD_UNMATCH,
+                    "密码错误，请重新输入",
+                    null
+            );
+            return result;
+        }
+
+        user_result.setPass(newpass);
+        int update = userMapper.updateById(user_result);
+
+        if(update !=1){
+            ResultUtil.quickSet(
+                    result,
+                    ErrorCode.USER_CHANGEPASS_FAILURE,
+                    "修改密码失败，请稍后再试",
+                    null
+            );
+            return result;
+        }
+
+        ResultUtil.quickSet(
+                result,
+                ErrorCode.USER_CHANGEPASS_SUCCESS,
+                "修改密码成功",
+                1
         );
         return result;
     }
