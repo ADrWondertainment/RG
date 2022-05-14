@@ -47,17 +47,17 @@ public class AnswerServiceImpl implements AnswerService {
 
         List<JsonBeanSurveysAnswers> answers = jsonBeanSurvey.getAnswers();
 
-        for (int i = 0; i < length; i++) {
-
-            JsonBeanTemplateContentsContent tempContent = content.get(i);
-            JsonBeanSurveysAnswers tempAnswer = answers.get(i);
-
-            String index = tempAnswer.getValue();
-            Map<String, Integer> value = tempContent.getValue();
-            Integer count = value.get(index) + 1;
-            value.put(index, count);
-
-        }
+//        for (int i = 0; i < length; i++) {
+//
+//            JsonBeanTemplateContentsContent tempContent = content.get(i);
+//            JsonBeanSurveysAnswers tempAnswer = answers.get(i);
+//
+//            String index = tempAnswer.getValue();
+//            Map<String, Integer> value = tempContent.getValue();
+//            Integer count = value.get(index) + 1;
+//            value.put(index, count);
+//
+//        }
 
         sheet1.setLocation(JSONUtil.toJsonPrettyStr(jsonBeanTemplate));
 
