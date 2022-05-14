@@ -39,8 +39,13 @@ public class TemplateController {
     @PostMapping
     public Result createOrUpdateTemplate(@RequestBody String data, HttpServletRequest request) {
 
-        jsonBeanTemplate = JSONUtil.toBean(data, JsonBeanTemplate.class);
-        template = TemplateUtil.strToTemplate(data);
+        JSONObject entries = JSONUtil.parseObj(data);
+        String json = (String) entries.get("json");
+
+        System.out.println(JSONUtil.toJsonStr(json));
+
+        jsonBeanTemplate = JSONUtil.toBean(json, JsonBeanTemplate.class);
+        template = TemplateUtil.strToTemplate(json);
 
         result = templateService.createOrUpdateTemplateByBean(template, jsonBeanTemplate);
 

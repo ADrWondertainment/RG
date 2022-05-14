@@ -27,23 +27,30 @@ public class UserController {
     private User user;
 
     @PostMapping("/register")
-    public Result reg(@RequestBody User user){
+    public Result reg(@RequestBody String data) {
+
+        JSONObject parseObj = JSONUtil.parseObj(data);
+        user.setEmail((String) parseObj.get("email"));
+        user.setPass((String) parseObj.get("pass"));
+
+        System.out.println(user);
+
         result = userService.register(user);
         return result;
     }
 
     @PostMapping("/login")
-    public Result login(HttpServletRequest request, @RequestBody User user){
+    public Result login(HttpServletRequest request, @RequestBody User user) {
         result = userService.login(user);
-        if(result.getErrorCode() == ErrorCode.USER_LOGIN_SUCCESS){
+        if (result.getErrorCode() == ErrorCode.USER_LOGIN_SUCCESS) {
             HttpSession session = request.getSession();
-            session.setAttribute("email",user.getEmail());
+            session.setAttribute("email", user.getEmail());
         }
         return result;
     }
 
     @PostMapping("/logout")
-    public Result logout(HttpServletRequest request){
+    public Result logout(HttpServletRequest request) {
         HttpSession session = request.getSession();
         session.removeAttribute("email");
         ResultUtil.quickSet(
@@ -56,12 +63,12 @@ public class UserController {
     }
 
     @PostMapping("/changepass")
-    public Result changepassword(HttpServletRequest request,@RequestBody JSONObject pass){
-        String oldpass =(String) pass.get("oldpass");
-        String newpass =(String) pass.get("newpass");
+    public Result changepassword(HttpServletRequest request, @RequestBody JSONObject pass) {
+        String oldpass = (String) pass.get("oldpass");
+        String newpass = (String) pass.get("newpass");
         user.setEmail((String) request.getSession().getAttribute("email"));
         user.setPass(oldpass);
-        result = userService.changePassword(user,newpass);
+        result = userService.changePassword(user, newpass);
         return result;
     }
 }

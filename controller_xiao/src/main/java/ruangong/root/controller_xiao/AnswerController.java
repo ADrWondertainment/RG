@@ -18,15 +18,5 @@ public class AnswerController {
     private Result result;
 
 
-    @PostMapping
-    public Result collectAnswer(@RequestBody String data){
-
-        JsonBeanSurvey jsonBeanSurvey = JSONUtil.toBean(data, JsonBeanSurvey.class);
-
-
-
-
-        return result;
-    }
 
 }
