@@ -12,4 +12,6 @@ public interface AnswerService {
 
     public Result insertAnswer(Answer answer);
 
+    public Result getAnswersBySheetId(Integer sheetId);
+
 }

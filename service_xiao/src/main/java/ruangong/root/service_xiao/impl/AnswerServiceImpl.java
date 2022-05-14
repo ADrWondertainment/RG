@@ -1,6 +1,8 @@
 package ruangong.root.service_xiao.impl;
 
 import cn.hutool.json.JSONUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ruangong.root.bean.*;
@@ -77,5 +79,22 @@ public class AnswerServiceImpl implements AnswerService {
         );
 
         return null;
+    }
+
+    @Override
+    public Result getAnswersBySheetId(Integer sheetId) {
+
+        QueryWrapper<Answer> query = Wrappers.query();
+        query.eq("id", sheetId);
+        List<Answer> answers = answerMapper.selectList(query);
+
+        ResultUtil.quickSet(
+                result,
+                ErrorCode.ALL_SET,
+                "成功获取调查信息",
+                JSONUtil.toJsonStr(answers)
+        );
+
+        return result;
     }
 }

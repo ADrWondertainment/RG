@@ -8,7 +8,7 @@ public class AnswerUtil {
 
     public static Answer jsonBeanToAnswer(JsonBeanSurvey jsonBeanSurvey) {
         Answer answer = new Answer();
-        answer.setSheetId(jsonBeanSurvey.getSheetId());
+        answer.setSid(jsonBeanSurvey.getSheetId());
         answer.setData(JSONUtil.toJsonPrettyStr(jsonBeanSurvey.getAnswers()));
 
         return answer;
