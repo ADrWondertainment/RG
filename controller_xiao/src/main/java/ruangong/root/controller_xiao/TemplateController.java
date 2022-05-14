@@ -46,6 +46,13 @@ public class TemplateController {
 
         jsonBeanTemplate = JSONUtil.toBean(json, JsonBeanTemplate.class);
         template = TemplateUtil.strToTemplate(json);
+        String email = (String) request.getSession().getAttribute("email");
+        Result result1 = userService.GetUserByEmail(email);
+
+        User user = (User) result1.getData();
+        template.setUid(user.getId());
+        jsonBeanTemplate.setUid(user.getId());
+        template.setData(JSONUtil.toJsonPrettyStr(jsonBeanTemplate));
 
         result = templateService.createOrUpdateTemplateByBean(template, jsonBeanTemplate);
 

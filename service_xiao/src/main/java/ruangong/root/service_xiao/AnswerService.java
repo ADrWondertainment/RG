@@ -1,6 +1,7 @@
 package ruangong.root.service_xiao;
 
 import org.springframework.stereotype.Service;
+import ruangong.root.bean.Answer;
 import ruangong.root.bean.JsonBeanSurvey;
 import ruangong.root.bean.Result;
 
@@ -8,5 +9,7 @@ import ruangong.root.bean.Result;
 public interface AnswerService {
 
     public Result collectAnswerAndUpdate(JsonBeanSurvey jsonBeanSurvey);
+
+    public Result insertAnswer(Answer answer);
 
 }

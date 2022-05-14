@@ -1,6 +1,7 @@
 package ruangong.root.service_xiao.impl;
 
 
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
@@ -43,7 +44,7 @@ public class SheetServiceImpl extends ServiceImpl<SheetMapper, Sheet> implements
         Result sheetTemplate = templateService.getTemplateById(sheet.getId());
         Template template = (Template) sheetTemplate.getData();
         String data = template.getData();
-        sheet.setData(data);
+        sheet.setLocation(IdUtil.simpleUUID());
 
         Integer insertCheck = sheetMapper.insert(sheet);
         System.out.println(sheet.getId());

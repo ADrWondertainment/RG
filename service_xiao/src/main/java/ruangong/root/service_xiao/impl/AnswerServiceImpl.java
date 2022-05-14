@@ -4,8 +4,11 @@ import cn.hutool.json.JSONUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ruangong.root.bean.*;
+import ruangong.root.dao.AnswerMapper;
+import ruangong.root.exception.ErrorCode;
 import ruangong.root.service_xiao.AnswerService;
 import ruangong.root.service_xiao.SheetService;
+import ruangong.root.utils.ResultUtil;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -22,6 +25,9 @@ public class AnswerServiceImpl implements AnswerService {
     @Resource
     private SheetService sheetService;
 
+    @Resource
+    private AnswerMapper answerMapper;
+
     @Override
     public Result collectAnswerAndUpdate(JsonBeanSurvey jsonBeanSurvey) {
 
@@ -31,7 +37,7 @@ public class AnswerServiceImpl implements AnswerService {
 
         Sheet sheet1 = JSONUtil.toBean((String) result1.getData(), Sheet.class);
 
-        JsonBeanTemplate jsonBeanTemplate = JSONUtil.toBean(sheet1.getData(), JsonBeanTemplate.class);
+        JsonBeanTemplate jsonBeanTemplate = JSONUtil.toBean(sheet1.getLocation(), JsonBeanTemplate.class);
 
         int length = jsonBeanTemplate.getContentLength();
 
@@ -51,11 +57,25 @@ public class AnswerServiceImpl implements AnswerService {
 
         }
 
-        sheet1.setData(JSONUtil.toJsonPrettyStr(jsonBeanTemplate));
+        sheet1.setLocation(JSONUtil.toJsonPrettyStr(jsonBeanTemplate));
 
         result = sheetService.updateSheet(sheet1);
 
 
         return result;
+    }
+
+    @Override
+    public Result insertAnswer(Answer answer) {
+
+        int insert = answerMapper.insert(answer);
+        ResultUtil.quickSet(
+                result,
+                ErrorCode.ALL_SET,
+                "答案提交成功",
+                1
+        );
+
+        return null;
     }
 }

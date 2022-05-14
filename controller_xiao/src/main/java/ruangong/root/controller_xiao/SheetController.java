@@ -22,6 +22,8 @@ public class SheetController {
 
     @PostMapping
     public Result debutSheet(@RequestBody Sheet sheet) {
+        System.out.println(1);
+
         return sheetService.fastCreateSheet(sheet);
     }
 
