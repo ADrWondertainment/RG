@@ -9,11 +9,13 @@ import ruangong.root.bean.UrlResourcedLocation;
 @Service
 public interface SheetService extends IService<Sheet> {
 
-    public Result fastCreateSheet(Sheet sheet);
+    public Result fastCreateSheet(Sheet sheet, int uid);
 
     public Result updateLocatedUrl(UrlResourcedLocation urlResourcedLocation);
 
     public Result getSheetById(int id);
 
     public Result updateSheet(Sheet sheet);
+
+    public Result getSheetsInPages(Integer id, Integer pageIndex, Integer sizePerPage);
 }

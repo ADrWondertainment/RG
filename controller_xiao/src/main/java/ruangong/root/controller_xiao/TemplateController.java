@@ -11,12 +11,14 @@ import ruangong.root.bean.Template;
 import ruangong.root.bean.User;
 import ruangong.root.service_tao.UserService;
 import ruangong.root.service_xiao.TemplateService;
+import ruangong.root.utils.PageUtil;
 import ruangong.root.utils.TemplateUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Date;
+import java.util.HashMap;
 
 @RestController
 @RequestMapping("/templates")
@@ -65,18 +67,17 @@ public class TemplateController {
         return result;
     }
 
+    /*
+    {
+        "pageNum":1,
+        "size":5
+    }
+     */
     @GetMapping
     public Result getTemplatesInPages(@RequestBody JSONObject jsonObject, HttpServletRequest request) {
-        String email = (String) request.getSession().getAttribute("email");
-        Result result = userService.GetUserByEmail(email);
+        HashMap<String, Integer> pageInfo = PageUtil.getPageInfo(jsonObject, request, userService);
 
-        User user = (User) result.getData();
-
-        Integer id = user.getId();
-        Integer pageNum = (Integer) jsonObject.get("pageNum");
-        Integer size = (Integer) jsonObject.get("size");
-
-        return templateService.getTemplatesInPages(id, pageNum, size);
+        return templateService.getTemplatesInPages(pageInfo.get("id"), pageInfo.get("pageIndex"), pageInfo.get("sizePerPage"));
     }
 
 

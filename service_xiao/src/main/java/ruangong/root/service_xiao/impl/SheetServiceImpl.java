@@ -6,7 +6,9 @@ import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,12 +41,13 @@ public class SheetServiceImpl extends ServiceImpl<SheetMapper, Sheet> implements
     @Resource
     private TemplateService templateService;
 
-    public Result fastCreateSheet(Sheet sheet) {
+    public Result fastCreateSheet(Sheet sheet, int uid) {
 
         Result sheetTemplate = templateService.getTemplateById(sheet.getId());
         Template template = (Template) sheetTemplate.getData();
         String data = template.getData();
         sheet.setLocation(IdUtil.simpleUUID());
+        sheet.setUid(uid);
 
         Integer insertCheck = sheetMapper.insert(sheet);
         System.out.println(sheet.getId());
@@ -102,6 +105,28 @@ public class SheetServiceImpl extends ServiceImpl<SheetMapper, Sheet> implements
                 ErrorCode.ALL_SET,
                 "增加成功",
                 JSONUtil.toJsonPrettyStr(JSONUtil.createObj().putOnce("updated", true))
+        );
+
+
+        return result;
+    }
+
+    @Override
+    public Result getSheetsInPages(Integer id, Integer pageIndex, Integer sizePerPage) {
+        IPage<Sheet> page = new Page(pageIndex, sizePerPage);
+
+        QueryWrapper<Sheet> query = Wrappers.query();
+        query.eq("uid", id);
+        IPage<Sheet> sheetIPage = sheetMapper.selectPage(page, query);
+
+        JSONArray jsonArray = JSONUtil.parseArray(sheetIPage);
+
+
+        ResultUtil.quickSet(
+                result,
+                ErrorCode.ALL_SET,
+                "查询成功",
+                JSONUtil.toJsonPrettyStr(jsonArray)
         );
 
 

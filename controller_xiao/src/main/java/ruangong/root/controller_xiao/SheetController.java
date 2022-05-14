@@ -1,16 +1,19 @@
 package ruangong.root.controller_xiao;
 
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import cn.hutool.json.JSONObject;
+import org.springframework.web.bind.annotation.*;
 import ruangong.root.bean.Result;
 import ruangong.root.bean.Sheet;
 import ruangong.root.bean.UrlResourcedLocation;
+import ruangong.root.bean.User;
+import ruangong.root.service_tao.UserService;
 import ruangong.root.service_xiao.SheetService;
+import ruangong.root.utils.PageUtil;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 
 @RestController
 @RequestMapping("/sheets")
@@ -18,13 +21,16 @@ public class SheetController {
 
     @Resource
     private SheetService sheetService;
-
+    @Resource
+    private UserService userService;
 
     @PostMapping
-    public Result debutSheet(@RequestBody Sheet sheet) {
-        System.out.println(1);
+    public Result debutSheet(@RequestBody Sheet sheet, HttpServletRequest httpServletRequest) {
+        String email = (String) httpServletRequest.getSession().getAttribute("email");
+        Result result = userService.GetUserByEmail(email);
+        User user = (User) result.getData();
 
-        return sheetService.fastCreateSheet(sheet);
+        return sheetService.fastCreateSheet(sheet, user.getId());
     }
 
 
@@ -34,6 +40,16 @@ public class SheetController {
 
     }
 
+    @GetMapping
+    public Result getSheetsInPages(@RequestBody JSONObject jsonObject, HttpServletRequest httpServletRequest) {
+        HashMap<String, Integer> pageInfo = PageUtil.getPageInfo(jsonObject, httpServletRequest, userService);
+        Integer id = pageInfo.get("id");
+        Integer pageIndex = pageInfo.get("pageIndex");
+        Integer sizePerPage = pageInfo.get("sizePerPage");
+
+
+        return sheetService.getSheetsInPages(id, pageIndex, sizePerPage);
+    }
 
 
 }
