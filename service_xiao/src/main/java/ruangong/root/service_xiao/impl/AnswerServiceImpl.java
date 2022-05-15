@@ -3,10 +3,12 @@ package ruangong.root.service_xiao.impl;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ruangong.root.bean.*;
 import ruangong.root.dao.AnswerMapper;
+import ruangong.root.dao.TemplateMapper;
 import ruangong.root.exception.BackException;
 import ruangong.root.exception.ErrorCode;
 import ruangong.root.service_xiao.AnswerService;
@@ -20,7 +22,7 @@ import java.util.Map;
 
 @Service
 @Transactional
-public class AnswerServiceImpl implements AnswerService {
+public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> implements AnswerService {
 
     @Resource
     private Result result;
@@ -71,9 +73,10 @@ public class AnswerServiceImpl implements AnswerService {
     @Override
     public Result insertAnswer(Answer answer) {
 
-        int insert = answerMapper.insert(answer);
 
-        if (insert != 1) {
+        boolean insert = saveOrUpdate(answer);
+
+        if (!insert) {
             throw new BackException(ErrorCode.ANSWER_INSERT_FAILURE, "回答插入失败");
         }
 
