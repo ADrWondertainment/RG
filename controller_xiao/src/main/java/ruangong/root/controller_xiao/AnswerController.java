@@ -65,65 +65,68 @@ public class AnswerController {
         Result sheetById = sheetService.getSheetById(sheetId);
         sheet = ResultUtil.getBeanFromData(sheetById, Sheet.class);
 
+        if (sheet.getType() == 0) {
+            Integer tid = sheet.getTid();
+            Result templateById = templateService.getTemplateById(tid);
+            template = ResultUtil.getBeanFromData(templateById, Template.class);
 
-        Integer tid = sheet.getTid();
-        Result templateById = templateService.getTemplateById(tid);
-        template = ResultUtil.getBeanFromData(templateById, Template.class);
+            Integer length = template.getLength();
 
-        Integer length = template.getLength();
-
-        List<JsonBeanTemplateContentsContent> content = JSONUtil.toBean(template.getData(), JsonBeanTemplate.class).getContent();
+            List<JsonBeanTemplateContentsContent> content = JSONUtil.toBean(template.getData(), JsonBeanTemplate.class).getContent();
 
 
-        Result answersBySheetId = answerService.getAnswersBySheetId(sheetId);
+            Result answersBySheetId = answerService.getAnswersBySheetId(sheetId);
 
-        String data1 =(String) answersBySheetId.getData();
+            String data1 = (String) answersBySheetId.getData();
 
-        List<Answer> list = JSONUtil.toList(data1, Answer.class);
+            List<Answer> list = JSONUtil.toList(data1, Answer.class);
 
 
 //        AnswerList answerList = ResultUtil.getBeanFromData(answersBySheetId, AnswerList.class);
 //
 //        List<Answer> list = answerList.getList();
 
-        try {
-            for (Answer o : list) {
-                String data = o.getData();
+            try {
+                for (Answer o : list) {
+                    String data = o.getData();
 //                JSONArray parseArray = JSONUtil.parseArray((String) JSONUtil.parseObj(data).get("content"));
-                JSONArray content1 =JSONUtil.parseArray(data);
-                List<JsonBeanSurveysAnswers> answers = JSONUtil.toList(content1, JsonBeanSurveysAnswers.class);
-                for (int t = 0; t < length; t++) {
+                    JSONArray content1 = JSONUtil.parseArray(data);
+                    List<JsonBeanSurveysAnswers> answers = JSONUtil.toList(content1, JsonBeanSurveysAnswers.class);
+                    for (int t = 0; t < length; t++) {
 
-                    JsonBeanTemplateContentsContent tempContent = content.get(t);
-                    JsonBeanSurveysAnswers tempAnswer = answers.get(t);
+                        JsonBeanTemplateContentsContent tempContent = content.get(t);
+                        JsonBeanSurveysAnswers tempAnswer = answers.get(t);
 
-                    String index = tempAnswer.getValue();
-                    Map<String, Integer> value = tempContent.getValue();
-                    Integer count = value.get(index) + 1;
-                    value.put(index, count);
+                        String index = tempAnswer.getValue();
+                        Map<String, Integer> value = tempContent.getValue();
+                        Integer count = value.get(index) + 1;
+                        value.put(index, count);
+
+                    }
 
                 }
 
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new BackException(ErrorCode.ANSWER_PROCESS_FAILURE, "处理回答数据时出错");
             }
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new BackException(ErrorCode.ANSWER_PROCESS_FAILURE, "处理回答数据时出错");
+
+            ResultUtil.quickSet(
+                    result,
+                    ErrorCode.ALL_SET,
+                    "问卷结果返回成功",
+                    JSONUtil.toJsonPrettyStr(content)
+            );
+
         }
 
-
-        ResultUtil.quickSet(
-                result,
-                ErrorCode.ALL_SET,
-                "问卷结果返回成功",
-                JSONUtil.toJsonPrettyStr(content)
-        );
 
         return result;
     }
 
     @PostMapping("/save")
-    public Result saveTempAnswer(@RequestBody String data){
+    public Result saveTempAnswer(@RequestBody String data) {
 
         return result;
     }
