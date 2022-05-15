@@ -21,6 +21,7 @@ import ruangong.root.service_xiao.TemplateService;
 import ruangong.root.utils.ResultUtil;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Service
 @Transactional
@@ -139,7 +140,9 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template> i
         if (templateIPage == null) {
             throw new BackException(ErrorCode.TEMPLATE_SELECT_FAILURE, "分页数据查询失败");
         }
-        JSONArray jsonArray = JSONUtil.parseArray(templateIPage);
+
+        List<Template> records = templateIPage.getRecords();
+        JSONArray jsonArray = JSONUtil.parseArray(records);
 
 
         ResultUtil.quickSet(

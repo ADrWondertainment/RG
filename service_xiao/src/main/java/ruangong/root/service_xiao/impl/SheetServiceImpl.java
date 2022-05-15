@@ -130,7 +130,7 @@ public class SheetServiceImpl extends ServiceImpl<SheetMapper, Sheet> implements
         if (sheetIPage == null) {
             throw new BackException(ErrorCode.SHEET_SELECT_FAILURE, "分页数据查询失败");
         }
-        JSONArray jsonArray = JSONUtil.parseArray(sheetIPage);
+        JSONArray jsonArray = JSONUtil.parseArray(sheetIPage.getRecords());
 
 
         ResultUtil.quickSet(
