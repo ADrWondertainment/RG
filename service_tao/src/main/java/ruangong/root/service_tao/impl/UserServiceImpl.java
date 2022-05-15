@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ruangong.root.bean.Result;
 import ruangong.root.bean.User;
 import ruangong.root.dao.UserMapper;
+import ruangong.root.exception.BackException;
 import ruangong.root.exception.ErrorCode;
 import ruangong.root.service_tao.UserService;
 import ruangong.root.utils.ResultUtil;
@@ -31,7 +32,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         User user_result = (User) temp_result.getData();
 
         //重名出错
-        if(user_result != null){
+        if (user_result != null) {
             ResultUtil.quickSet(
                     result,
                     ErrorCode.USER_NAME_DUPLICATED,
@@ -44,7 +45,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         //注册功能
         int insert = userMapper.insert(user);
 
-        if(insert !=1){
+        if (insert != 1) {
             ResultUtil.quickSet(
                     result,
                     ErrorCode.USER_INSERT_FAILURE,
@@ -71,11 +72,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         Result temp_result = GetUserByEmail(username);
         User user_result = (User) temp_result.getData();
 
-        if(user_result ==null){
+        if (user_result == null) {
             return temp_result;
         }
-        String real_pass =user_result.getPass();
-        if(!real_pass.equals(password)){
+        String real_pass = user_result.getPass();
+        if (!real_pass.equals(password)) {
             ResultUtil.quickSet(
                     result,
                     ErrorCode.USER_PASSWORD_UNMATCH,
@@ -97,17 +98,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public Result GetUserByEmail(String email) {
         QueryWrapper<User> wrapper = new QueryWrapper<>();
-        wrapper.eq("email",email);
+        wrapper.eq("email", email);
         User user_result = userMapper.selectOne(wrapper);
-        if(user_result ==null){
-            ResultUtil.quickSet(
-                    result,
-                    ErrorCode.USER_NAME_UNFINDED,
-                    "该用户不存在",
-                    null
-            );
-            return result;
+        if (user_result == null) {
+            throw new BackException(ErrorCode.USER_NAME_UNFINDED, "该用户不存在");
         }
+//        if (user_result == null) {
+//            ResultUtil.quickSet(
+//                    result,
+//                    ErrorCode.USER_NAME_UNFINDED,
+//                    "该用户不存在",
+//                    null
+//            );
+//            return result;
+//        }
         ResultUtil.quickSet(
                 result,
                 ErrorCode.SUCCESS,
@@ -119,17 +123,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public Result changePassword(User user, String newpass) {
-        String username =user.getEmail();
-        String oldpass =user.getPass();
+        String username = user.getEmail();
+        String oldpass = user.getPass();
 
         Result temp_result = GetUserByEmail(username);
-        User user_result =(User) temp_result.getData();
+        User user_result = (User) temp_result.getData();
 
-        if(user_result == null){
+        if (user_result == null) {
             return temp_result;
         }
 
-        if(!oldpass.equals(user_result.getPass())){
+        if (!oldpass.equals(user_result.getPass())) {
             ResultUtil.quickSet(
                     result,
                     ErrorCode.USER_PASSWORD_UNMATCH,
@@ -142,7 +146,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         user_result.setPass(newpass);
         int update = userMapper.updateById(user_result);
 
-        if(update !=1){
+        if (update != 1) {
             ResultUtil.quickSet(
                     result,
                     ErrorCode.USER_CHANGEPASS_FAILURE,

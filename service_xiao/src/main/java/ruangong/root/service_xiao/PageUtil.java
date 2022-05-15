@@ -4,6 +4,8 @@ import cn.hutool.json.JSONObject;
 import org.springframework.stereotype.Component;
 import ruangong.root.bean.Result;
 import ruangong.root.bean.User;
+import ruangong.root.exception.BackException;
+import ruangong.root.exception.ErrorCode;
 import ruangong.root.service_tao.UserService;
 
 import javax.annotation.Resource;
@@ -25,6 +27,10 @@ public class PageUtil {
     public static HashMap<String, Integer> getPageInfo(JSONObject jsonObject, HttpServletRequest httpServletRequest, UserService userService){
 
         String email = (String) httpServletRequest.getSession().getAttribute("email");
+        if (email == null) {
+            throw new BackException(ErrorCode.USER_ILLEGAL_ACCESS, "用户未登录");
+        }
+
         Result result = userService.GetUserByEmail(email);
         User user = (User) result.getData();
 

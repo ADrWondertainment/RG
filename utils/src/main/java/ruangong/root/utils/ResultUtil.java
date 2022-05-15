@@ -3,6 +3,8 @@ package ruangong.root.utils;
 
 import cn.hutool.json.JSONUtil;
 import ruangong.root.bean.Result;
+import ruangong.root.exception.ErrorCode;
+import ruangong.root.exception.FrontException;
 
 public class ResultUtil {
 
@@ -15,7 +17,11 @@ public class ResultUtil {
 
     public static <T> T getBeanFromData(Result result, Class<T> tClass) {
         String data = (String) result.getData();
-        return JSONUtil.toBean(data, tClass);
+        T t = JSONUtil.toBean(data, tClass);
+        if (t == null) {
+            throw new FrontException(ErrorCode.FRONT_DATA_IRREGULAR, "前端数据格式不规范");
+        }
+        return t;
     }
 
 }

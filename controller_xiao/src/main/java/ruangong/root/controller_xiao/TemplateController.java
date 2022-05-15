@@ -8,6 +8,9 @@ import ruangong.root.bean.JsonBeanTemplate;
 import ruangong.root.bean.Result;
 import ruangong.root.bean.Template;
 import ruangong.root.bean.User;
+import ruangong.root.exception.BackException;
+import ruangong.root.exception.ErrorCode;
+import ruangong.root.exception.FrontException;
 import ruangong.root.service_tao.UserService;
 import ruangong.root.service_xiao.TemplateService;
 import ruangong.root.service_xiao.PageUtil;
@@ -40,12 +43,21 @@ public class TemplateController {
 
         JSONObject entries = JSONUtil.parseObj(data);
         String json = (String) entries.get("json");
+        if (json == null) {
+            throw new FrontException(ErrorCode.FRONT_DATA_IRREGULAR, "前端数据格式未按照规范");
+        }
 
-        System.out.println(JSONUtil.toJsonStr(json));
+        try {
+            jsonBeanTemplate = JSONUtil.toBean(json, JsonBeanTemplate.class);
+            template = TemplateUtil.strToTemplate(json);
 
-        jsonBeanTemplate = JSONUtil.toBean(json, JsonBeanTemplate.class);
-        template = TemplateUtil.strToTemplate(json);
+        } catch (Exception e) {
+            throw new BackException(ErrorCode.UTIL_ERROR, "工具类出错");
+        }
         String email = (String) request.getSession().getAttribute("email");
+        if (email == null) {
+            throw new BackException(ErrorCode.USER_ILLEGAL_ACCESS, "用户未登录");
+        }
         Result result1 = userService.GetUserByEmail(email);
 
         User user = (User) result1.getData();

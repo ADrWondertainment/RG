@@ -1,33 +1,21 @@
 package ruangong.root.exception;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+@EqualsAndHashCode(callSuper = true)
 @Component
 @Scope("prototype")
+@Data
+@AllArgsConstructor
+@Accessors(chain = true)
 public class BackException extends RuntimeException{
     private Integer errorCode;
+    private String errorMessage;
 
-    public BackException() {
-    }
-
-    public BackException(Integer errorCode) {
-        this.errorCode = errorCode;
-    }
-
-    public BackException(Integer errorCode, String message) {
-        super(message);
-        this.errorCode = errorCode;
-    }
-
-    public BackException(Integer errorCode, String message, Throwable cause) {
-        super(message, cause);
-        this.errorCode = errorCode;
-    }
-
-    public BackException(Integer errorCode, Throwable cause) {
-        super(cause);
-        this.errorCode = errorCode;
-    }
 
 }

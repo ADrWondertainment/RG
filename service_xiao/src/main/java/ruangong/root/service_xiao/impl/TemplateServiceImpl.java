@@ -14,7 +14,9 @@ import ruangong.root.bean.JsonBeanTemplate;
 import ruangong.root.bean.Result;
 import ruangong.root.bean.Template;
 import ruangong.root.dao.TemplateMapper;
+import ruangong.root.exception.BackException;
 import ruangong.root.exception.ErrorCode;
+import ruangong.root.exception.FrontException;
 import ruangong.root.service_xiao.TemplateService;
 import ruangong.root.utils.ResultUtil;
 
@@ -28,7 +30,6 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template> i
     private TemplateMapper templateMapper;
 
 
-
     @Resource
     private Result result;
 
@@ -39,15 +40,15 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template> i
         JSONObject data = JSONUtil.parseObj(template.getData());
         int type = jsonBeanTemplate.getType();
 
-
         if (type != 0 && type != 1) {
-            ResultUtil.quickSet(
-                    result,
-                    ErrorCode.TEMPLATE_DATA_NULL,
-                    "模板名称和内容不能为空捏~",
-                    null
-            );
-            return result;
+            throw new FrontException(ErrorCode.TEMPLATE_DATA_NULL, "模板名称和内容不能为空捏~");
+//            ResultUtil.quickSet(
+//                    result,
+//                    ErrorCode.TEMPLATE_DATA_NULL,
+//                    "模板名称和内容不能为空捏~",
+//                    null
+//            );
+//            return result;
         }
         QueryWrapper<Template> queryWrapper = Wrappers.query();
         queryWrapper.eq("name", template.getName());
@@ -56,25 +57,27 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template> i
 
 
         if (uniqueCheck != null) {
-            ResultUtil.quickSet(
-                    result,
-                    ErrorCode.TEMPLATE_NAME_DUPLICATED,
-                    "模板重名了捏，请重新起一个名字~",
-                    null
-            );
-            return result;
+            throw new FrontException(ErrorCode.TEMPLATE_NAME_DUPLICATED, "模板重名了捏，请重新起一个名字~");
+//            ResultUtil.quickSet(
+//                    result,
+//                    ErrorCode.TEMPLATE_NAME_DUPLICATED,
+//                    "模板重名了捏，请重新起一个名字~",
+//                    null
+//            );
+//            return result;
         }
 
         boolean isUpdated = saveOrUpdate(template);
 
-        if (isUpdated) {
-            ResultUtil.quickSet(
-                    result,
-                    ErrorCode.TEMPLATE_INSERT_FAILURE,
-                    "添加或者修改失败了捏，请稍后再试~",
-                    null
-            );
-            return result;
+        if (!isUpdated) {
+            throw new BackException(ErrorCode.TEMPLATE_INSERT_FAILURE, "添加或者修改失败了捏，请稍后再试~");
+//            ResultUtil.quickSet(
+//                    result,
+//                    ErrorCode.TEMPLATE_INSERT_FAILURE,
+//                    "添加或者修改失败了捏，请稍后再试~",
+//                    null
+//            );
+//            return result;
         }
         ResultUtil.quickSet(
                 result,
@@ -93,25 +96,27 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template> i
         queryWrapper.eq("id", id);
         long count = (long) templateMapper.selectCount(queryWrapper);
         if (count != 1) {
-            ResultUtil.quickSet(
-                    result,
-                    ErrorCode.TEMPLATE_ID_UNREGISTERED,
-                    "没有找到您的模板捏~",
-                    null
-            );
-
-            return result;
+            throw new BackException(ErrorCode.TEMPLATE_ID_UNREGISTERED, "没有找到您的模板捏~");
+//            ResultUtil.quickSet(
+//                    result,
+//                    ErrorCode.TEMPLATE_ID_UNREGISTERED,
+//                    "没有找到您的模板捏~",
+//                    null
+//            );
+//
+//            return result;
         }
         int deleteCheck = templateMapper.deleteById(id);
         if (deleteCheck != 1) {
-            ResultUtil.quickSet(
-                    result,
-                    ErrorCode.TEMPLATE_DELETE_FAILURE,
-                    "您的模板删除失败捏~",
-                    null
-            );
-
-            return result;
+            throw new BackException(ErrorCode.TEMPLATE_DELETE_FAILURE, "您的模板删除失败捏~");
+//            ResultUtil.quickSet(
+//                    result,
+//                    ErrorCode.TEMPLATE_DELETE_FAILURE,
+//                    "您的模板删除失败捏~",
+//                    null
+//            );
+//
+//            return result;
         }
         ResultUtil.quickSet(
                 result,
@@ -131,7 +136,9 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template> i
         QueryWrapper<Template> query = Wrappers.query();
         query.eq("uid", id);
         IPage<Template> templateIPage = templateMapper.selectPage(page, query);
-
+        if (templateIPage == null) {
+            throw new BackException(ErrorCode.TEMPLATE_SELECT_FAILURE, "分页数据查询失败");
+        }
         JSONArray jsonArray = JSONUtil.parseArray(templateIPage);
 
 
@@ -152,6 +159,10 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template> i
         QueryWrapper<Template> query = Wrappers.query();
         query.eq("id", id);
         Template template = templateMapper.selectOne(query);
+
+        if (template == null) {
+            throw new BackException(ErrorCode.TEMPLATE_SELECT_FAILURE, "没有对应id的模板");
+        }
 
         ResultUtil.quickSet(
                 result,

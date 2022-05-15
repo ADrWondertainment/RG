@@ -5,6 +5,7 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import org.springframework.web.bind.annotation.*;
 import ruangong.root.bean.*;
+import ruangong.root.exception.BackException;
 import ruangong.root.exception.ErrorCode;
 import ruangong.root.service_xiao.AnswerService;
 import ruangong.root.service_xiao.SheetService;
@@ -70,25 +71,31 @@ public class AnswerController {
 
         Result answersBySheetId = answerService.getAnswersBySheetId(sheetId);
         List answerList = ResultUtil.getBeanFromData(answersBySheetId, List.class);
-        int size = answerList.size();
-        for (Object o : answerList) {
-            Answer temp = (Answer) o;
-            String data = temp.getData();
-            JSONArray parseArray = JSONUtil.parseArray((String) JSONUtil.parseObj(data).get("content"));
-            List<JsonBeanSurveysAnswers> answers = JSONUtil.toList(parseArray, JsonBeanSurveysAnswers.class);
-            for (int t = 0; t < length; t++) {
 
-                JsonBeanTemplateContentsContent tempContent = content.get(t);
-                JsonBeanSurveysAnswers tempAnswer = answers.get(t);
+        try {
+            for (Object o : answerList) {
+                Answer temp = (Answer) o;
+                String data = temp.getData();
+                JSONArray parseArray = JSONUtil.parseArray((String) JSONUtil.parseObj(data).get("content"));
+                List<JsonBeanSurveysAnswers> answers = JSONUtil.toList(parseArray, JsonBeanSurveysAnswers.class);
+                for (int t = 0; t < length; t++) {
 
-                String index = tempAnswer.getValue();
-                Map<String, Integer> value = tempContent.getValue();
-                Integer count = value.get(index) + 1;
-                value.put(index, count);
+                    JsonBeanTemplateContentsContent tempContent = content.get(t);
+                    JsonBeanSurveysAnswers tempAnswer = answers.get(t);
+
+                    String index = tempAnswer.getValue();
+                    Map<String, Integer> value = tempContent.getValue();
+                    Integer count = value.get(index) + 1;
+                    value.put(index, count);
+
+                }
 
             }
 
+        } catch (Exception e) {
+            throw new BackException(ErrorCode.ANSWER_PROCESS_FAILURE, "处理回答数据时出错");
         }
+
 
         ResultUtil.quickSet(
                 result,

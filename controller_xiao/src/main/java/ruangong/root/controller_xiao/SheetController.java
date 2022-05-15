@@ -7,6 +7,8 @@ import ruangong.root.bean.Result;
 import ruangong.root.bean.Sheet;
 import ruangong.root.bean.UrlResourcedLocation;
 import ruangong.root.bean.User;
+import ruangong.root.exception.BackException;
+import ruangong.root.exception.ErrorCode;
 import ruangong.root.service_tao.UserService;
 import ruangong.root.service_xiao.SheetService;
 import ruangong.root.service_xiao.PageUtil;
@@ -27,6 +29,9 @@ public class SheetController {
     @PostMapping
     public Result debutSheet(@RequestBody Sheet sheet, HttpServletRequest httpServletRequest) {
         String email = (String) httpServletRequest.getSession().getAttribute("email");
+        if (email == null) {
+            throw new BackException(ErrorCode.USER_ILLEGAL_ACCESS, "用户未登录");
+        }
         Result result = userService.GetUserByEmail(email);
         User user = (User) result.getData();
 

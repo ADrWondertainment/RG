@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ruangong.root.bean.*;
 import ruangong.root.dao.AnswerMapper;
+import ruangong.root.exception.BackException;
 import ruangong.root.exception.ErrorCode;
 import ruangong.root.service_xiao.AnswerService;
 import ruangong.root.service_xiao.SheetService;
@@ -71,6 +72,11 @@ public class AnswerServiceImpl implements AnswerService {
     public Result insertAnswer(Answer answer) {
 
         int insert = answerMapper.insert(answer);
+
+        if (insert != 1) {
+            throw new BackException(ErrorCode.ANSWER_INSERT_FAILURE, "回答插入失败");
+        }
+
         ResultUtil.quickSet(
                 result,
                 ErrorCode.ALL_SET,
@@ -87,6 +93,10 @@ public class AnswerServiceImpl implements AnswerService {
         QueryWrapper<Answer> query = Wrappers.query();
         query.eq("id", sheetId);
         List<Answer> answers = answerMapper.selectList(query);
+
+        if (answers == null) {
+            throw new BackException(ErrorCode.ANSWER_SELECT_FAILURE, "回答分页查找失败");
+        }
 
         ResultUtil.quickSet(
                 result,

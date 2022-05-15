@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ruangong.root.bean.JsonBeanTemplate;
 import ruangong.root.bean.Template;
+import ruangong.root.exception.ErrorCode;
+import ruangong.root.exception.FrontException;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -13,7 +15,7 @@ import java.util.Date;
 public class TemplateUtil {
 
 
-    public static Template jsonBeanToTemplate(JsonBeanTemplate jsonBeanTemplate){
+    public static Template jsonBeanToTemplate(JsonBeanTemplate jsonBeanTemplate) {
         Template template = new Template();
 
         template.setUid(jsonBeanTemplate.getUid());
@@ -27,8 +29,12 @@ public class TemplateUtil {
 
     }
 
-    public static Template strToTemplate(String str){
-        return jsonBeanToTemplate(JSONUtil.toBean(str,JsonBeanTemplate.class)) ;
+    public static Template strToTemplate(String str) {
+        JsonBeanTemplate jsonBeanTemplate = JSONUtil.toBean(str, JsonBeanTemplate.class);
+        if (jsonBeanTemplate == null) {
+            throw new FrontException(ErrorCode.FRONT_DATA_IRREGULAR, "前端数据格式不规范");
+        }
+        return jsonBeanToTemplate(jsonBeanTemplate);
     }
 
 }

@@ -17,6 +17,7 @@ import ruangong.root.bean.Sheet;
 import ruangong.root.bean.Template;
 import ruangong.root.bean.UrlResourcedLocation;
 import ruangong.root.dao.SheetMapper;
+import ruangong.root.exception.BackException;
 import ruangong.root.exception.ErrorCode;
 import ruangong.root.service_xiao.SheetService;
 import ruangong.root.service_xiao.TemplateService;
@@ -49,8 +50,10 @@ public class SheetServiceImpl extends ServiceImpl<SheetMapper, Sheet> implements
         sheet.setLocation(IdUtil.simpleUUID());
         sheet.setUid(uid);
 
-        Integer insertCheck = sheetMapper.insert(sheet);
-        System.out.println(sheet.getId());
+        int insertCheck = sheetMapper.insert(sheet);
+        if (insertCheck != 1) {
+            throw new BackException(ErrorCode.FAST_CREAT_SHEET_FAILURE, "快速创建sheet失败");
+        }
         ResultUtil.quickSet(
                 result,
                 ErrorCode.ALL_SET,
@@ -85,6 +88,11 @@ public class SheetServiceImpl extends ServiceImpl<SheetMapper, Sheet> implements
     @Override
     public Result getSheetById(int id) {
         Sheet sheet = sheetMapper.selectById(id);
+
+        if (sheet == null) {
+            throw new BackException(ErrorCode.ANSWER_ID_UNREGISTERED, "未找到对应id的sheet");
+        }
+
         ResultUtil.quickSet(
                 result,
                 ErrorCode.ALL_SET,
@@ -118,7 +126,9 @@ public class SheetServiceImpl extends ServiceImpl<SheetMapper, Sheet> implements
         QueryWrapper<Sheet> query = Wrappers.query();
         query.eq("uid", id);
         IPage<Sheet> sheetIPage = sheetMapper.selectPage(page, query);
-
+        if (sheetIPage == null) {
+            throw new BackException(ErrorCode.SHEET_SELECT_FAILURE, "分页数据查询失败");
+        }
         JSONArray jsonArray = JSONUtil.parseArray(sheetIPage);
 
 
