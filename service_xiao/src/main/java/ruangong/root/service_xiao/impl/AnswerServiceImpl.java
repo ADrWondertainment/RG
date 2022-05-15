@@ -91,11 +91,11 @@ public class AnswerServiceImpl implements AnswerService {
     public Result getAnswersBySheetId(Integer sheetId) {
 
         QueryWrapper<Answer> query = Wrappers.query();
-        query.eq("id", sheetId);
+        query.eq("sid", sheetId);
         List<Answer> answers = answerMapper.selectList(query);
 
-        if (answers == null) {
-            throw new BackException(ErrorCode.ANSWER_SELECT_FAILURE, "回答分页查找失败");
+        if (answers.size() == 0) {
+            throw new BackException(ErrorCode.ANSWER_SELECT_FAILURE, "回答分页查找失败或者无人回答");
         }
 
         ResultUtil.quickSet(

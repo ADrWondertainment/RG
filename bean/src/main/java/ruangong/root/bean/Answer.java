@@ -1,5 +1,6 @@
 package ruangong.root.bean;
 
+import cn.hutool.json.JSONObject;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;

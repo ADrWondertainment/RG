@@ -44,9 +44,10 @@ public class SheetServiceImpl extends ServiceImpl<SheetMapper, Sheet> implements
 
     public Result fastCreateSheet(Sheet sheet, int uid) {
 
-        Result sheetTemplate = templateService.getTemplateById(sheet.getId());
-        Template template = (Template) sheetTemplate.getData();
-        String data = template.getData();
+//        Result sheetTemplate = templateService.getTemplateById(sheet.getTid());
+//        Template template = ResultUtil.getBeanFromData(sheetTemplate, Template.class);
+//        Template template = (Template) sheetTemplate.getData();
+//        String data = template.getData();
         sheet.setLocation(IdUtil.simpleUUID());
         sheet.setUid(uid);
 

@@ -26,6 +26,18 @@ public class SheetController {
     @Resource
     private UserService userService;
 
+    /*
+    {
+        "tid":1,
+        "uid":2,
+        "name":"test",
+        "description":"sample sheet",
+        "start":"2022-05-15",
+        "end":"2022-05-18",
+        "type":1,
+        "length":4
+    }
+    */
     @PostMapping
     public Result debutSheet(@RequestBody Sheet sheet, HttpServletRequest httpServletRequest) {
         String email = (String) httpServletRequest.getSession().getAttribute("email");

@@ -44,8 +44,14 @@ public class AnswerController {
     @Resource
     private Result result;
 
+    /*
+        {
+            "sheetId":7,
+            "answers":[{"id": "0", "value": "A"}, {"id": "1", "value": ["5555"]}]
+        }
+     */
     @PostMapping("/submit")
-    public Result collectAnswers(String data) {
+    public Result collectAnswers(@RequestBody String data) {
         answer = AnswerUtil.strToAnswer(data);
         return answerService.insertAnswer(answer);
     }
@@ -70,14 +76,22 @@ public class AnswerController {
 
 
         Result answersBySheetId = answerService.getAnswersBySheetId(sheetId);
-        List answerList = ResultUtil.getBeanFromData(answersBySheetId, List.class);
+
+        String data1 =(String) answersBySheetId.getData();
+
+        List<Answer> list = JSONUtil.toList(data1, Answer.class);
+
+
+//        AnswerList answerList = ResultUtil.getBeanFromData(answersBySheetId, AnswerList.class);
+//
+//        List<Answer> list = answerList.getList();
 
         try {
-            for (Object o : answerList) {
-                Answer temp = (Answer) o;
-                String data = temp.getData();
-                JSONArray parseArray = JSONUtil.parseArray((String) JSONUtil.parseObj(data).get("content"));
-                List<JsonBeanSurveysAnswers> answers = JSONUtil.toList(parseArray, JsonBeanSurveysAnswers.class);
+            for (Answer o : list) {
+                String data = o.getData();
+//                JSONArray parseArray = JSONUtil.parseArray((String) JSONUtil.parseObj(data).get("content"));
+                JSONArray content1 =JSONUtil.parseArray(data);
+                List<JsonBeanSurveysAnswers> answers = JSONUtil.toList(content1, JsonBeanSurveysAnswers.class);
                 for (int t = 0; t < length; t++) {
 
                     JsonBeanTemplateContentsContent tempContent = content.get(t);
@@ -93,6 +107,7 @@ public class AnswerController {
             }
 
         } catch (Exception e) {
+            e.printStackTrace();
             throw new BackException(ErrorCode.ANSWER_PROCESS_FAILURE, "处理回答数据时出错");
         }
 
@@ -103,6 +118,12 @@ public class AnswerController {
                 "问卷结果返回成功",
                 JSONUtil.toJsonPrettyStr(content)
         );
+
+        return result;
+    }
+
+    @PostMapping("/save")
+    public Result saveTempAnswer(@RequestBody String data){
 
         return result;
     }
