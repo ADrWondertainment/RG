@@ -13,11 +13,13 @@ import ruangong.root.dao.TemplateMapper;
 import ruangong.root.exception.BackException;
 import ruangong.root.exception.ErrorCode;
 import ruangong.root.exception.FrontException;
+import ruangong.root.service_tao.UserService;
 import ruangong.root.service_xiao.AnswerService;
 import ruangong.root.service_xiao.SheetService;
 import ruangong.root.utils.ResultUtil;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +37,9 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
 
     @Resource
     private AnswerMapper answerMapper;
+
+    @Resource
+    private UserService userService;
 
     @Override
     public Result collectAnswerAndUpdate(JsonBeanSurvey jsonBeanSurvey) {
@@ -75,6 +80,7 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
 
     @Override
     public Result insertAnswer(Answer answer) {
+
 
         if (!checkAnswerTime(answer)) {
             throw new FrontException(ErrorCode.ILLEGAL_ANSWER_TIME, "该问卷回答时间已结束");
@@ -158,5 +164,39 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
         return result;
 
 
+    }
+
+    @Override
+    public boolean checkAnswerStatus(Answer answer) {
+
+
+        return false;
+    }
+
+    @Override
+    public boolean checkUserStatus(HttpServletRequest httpServletRequest) {
+        Object email = httpServletRequest.getSession().getAttribute("email");
+        if (email == null) {
+            throw new FrontException(ErrorCode.USER_ILLEGAL_ACCESS, "必须登录以填写问卷");
+        }
+
+        return true;
+    }
+
+    @Override
+    public Result selectAnswerByAnswerID(int id) {
+        Answer answer = answerMapper.selectById(id);
+        if (answer == null) {
+            throw new BackException(ErrorCode.ANSWER_SELECT_FAILURE, "未找到对应id的答案");
+        }
+
+        ResultUtil.quickSet(
+                result,
+                ErrorCode.ALL_SET,
+                "成功找到答案",
+                JSONUtil.toJsonStr(answer)
+        );
+
+        return result;
     }
 }
