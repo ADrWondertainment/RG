@@ -28,4 +28,6 @@ public interface AnswerService {
     public boolean checkAnswerStatus(Answer answer);
 
     public boolean checkUserStatus(HttpServletRequest httpServletRequest);
+
+    public Result getAnswersByUserID(Integer id, Integer pageNum, Integer size);
 }

@@ -16,6 +16,7 @@ public class Answer {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
     private Integer sid;
+    private Integer uid;
     private String data;
     private Integer done;
     private Integer pass;

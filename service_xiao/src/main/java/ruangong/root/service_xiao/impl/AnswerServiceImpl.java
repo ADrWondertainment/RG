@@ -1,9 +1,12 @@
 package ruangong.root.service_xiao.impl;
 
+import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +23,7 @@ import ruangong.root.utils.ResultUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -133,7 +137,8 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
 
         Result sheetById = sheetService.getSheetById(answer.getSid());
         Sheet beanFromData = ResultUtil.getBeanFromData(sheetById, Sheet.class);
-        return beanFromData.getEnd().getTime() > (System.currentTimeMillis());
+        Date date = new Date();
+        return beanFromData.getEnd().getTime() > date.getTime();
 
 
     }
@@ -183,6 +188,34 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
         }
 
         return true;
+    }
+
+    @Override
+    public Result getAnswersByUserID(Integer id, Integer pageNum, Integer size) {
+
+        IPage<Answer> page = new Page(pageNum, size);
+
+        QueryWrapper<Answer> query = Wrappers.query();
+        query.eq("uid", id);
+        IPage<Answer> answerIPage = answerMapper.selectPage(page, query);
+        if (answerIPage == null) {
+            throw new BackException(ErrorCode.TEMPLATE_SELECT_FAILURE, "分页数据查询失败");
+        }
+
+        List<Answer> records = answerIPage.getRecords();
+        JSONArray jsonArray = JSONUtil.parseArray(records);
+
+        System.out.println(JSONUtil.toJsonPrettyStr(jsonArray));
+
+        ResultUtil.quickSet(
+                result,
+                ErrorCode.ALL_SET,
+                "查询成功",
+                JSONUtil.toJsonPrettyStr(jsonArray)
+        );
+
+
+        return result;
     }
 
     @Override
