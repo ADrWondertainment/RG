@@ -85,9 +85,12 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
         if (!checkAnswerTime(answer)) {
             throw new FrontException(ErrorCode.ILLEGAL_ANSWER_TIME, "该问卷回答时间已结束");
         }
+
+        checkAnswerStatus(answer);
+
+
         boolean insert = saveOrUpdate(answer);
 
-//        boolean insert = saveOrUpdate(answer);
 
         if (!insert) {
             throw new BackException(ErrorCode.ANSWER_INSERT_FAILURE, "回答插入失败");
@@ -151,6 +154,9 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
         if (!checkAnswerTime(answer)) {
             throw new FrontException(ErrorCode.ILLEGAL_ANSWER_TIME, "该问卷回答时间已结束");
         }
+
+        checkAnswerStatus(answer);
+
         boolean insert = saveOrUpdate(answer);
         if (!insert) {
             throw new BackException(ErrorCode.ANSWER_INSERT_FAILURE, "回答插入失败");
@@ -168,9 +174,7 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
 
     @Override
     public boolean checkAnswerStatus(Answer answer) {
-
-
-        return false;
+        return answer.getDone() == 1;
     }
 
     @Override

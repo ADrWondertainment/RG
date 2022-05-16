@@ -14,7 +14,8 @@ import org.springframework.stereotype.Component;
 @TableName("answers")
 public class Answer {
     @TableId(value = "id", type = IdType.AUTO)
-    private int id;
-    private int sid;
+    private Integer id;
+    private Integer sid;
     private String data;
+    private Integer done;
 }

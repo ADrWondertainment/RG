@@ -71,7 +71,7 @@ public class AnswerController {
 
             Result result1 = answerService.selectAnswerByAnswerID(Integer.parseInt(str));
             Answer answerFromData = ResultUtil.getBeanFromData(result1, Answer.class);
-            if (answerFromData.getSid() == answer.getSid()) {
+            if (answerFromData.getSid().equals(answer.getSid())) {
                 answerService.checkAnswerStatus(answerFromData);
                 Object data1 = answerFromData.getData();
                 ResultUtil.quickSet(
@@ -103,7 +103,7 @@ public class AnswerController {
 
 
         {
-            "id":0,
+            "id":,
             "sid":7,
             "data":[{"id": "0", "value": "A"}, {"id": "1", "value": ["5555"]}]
         }
@@ -113,7 +113,7 @@ public class AnswerController {
     @PostMapping("/submit")
     public Result collectAnswer(@RequestBody String data) {
         Answer strToAnswer = AnswerUtil.strToAnswer(data);
-
+        answerService.insertAnswer(answer);
 
 
         return result;
