@@ -18,4 +18,5 @@ public class Answer {
     private Integer sid;
     private String data;
     private Integer done;
+    private Integer pass;
 }

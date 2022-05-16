@@ -17,6 +17,7 @@ import ruangong.root.utils.TemplateUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.sql.ResultSet;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -112,11 +113,19 @@ public class AnswerController {
 
     @PostMapping("/submit")
     public Result collectAnswer(@RequestBody String data) {
+
         Answer strToAnswer = AnswerUtil.strToAnswer(data);
         answerService.insertAnswer(answer);
-
-
         return result;
+
+    }
+
+    @PostMapping("/save")
+    public Result saveAnswer(@RequestBody String data){
+        Answer strToAnswer = AnswerUtil.strToAnswer(data);
+        answerService.saveTempAnswer(answer);
+        return result;
+
     }
 
 
@@ -192,12 +201,7 @@ public class AnswerController {
         return result;
     }
 
-    @PostMapping("/save")
-    public Result saveTempAnswer(@RequestBody String data) {
-        answer = AnswerUtil.strToAnswer(data);
-        return answerService.saveTempAnswer(answer);
 
-    }
 
 
 }

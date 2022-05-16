@@ -6,16 +6,15 @@ import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ruangong.root.bean.Result;
-import ruangong.root.bean.Sheet;
-import ruangong.root.bean.Template;
-import ruangong.root.bean.UrlResourcedLocation;
+import ruangong.root.bean.*;
+import ruangong.root.dao.AnswerMapper;
 import ruangong.root.dao.SheetMapper;
 import ruangong.root.exception.BackException;
 import ruangong.root.exception.ErrorCode;
@@ -32,6 +31,9 @@ public class SheetServiceImpl extends ServiceImpl<SheetMapper, Sheet> implements
 
     @Resource
     private SheetMapper sheetMapper;
+
+    @Resource
+    private AnswerMapper answerMapper;
 
     @Resource
     private Result result;
@@ -140,6 +142,24 @@ public class SheetServiceImpl extends ServiceImpl<SheetMapper, Sheet> implements
                 JSONUtil.toJsonPrettyStr(jsonArray)
         );
 
+
+        return result;
+    }
+
+    @Override
+    public Result checkSheetAnswer(Integer id, Integer done) {
+        UpdateWrapper<Answer> update = Wrappers.update();
+        update.eq("id", id).set("done", done);
+        int update1 = answerMapper.update(null, update);
+        if (update1 != 1) {
+            throw new BackException(ErrorCode.PASS_FAILURE, "审批失败");
+        }
+        ResultUtil.quickSet(
+                result,
+                ErrorCode.ALL_SET,
+                "审批成功",
+                1
+        );
 
         return result;
     }

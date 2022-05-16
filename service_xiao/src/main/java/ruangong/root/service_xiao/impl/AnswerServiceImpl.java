@@ -38,8 +38,6 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
     @Resource
     private AnswerMapper answerMapper;
 
-    @Resource
-    private UserService userService;
 
     @Override
     public Result collectAnswerAndUpdate(JsonBeanSurvey jsonBeanSurvey) {
