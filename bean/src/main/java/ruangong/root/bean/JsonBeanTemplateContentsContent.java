@@ -14,5 +14,6 @@ import java.util.Map;
 public class JsonBeanTemplateContentsContent {
     private String id;
     private String type;
+    private String description;
     private Map<String, Integer> value;
 }
