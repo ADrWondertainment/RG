@@ -14,4 +14,5 @@ public interface AnswerService {
 
     public Result getAnswersBySheetId(Integer sheetId);
 
+    public boolean checkAnswerTime(Answer answer);
 }

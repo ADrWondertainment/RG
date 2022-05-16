@@ -41,4 +41,6 @@ public class ErrorCode {
     public static final Integer ANSWER_ID_UNREGISTERED = 20120;
     public static final Integer ANSWER_SELECT_FAILURE = 20130;
     public static final Integer ANSWER_PROCESS_FAILURE = 20140;
+
+    public static final Integer ILLEGAL_ANSWER_TIME = 20150;
 }

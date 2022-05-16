@@ -11,11 +11,13 @@ import ruangong.root.dao.AnswerMapper;
 import ruangong.root.dao.TemplateMapper;
 import ruangong.root.exception.BackException;
 import ruangong.root.exception.ErrorCode;
+import ruangong.root.exception.FrontException;
 import ruangong.root.service_xiao.AnswerService;
 import ruangong.root.service_xiao.SheetService;
 import ruangong.root.utils.ResultUtil;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -72,11 +74,17 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
 
     @Override
     public Result insertAnswer(Answer answer) {
+        Result sheetById = sheetService.getSheetById(answer.getSid());
+        Sheet beanFromData = ResultUtil.getBeanFromData(sheetById, Sheet.class);
+        Date date = new Date();
+        if (beanFromData.getEnd().getTime() <= date.getTime()) {
+            throw new FrontException(ErrorCode.ILLEGAL_ANSWER_TIME, "该问卷回答时间已结束");
+        }
+        int insert = answerMapper.insert(answer);
 
+//        boolean insert = saveOrUpdate(answer);
 
-        boolean insert = saveOrUpdate(answer);
-
-        if (!insert) {
+        if (insert != 1) {
             throw new BackException(ErrorCode.ANSWER_INSERT_FAILURE, "回答插入失败");
         }
 
@@ -109,5 +117,13 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
         );
 
         return result;
+    }
+
+    @Override
+    public boolean checkAnswerTime(Answer answer) {
+
+//        ResultUtil.getBeanFromData(sheetService.getSheetById(answer.getSid()).getData(),Sheet.class)
+
+        return false;
     }
 }
