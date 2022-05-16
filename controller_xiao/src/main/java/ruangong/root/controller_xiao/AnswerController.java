@@ -128,8 +128,9 @@ public class AnswerController {
 
     @PostMapping("/save")
     public Result saveTempAnswer(@RequestBody String data) {
+        answer = AnswerUtil.strToAnswer(data);
+        return answerService.saveTempAnswer(answer);
 
-        return result;
     }
 
 

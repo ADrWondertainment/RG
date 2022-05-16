@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ruangong.root.bean.JsonBeanTemplate;
 import ruangong.root.bean.Result;
 import ruangong.root.bean.Template;
+import ruangong.root.bean.TemplateTransfer;
 import ruangong.root.dao.TemplateMapper;
 import ruangong.root.exception.BackException;
 import ruangong.root.exception.ErrorCode;
@@ -21,6 +22,7 @@ import ruangong.root.service_xiao.TemplateService;
 import ruangong.root.utils.ResultUtil;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -142,8 +144,21 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template> i
         }
 
         List<Template> records = templateIPage.getRecords();
-        JSONArray jsonArray = JSONUtil.parseArray(records);
+        List<TemplateTransfer> transfers = new ArrayList<>();
+        for (Template t : records) {
+            TemplateTransfer temp = new TemplateTransfer();
+            temp.setId(t.getId());
+            temp.setUid(t.getUid());
+            temp.setName(t.getName());
+            temp.setTime(t.getTime());
+            temp.setLength(t.getLength());
+            temp.setDescription(t.getDescription());
+            temp.setData(JSONUtil.parseObj(t.getData()));
+            transfers.add(temp);
+        }
+        JSONArray jsonArray = JSONUtil.parseArray(transfers);
 
+        System.out.println(JSONUtil.toJsonPrettyStr(jsonArray));
 
         ResultUtil.quickSet(
                 result,

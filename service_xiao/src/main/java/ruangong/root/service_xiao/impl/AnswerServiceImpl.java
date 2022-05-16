@@ -2,6 +2,7 @@ package ruangong.root.service_xiao.impl;
 
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
@@ -74,19 +75,20 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
 
     @Override
     public Result insertAnswer(Answer answer) {
-        Result sheetById = sheetService.getSheetById(answer.getSid());
-        Sheet beanFromData = ResultUtil.getBeanFromData(sheetById, Sheet.class);
-        Date date = new Date();
-        if (beanFromData.getEnd().getTime() <= date.getTime()) {
+
+        if (!checkAnswerTime(answer)) {
             throw new FrontException(ErrorCode.ILLEGAL_ANSWER_TIME, "该问卷回答时间已结束");
         }
-        int insert = answerMapper.insert(answer);
+        boolean insert = saveOrUpdate(answer);
 
 //        boolean insert = saveOrUpdate(answer);
 
-        if (insert != 1) {
+        if (!insert) {
             throw new BackException(ErrorCode.ANSWER_INSERT_FAILURE, "回答插入失败");
         }
+
+        boolean b = closeAnswer(answer);
+
 
         ResultUtil.quickSet(
                 result,
@@ -95,7 +97,7 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
                 1
         );
 
-        return null;
+        return result;
     }
 
     @Override
@@ -122,8 +124,39 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
     @Override
     public boolean checkAnswerTime(Answer answer) {
 
-//        ResultUtil.getBeanFromData(sheetService.getSheetById(answer.getSid()).getData(),Sheet.class)
+        Result sheetById = sheetService.getSheetById(answer.getSid());
+        Sheet beanFromData = ResultUtil.getBeanFromData(sheetById, Sheet.class);
+        return beanFromData.getEnd().getTime() > (System.currentTimeMillis());
 
-        return false;
+
+    }
+
+    @Override
+    public boolean closeAnswer(Answer answer) {
+
+        UpdateWrapper<Answer> update = Wrappers.update();
+        update.eq("id", answer.getId()).set("done", 1);
+        int update1 = answerMapper.update(null, update);
+        return update1 == 1;
+    }
+
+    @Override
+    public Result saveTempAnswer(Answer answer) {
+        if (!checkAnswerTime(answer)) {
+            throw new FrontException(ErrorCode.ILLEGAL_ANSWER_TIME, "该问卷回答时间已结束");
+        }
+        boolean insert = saveOrUpdate(answer);
+        if (!insert) {
+            throw new BackException(ErrorCode.ANSWER_INSERT_FAILURE, "回答插入失败");
+        }
+        ResultUtil.quickSet(
+                result,
+                ErrorCode.ALL_SET,
+                "答案提交成功",
+                1
+        );
+        return result;
+
+
     }
 }

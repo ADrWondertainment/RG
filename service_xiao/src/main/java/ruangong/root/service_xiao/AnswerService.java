@@ -15,4 +15,8 @@ public interface AnswerService {
     public Result getAnswersBySheetId(Integer sheetId);
 
     public boolean checkAnswerTime(Answer answer);
+
+    public boolean closeAnswer(Answer answer);
+
+    public Result saveTempAnswer(Answer answer);
 }
