@@ -8,10 +8,10 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Data
-@TableName("allrole")
+@TableName("alldept")
 @Component
 @Scope("prototype")
-public class role {
+public class Dept {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
     private Integer cid;
