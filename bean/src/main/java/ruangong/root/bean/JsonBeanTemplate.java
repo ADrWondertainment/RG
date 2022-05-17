@@ -60,11 +60,11 @@ import java.util.List;
 public class JsonBeanTemplate {
     private int uid;
     private String name;
-    private int type;
+    private String type;
     private String startTime;
     private String endTime;
-    private int contentLength;
     private String description;
-    private List<JsonBeanTemplateOriginContentsContent> originContent;
+    private int contentLength;
+    private String originContent;
     private List<JsonBeanTemplateContentsContent> content;
 }
