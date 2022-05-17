@@ -44,7 +44,7 @@ public class SheetServiceImpl extends ServiceImpl<SheetMapper, Sheet> implements
     @Resource
     private TemplateService templateService;
 
-    public Result fastCreateSheet(Sheet sheet, int uid) {
+    public Result fastCreateSheet(Sheet sheet, Integer cid, Integer uid) {
 
 //        Result sheetTemplate = templateService.getTemplateById(sheet.getTid());
 //        Template template = ResultUtil.getBeanFromData(sheetTemplate, Template.class);
@@ -52,6 +52,14 @@ public class SheetServiceImpl extends ServiceImpl<SheetMapper, Sheet> implements
 //        String data = template.getData();
         sheet.setLocation(IdUtil.simpleUUID());
         sheet.setUid(uid);
+        sheet.setCid(cid);
+
+        Result templateById = templateService.getTemplateById(sheet.getTid());
+        Template templateFromData = ResultUtil.getBeanFromData(templateById, Template.class);
+        sheet.setLength(templateFromData.getLength());
+        Integer type = (Integer) JSONUtil.parseObj(templateFromData.getData()).get("type");
+        sheet.setType(type);
+
 
         int insertCheck = sheetMapper.insert(sheet);
         if (insertCheck != 1) {

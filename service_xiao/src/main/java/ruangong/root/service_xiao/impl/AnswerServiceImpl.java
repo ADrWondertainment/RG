@@ -180,7 +180,9 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
 
     @Override
     public boolean checkAnswerStatus(Answer answer) {
-        return answer.getDone() == 1;
+        if(answer.getDone()!=null)
+            return answer.getDone() == 1;
+        return true;
     }
 
     @Override
