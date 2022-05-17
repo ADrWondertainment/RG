@@ -7,11 +7,9 @@ import org.springframework.web.bind.annotation.*;
 import ruangong.root.bean.*;
 import ruangong.root.exception.BackException;
 import ruangong.root.exception.ErrorCode;
+import ruangong.root.exception.FrontException;
 import ruangong.root.service_tao.UserService;
-import ruangong.root.service_xiao.AnswerService;
-import ruangong.root.service_xiao.PageUtil;
-import ruangong.root.service_xiao.SheetService;
-import ruangong.root.service_xiao.TemplateService;
+import ruangong.root.service_xiao.*;
 import ruangong.root.utils.AnswerUtil;
 import ruangong.root.utils.ResultUtil;
 import ruangong.root.utils.TemplateUtil;
@@ -50,6 +48,9 @@ public class AnswerController {
     private UserService userService;
 
     @Resource
+    private CuserService cuserService;
+
+    @Resource
     private Result result;
 
     /*
@@ -68,7 +69,8 @@ public class AnswerController {
         Result userByEmail = userService.GetUserByEmail(email);
         User userFromData = ResultUtil.getBeanFromData(userByEmail, User.class);
 
-
+        if (!answerService.checkUserCompany(userFromData, answer.getSid()))
+            throw new FrontException(ErrorCode.ILLEGAL_COMPANY_USER, "该用户不是公司用户");
 
         JSONArray jsonArray = JSONUtil.parseArray(userFromData.getSheets());
         List<String> strings = JSONUtil.toList(jsonArray, String.class);
@@ -127,7 +129,7 @@ public class AnswerController {
     }
 
     @PostMapping("/save")
-    public Result saveAnswer(@RequestBody String data){
+    public Result saveAnswer(@RequestBody String data) {
         Answer strToAnswer = AnswerUtil.strToAnswer(data);
         answerService.saveTempAnswer(answer);
         return result;
@@ -215,14 +217,13 @@ public class AnswerController {
      */
 
     @GetMapping()
-    public Result getAnswersInPage(@RequestBody JSONObject jsonObject, HttpServletRequest request){
+    public Result getAnswersInPage(@RequestBody JSONObject jsonObject, HttpServletRequest request) {
         HashMap<String, Integer> pageInfo = PageUtil.getPageInfo(jsonObject, request, userService);
 
         return answerService.getAnswersByUserID(pageInfo.get("id"), pageInfo.get("pageIndex"), pageInfo.get("sizePerPage"));
 
 
     }
-
 
 
 }

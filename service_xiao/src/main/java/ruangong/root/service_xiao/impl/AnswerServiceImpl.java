@@ -18,6 +18,7 @@ import ruangong.root.exception.ErrorCode;
 import ruangong.root.exception.FrontException;
 import ruangong.root.service_tao.UserService;
 import ruangong.root.service_xiao.AnswerService;
+import ruangong.root.service_xiao.CuserService;
 import ruangong.root.service_xiao.SheetService;
 import ruangong.root.utils.ResultUtil;
 
@@ -42,6 +43,8 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
     @Resource
     private AnswerMapper answerMapper;
 
+    @Resource
+    private CuserService cuserService;
 
     @Override
     public Result collectAnswerAndUpdate(JsonBeanSurvey jsonBeanSurvey) {
@@ -231,10 +234,15 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
         } else if (did == 0) {
             if (user.getType() == null)
                 return false;
-
+            Cuser cuserByTypeID = cuserService.getCuserByTypeID(user.getType());
+            return cuserByTypeID.getCid() == cid;
+        } else {
+            if (user.getType() == null)
+                return false;
+            Cuser cuserByTypeID = cuserService.getCuserByTypeID(user.getType());
+            return cuserByTypeID.getCid() == cid && cuserByTypeID.getDid() == did;
         }
 
-        return false;
     }
 
     @Override
