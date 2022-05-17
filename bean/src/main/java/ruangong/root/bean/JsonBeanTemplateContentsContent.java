@@ -15,4 +15,6 @@ public class JsonBeanTemplateContentsContent {
     private String id;
     private String type;
     private Map<String, Integer> value;
+    private String description;
+
 }

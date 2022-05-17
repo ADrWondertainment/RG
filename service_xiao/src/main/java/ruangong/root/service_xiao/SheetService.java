@@ -6,6 +6,8 @@ import ruangong.root.bean.Result;
 import ruangong.root.bean.Sheet;
 import ruangong.root.bean.UrlResourcedLocation;
 
+import java.sql.ResultSet;
+
 @Service
 public interface SheetService extends IService<Sheet> {
 
@@ -18,4 +20,6 @@ public interface SheetService extends IService<Sheet> {
     public Result updateSheet(Sheet sheet);
 
     public Result getSheetsInPages(Integer id, Integer pageIndex, Integer sizePerPage);
+
+    public Result checkSheetAnswer(Integer id, Integer done);
 }

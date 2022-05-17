@@ -19,6 +19,8 @@ public class Sheet {
     private Integer id;
     private Integer uid;
     private Integer tid;
+    private Integer cid;
+    private Integer did;
     private String name;
     private String description;
     private Date start;

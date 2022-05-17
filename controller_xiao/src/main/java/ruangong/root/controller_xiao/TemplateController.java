@@ -39,31 +39,7 @@ public class TemplateController {
     private JsonBeanTemplate jsonBeanTemplate;
 
 
-    /*
-        {
-	        "uid": 1,
-	        "name": "123",
-	        "type": 0,
-	        "contentLength": 2,
-            "content": [
-                {
-                    "id": "0",
-                    "type": "sigle-check",
-                    "value": {
-                        "34": 0,
-                        "345": 0
-                    }
-                },
-                {
-                    "id": "1",
-                    "type": "multi-check",
-                    "value": {
-                        "666": 0
-                    }
-                }
-            ]
-        }
-     */
+
     @PostMapping
     public Result createOrUpdateTemplate(@RequestBody String data, HttpServletRequest request) {
 
