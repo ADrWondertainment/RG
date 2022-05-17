@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import ruangong.root.bean.Answer;
 import ruangong.root.bean.JsonBeanSurvey;
 import ruangong.root.bean.Result;
+import ruangong.root.bean.User;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.ResultSet;
@@ -30,4 +31,6 @@ public interface AnswerService {
     public boolean checkUserStatus(HttpServletRequest httpServletRequest);
 
     public Result getAnswersByUserID(Integer id, Integer pageNum, Integer size);
+
+    public boolean checkUserCompany(User user, Integer sheetID);
 }

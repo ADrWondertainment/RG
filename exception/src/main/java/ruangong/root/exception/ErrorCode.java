@@ -45,4 +45,5 @@ public class ErrorCode {
     public static final Integer ILLEGAL_ANSWER_TIME = 20150;
 
     public static final Integer PASS_FAILURE = 20160;
+    public static final Integer SHEET_STRUCTURE_CONTAMINATED = 20170;
 }

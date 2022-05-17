@@ -67,6 +67,9 @@ public class AnswerController {
         String email = (String) httpServletRequest.getSession().getAttribute("email");
         Result userByEmail = userService.GetUserByEmail(email);
         User userFromData = ResultUtil.getBeanFromData(userByEmail, User.class);
+
+
+
         JSONArray jsonArray = JSONUtil.parseArray(userFromData.getSheets());
         List<String> strings = JSONUtil.toList(jsonArray, String.class);
 

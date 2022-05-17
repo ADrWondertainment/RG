@@ -219,6 +219,25 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
     }
 
     @Override
+    public boolean checkUserCompany(User user, Integer sheetID) {
+        Result sheetById = sheetService.getSheetById(sheetID);
+        Sheet sheetFromData = ResultUtil.getBeanFromData(sheetById, Sheet.class);
+        int cid = sheetFromData.getCid();
+        int did = sheetFromData.getDid();
+        if (cid == 0 && did == 0) {
+            return true;
+        } else if (cid == 0) {
+            throw new BackException(ErrorCode.SHEET_STRUCTURE_CONTAMINATED, "发布sheet结构异常");
+        } else if (did == 0) {
+            if (user.getType() == null)
+                return false;
+
+        }
+
+        return false;
+    }
+
+    @Override
     public Result selectAnswerByAnswerID(int id) {
         Answer answer = answerMapper.selectById(id);
         if (answer == null) {

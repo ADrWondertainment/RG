@@ -39,6 +39,8 @@ public class SheetController {
     {
         "tid":1,
         "uid":2,
+        "cid":1,
+        "did":3,
         "name":"test",
         "description":"sample sheet",
         "start":"2022-05-15",

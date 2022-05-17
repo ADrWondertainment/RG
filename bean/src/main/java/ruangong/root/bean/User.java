@@ -24,5 +24,5 @@ public class User {
     private String pass;
     private String templates;
     private String sheets;
-    private String type;
+    private Integer type;
 }
