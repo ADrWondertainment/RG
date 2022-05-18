@@ -51,42 +51,6 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
     @Resource
     private CuserService cuserService;
 
-    @Override
-    public Result collectAnswerAndUpdate(JsonBeanSurvey jsonBeanSurvey) {
-
-        int sheetId = jsonBeanSurvey.getSheetId();
-
-        Result result1 = sheetService.getSheetById(sheetId);
-
-        Sheet sheet1 = JSONUtil.toBean((String) result1.getData(), Sheet.class);
-
-        JsonBeanTemplate jsonBeanTemplate = JSONUtil.toBean(sheet1.getLocation(), JsonBeanTemplate.class);
-
-        int length = jsonBeanTemplate.getContentLength();
-
-        List<JsonBeanTemplateContentsContent> content = jsonBeanTemplate.getContent();
-
-        List<JsonBeanSurveysAnswers> answers = jsonBeanSurvey.getAnswers();
-
-//        for (int i = 0; i < length; i++) {
-//
-//            JsonBeanTemplateContentsContent tempContent = content.get(i);
-//            JsonBeanSurveysAnswers tempAnswer = answers.get(i);
-//
-//            String index = tempAnswer.getValue();
-//            Map<String, Integer> value = tempContent.getValue();
-//            Integer count = value.get(index) + 1;
-//            value.put(index, count);
-//
-//        }
-
-        sheet1.setLocation(JSONUtil.toJsonPrettyStr(jsonBeanTemplate));
-
-        result = sheetService.updateSheet(sheet1);
-
-
-        return result;
-    }
 
     @Override
     public Result insertAnswer(Answer answer, User user) {

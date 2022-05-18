@@ -14,7 +14,6 @@ public interface AnswerService {
 
     public Result selectAnswerByAnswerID(int id);
 
-    public Result collectAnswerAndUpdate(JsonBeanSurvey jsonBeanSurvey);
 
     public Result insertAnswer(Answer answer, User user);
 

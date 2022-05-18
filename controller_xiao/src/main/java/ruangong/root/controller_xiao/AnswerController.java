@@ -166,7 +166,6 @@ public class AnswerController {
             try {
                 for (Answer o : list) {
                     String data = o.getData();
-//                JSONArray parseArray = JSONUtil.parseArray((String) JSONUtil.parseObj(data).get("content"));
                     JSONArray content1 = JSONUtil.parseArray(data);
                     List<JsonBeanSurveysAnswers> answers = JSONUtil.toList(content1, JsonBeanSurveysAnswers.class);
                     for (int t = 0; t < length; t++) {

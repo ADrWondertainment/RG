@@ -18,6 +18,7 @@ import ruangong.root.dao.TemplateMapper;
 import ruangong.root.exception.BackException;
 import ruangong.root.exception.ErrorCode;
 import ruangong.root.exception.FrontException;
+import ruangong.root.service_xiao.PageUtil;
 import ruangong.root.service_xiao.TemplateService;
 import ruangong.root.utils.ResultUtil;
 
@@ -83,16 +84,8 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template> i
     @Override
     public Result getTemplatesInPages(Integer id, Integer pageNum, Integer size) {
 
-        IPage<Template> page = new Page(pageNum, size);
-
-        QueryWrapper<Template> query = Wrappers.query();
-        query.eq("uid", id);
-        IPage<Template> templateIPage = templateMapper.selectPage(page, query);
-        if (templateIPage == null) {
-            throw new BackException(ErrorCode.TEMPLATE_SELECT_FAILURE, "分页数据查询失败");
-        }
-
-        List<Template> records = templateIPage.getRecords();
+        JSONArray recordsById = PageUtil.getPageRecordsById(id, pageNum, size, "uid", Template.class, templateMapper);
+        List<Template> records = JSONUtil.toList(recordsById, Template.class);
         List<TemplateTransfer> transfers = new ArrayList<>();
         for (Template t : records) {
             TemplateTransfer temp = new TemplateTransfer();
@@ -106,16 +99,12 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template> i
             transfers.add(temp);
         }
         JSONArray jsonArray = JSONUtil.parseArray(transfers);
-
-
         ResultUtil.quickSet(
                 result,
                 ErrorCode.ALL_SET,
                 "查询成功",
                 JSONUtil.toJsonPrettyStr(jsonArray)
         );
-
-
         return result;
     }
 

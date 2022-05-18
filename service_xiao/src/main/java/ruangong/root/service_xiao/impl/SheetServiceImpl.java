@@ -116,16 +116,6 @@ public class SheetServiceImpl extends ServiceImpl<SheetMapper, Sheet> implements
     @Override
     public Result getSheetsInPages(Integer id, Integer pageIndex, Integer sizePerPage) {
 
-
-//        IPage<Sheet> page = new Page(pageIndex, sizePerPage);
-//        QueryWrapper<Sheet> query = Wrappers.query();
-//        query.eq("uid", id);
-//        IPage<Sheet> sheetIPage = sheetMapper.selectPage(page, query);
-//        if (sheetIPage == null) {
-//            throw new BackException(ErrorCode.SHEET_SELECT_FAILURE, "分页数据查询失败");
-//        }
-//        JSONArray jsonArray = JSONUtil.parseArray(sheetIPage.getRecords());
-
         JSONArray pageRecordsById = PageUtil.getPageRecordsById(id, pageIndex, sizePerPage, "uid", Sheet.class, sheetMapper);
         ResultUtil.quickSet(
                 result,
