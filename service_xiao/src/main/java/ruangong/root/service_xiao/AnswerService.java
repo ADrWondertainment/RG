@@ -20,6 +20,8 @@ public interface AnswerService {
 
     public Result getAnswersBySheetId(Integer sheetId);
 
+    public Result getAnswerInPagesByUserId(Integer uid, Integer pageIndex, Integer size);
+
     public boolean checkAnswerTime(Answer answer);
 
     public boolean closeAnswer(Answer answer);

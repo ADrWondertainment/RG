@@ -18,6 +18,7 @@ import ruangong.root.dao.AnswerMapper;
 import ruangong.root.dao.SheetMapper;
 import ruangong.root.exception.BackException;
 import ruangong.root.exception.ErrorCode;
+import ruangong.root.service_xiao.PageUtil;
 import ruangong.root.service_xiao.SheetService;
 import ruangong.root.service_xiao.TemplateService;
 import ruangong.root.utils.ResultUtil;
@@ -46,10 +47,6 @@ public class SheetServiceImpl extends ServiceImpl<SheetMapper, Sheet> implements
 
     public Result fastCreateSheet(Sheet sheet, Integer cid, Integer uid) {
 
-//        Result sheetTemplate = templateService.getTemplateById(sheet.getTid());
-//        Template template = ResultUtil.getBeanFromData(sheetTemplate, Template.class);
-//        Template template = (Template) sheetTemplate.getData();
-//        String data = template.getData();
         sheet.setLocation(IdUtil.simpleUUID());
         sheet.setUid(uid);
         sheet.setCid(cid);
@@ -81,26 +78,6 @@ public class SheetServiceImpl extends ServiceImpl<SheetMapper, Sheet> implements
         return result;
     }
 
-    @Override
-    public Result updateLocatedUrl(UrlResourcedLocation urlResourcedLocation) {
-
-        String url = urlResourcedLocation.getUrl();
-        Integer id = urlResourcedLocation.getId();
-
-        sheet.setUrl(url);
-        sheet.setId(id);
-
-        sheetMapper.updateById(sheet);
-
-        ResultUtil.quickSet(
-                result,
-                ErrorCode.ALL_SET,
-                "url增加成功",
-                JSONUtil.toJsonPrettyStr(JSONUtil.createObj().putOnce("updated", true))
-        );
-
-        return result;
-    }
 
     @Override
     public Result getSheetById(int id) {
@@ -138,22 +115,23 @@ public class SheetServiceImpl extends ServiceImpl<SheetMapper, Sheet> implements
 
     @Override
     public Result getSheetsInPages(Integer id, Integer pageIndex, Integer sizePerPage) {
-        IPage<Sheet> page = new Page(pageIndex, sizePerPage);
-
-        QueryWrapper<Sheet> query = Wrappers.query();
-        query.eq("uid", id);
-        IPage<Sheet> sheetIPage = sheetMapper.selectPage(page, query);
-        if (sheetIPage == null) {
-            throw new BackException(ErrorCode.SHEET_SELECT_FAILURE, "分页数据查询失败");
-        }
-        JSONArray jsonArray = JSONUtil.parseArray(sheetIPage.getRecords());
 
 
+//        IPage<Sheet> page = new Page(pageIndex, sizePerPage);
+//        QueryWrapper<Sheet> query = Wrappers.query();
+//        query.eq("uid", id);
+//        IPage<Sheet> sheetIPage = sheetMapper.selectPage(page, query);
+//        if (sheetIPage == null) {
+//            throw new BackException(ErrorCode.SHEET_SELECT_FAILURE, "分页数据查询失败");
+//        }
+//        JSONArray jsonArray = JSONUtil.parseArray(sheetIPage.getRecords());
+
+        JSONArray pageRecordsById = PageUtil.getPageRecordsById(id, pageIndex, sizePerPage, "uid", Sheet.class, sheetMapper);
         ResultUtil.quickSet(
                 result,
                 ErrorCode.ALL_SET,
                 "查询成功",
-                JSONUtil.toJsonPrettyStr(jsonArray)
+                JSONUtil.toJsonPrettyStr(pageRecordsById)
         );
 
 
@@ -161,9 +139,9 @@ public class SheetServiceImpl extends ServiceImpl<SheetMapper, Sheet> implements
     }
 
     @Override
-    public Result checkSheetAnswer(Integer id, Integer done) {
+    public Result checkSheetAnswer(Integer id, Integer pass) {
         UpdateWrapper<Answer> update = Wrappers.update();
-        update.eq("id", id).set("done", done);
+        update.eq("id", id).set("pass", pass);
         int update1 = answerMapper.update(null, update);
         if (update1 != 1) {
             throw new BackException(ErrorCode.PASS_FAILURE, "审批失败");

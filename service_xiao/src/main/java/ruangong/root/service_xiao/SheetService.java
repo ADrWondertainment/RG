@@ -14,13 +14,11 @@ public interface SheetService extends IService<Sheet> {
 
     public Result fastCreateSheet(Sheet sheet, Integer uid, Integer cid);
 
-    public Result updateLocatedUrl(UrlResourcedLocation urlResourcedLocation);
-
     public Result getSheetById(int id);
 
     public Result updateSheet(Sheet sheet);
 
     public Result getSheetsInPages(Integer id, Integer pageIndex, Integer sizePerPage);
 
-    public Result checkSheetAnswer(Integer id, Integer done);
+    public Result checkSheetAnswer(Integer id, Integer pass);
 }

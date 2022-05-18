@@ -41,13 +41,13 @@ public class TemplateController {
 
 
     @PostMapping("/modify")
-    public Result modifyTemplate(){
+    public Result modifyTemplate() {
 
         return null;
     }
 
 
-    @PostMapping
+    @PostMapping("/create")
     public Result createOrUpdateTemplate(@RequestBody String data, HttpServletRequest request) {
 
 
@@ -64,28 +64,23 @@ public class TemplateController {
         } catch (Exception e) {
             throw new BackException(ErrorCode.UTIL_ERROR, "工具类出错");
         }
-        String email = (String) request.getSession().getAttribute("email");
-        if (email == null) {
+
+        Integer uid = (Integer) request.getSession().getAttribute("id");
+        if (uid == null || uid == 0) {
             throw new BackException(ErrorCode.USER_ILLEGAL_ACCESS, "用户未登录");
         }
-        Result result1 = userService.GetUserByEmail(email);
 
-        User user = (User) result1.getData();
-        template.setUid(user.getId());
-        jsonBeanTemplate.setUid(user.getId());
+        template.setUid(uid);
+        jsonBeanTemplate.setUid(uid);
         template.setData(JSONUtil.toJsonPrettyStr(jsonBeanTemplate));
-
         result = templateService.createOrUpdateTemplateByBean(template, jsonBeanTemplate);
-
-        System.out.println(result);
 
         return result;
     }
 
     @DeleteMapping("/{id}")
     public Result deleteTemplateById(@PathVariable String id) {
-        result = templateService.deleteTemplateById(Integer.parseInt(id));
-        return result;
+        return templateService.deleteTemplateById(Integer.parseInt(id));
     }
 
     /*
@@ -98,12 +93,7 @@ public class TemplateController {
     public Result getTemplatesInPages(@RequestBody String jsonObject, HttpServletRequest request) {
         JSONObject entries = JSONUtil.parseObj(jsonObject);
         HashMap<String, Integer> pageInfo = PageUtil.getPageInfo(entries, request, userService);
-
-        Result templatesInPages = templateService.getTemplatesInPages(pageInfo.get("id"), pageInfo.get("pageIndex"), pageInfo.get("sizePerPage"));
-
-        System.out.println(JSONUtil.toJsonPrettyStr(templatesInPages));
-
-        return templatesInPages;
+        return templateService.getTemplatesInPages(pageInfo.get("id"), pageInfo.get("pageIndex"), pageInfo.get("sizePerPage"));
     }
 
 

@@ -20,6 +20,7 @@ import ruangong.root.exception.FrontException;
 import ruangong.root.service_tao.UserService;
 import ruangong.root.service_xiao.AnswerService;
 import ruangong.root.service_xiao.CuserService;
+import ruangong.root.service_xiao.PageUtil;
 import ruangong.root.service_xiao.SheetService;
 import ruangong.root.utils.ResultUtil;
 
@@ -152,6 +153,23 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
                 ErrorCode.ALL_SET,
                 "成功获取调查信息",
                 JSONUtil.toJsonStr(answers)
+        );
+
+        return result;
+    }
+
+    @Override
+    public Result getAnswerInPagesByUserId(Integer uid, Integer pageIndex, Integer sizePerPage) {
+
+        JSONArray recordsById = PageUtil.getPageRecordsById(uid, pageIndex, sizePerPage,
+                "uid", Answer.class, answerMapper);
+
+
+        ResultUtil.quickSet(
+                result,
+                ErrorCode.ALL_SET,
+                "成功获取调查信息",
+                JSONUtil.toJsonStr(recordsById)
         );
 
         return result;

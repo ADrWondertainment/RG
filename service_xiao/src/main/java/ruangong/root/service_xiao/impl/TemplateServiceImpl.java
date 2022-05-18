@@ -40,47 +40,19 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template> i
     @Override
     public Result createOrUpdateTemplateByBean(Template template, JsonBeanTemplate jsonBeanTemplate) {
 
-        JSONObject data = JSONUtil.parseObj(template.getData());
         String type = jsonBeanTemplate.getType();
-
         if (!(type.equals("0") || type.equals("1"))) {
             throw new FrontException(ErrorCode.TEMPLATE_DATA_NULL, "模板名称和内容不能为空捏~");
-//            ResultUtil.quickSet(
-//                    result,
-//                    ErrorCode.TEMPLATE_DATA_NULL,
-//                    "模板名称和内容不能为空捏~",
-//                    null
-//            );
-//            return result;
         }
         QueryWrapper<Template> queryWrapper = Wrappers.query();
-        queryWrapper.eq("name", template.getName());
-
-        Template uniqueCheck = templateMapper.selectOne(queryWrapper);
-
-
-//        if (uniqueCheck != null) {
-//            throw new FrontException(ErrorCode.TEMPLATE_NAME_DUPLICATED, "模板重名了捏，请重新起一个名字~");
-////            ResultUtil.quickSet(
-////                    result,
-////                    ErrorCode.TEMPLATE_NAME_DUPLICATED,
-////                    "模板重名了捏，请重新起一个名字~",
-////                    null
-////            );
-////            return result;
-//        }
-
+        queryWrapper.eq("id", template.getId()).eq("name", template.getName());
+        Integer uniqueCheck = templateMapper.selectCount(queryWrapper);
+        if (uniqueCheck != 0) {
+            throw new FrontException(ErrorCode.TEMPLATE_NAME_DUPLICATED, "模板重名了捏，请重新起一个名字~");
+        }
         boolean isUpdated = saveOrUpdate(template);
-
         if (!isUpdated) {
             throw new BackException(ErrorCode.TEMPLATE_INSERT_FAILURE, "添加或者修改失败了捏，请稍后再试~");
-//            ResultUtil.quickSet(
-//                    result,
-//                    ErrorCode.TEMPLATE_INSERT_FAILURE,
-//                    "添加或者修改失败了捏，请稍后再试~",
-//                    null
-//            );
-//            return result;
         }
         ResultUtil.quickSet(
                 result,
@@ -88,38 +60,15 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template> i
                 "模板添加/修改成功了捏~",
                 JSONUtil.toJsonPrettyStr(JSONUtil.createObj().putOnce("isSuccess", true))
         );
-
         return result;
     }
 
     @Override
     public Result deleteTemplateById(Integer id) {
 
-        QueryWrapper<Template> queryWrapper = Wrappers.query();
-        queryWrapper.eq("id", id);
-        long count = (long) templateMapper.selectCount(queryWrapper);
-        if (count != 1) {
-            throw new BackException(ErrorCode.TEMPLATE_ID_UNREGISTERED, "没有找到您的模板捏~");
-//            ResultUtil.quickSet(
-//                    result,
-//                    ErrorCode.TEMPLATE_ID_UNREGISTERED,
-//                    "没有找到您的模板捏~",
-//                    null
-//            );
-//
-//            return result;
-        }
         int deleteCheck = templateMapper.deleteById(id);
         if (deleteCheck != 1) {
             throw new BackException(ErrorCode.TEMPLATE_DELETE_FAILURE, "您的模板删除失败捏~");
-//            ResultUtil.quickSet(
-//                    result,
-//                    ErrorCode.TEMPLATE_DELETE_FAILURE,
-//                    "您的模板删除失败捏~",
-//                    null
-//            );
-//
-//            return result;
         }
         ResultUtil.quickSet(
                 result,

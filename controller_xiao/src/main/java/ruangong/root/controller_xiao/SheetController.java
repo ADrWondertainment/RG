@@ -1,7 +1,6 @@
 package ruangong.root.controller_xiao;
 
 
-import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import org.springframework.web.bind.annotation.*;
@@ -12,21 +11,16 @@ import ruangong.root.service_tao.UserService;
 import ruangong.root.service_xiao.AnswerService;
 import ruangong.root.service_xiao.SheetService;
 import ruangong.root.service_xiao.PageUtil;
-import ruangong.root.utils.ResultUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.sql.ResultSet;
 import java.util.HashMap;
-import java.util.List;
 
 @RestController
 @RequestMapping("/sheets")
 public class SheetController {
 
-    @Resource
-    private UrlResourcedLocation urlResourcedLocation;
     @Resource
     private SheetService sheetService;
     @Resource
@@ -34,9 +28,6 @@ public class SheetController {
 
     @Resource
     private AnswerService answerService;
-
-    @Resource
-    private Result result;
 
     /*
     {
@@ -57,55 +48,38 @@ public class SheetController {
     @PostMapping
     public Result debutSheet(@RequestBody Sheet sheet, HttpServletRequest httpServletRequest) {
         HttpSession session = httpServletRequest.getSession();
-        String email = (String) session.getAttribute("email");
-        if (email == null) {
-            throw new BackException(ErrorCode.USER_ILLEGAL_ACCESS, "用户未登录");
-        }
-
         Integer uid = (Integer) session.getAttribute("id");
         Integer cid = (Integer) session.getAttribute("cid");
-
-
+        if (uid == null || uid == 0) {
+            throw new BackException(ErrorCode.USER_ILLEGAL_ACCESS, "用户未登录");
+        }
         return sheetService.fastCreateSheet(sheet, cid, uid);
     }
 
 
-    @PostMapping("/url")
-    public Result enableSheetUrl(@RequestBody String data) {
-        JSONObject entries = JSONUtil.parseObj(data);
-        String url = (String)entries.get("url");
-        Integer id = (Integer) entries.get("id");
-        urlResourcedLocation.setUrl(url);
-        urlResourcedLocation.setId(id);
-        return sheetService.updateLocatedUrl(urlResourcedLocation);
+    /*
+    {
+        "pageNum":1
+        "size":3
     }
+     */
 
-    @GetMapping
-    public Result getSheetsInPages(@RequestBody JSONObject jsonObject, HttpServletRequest httpServletRequest) {
-        HashMap<String, Integer> pageInfo = PageUtil.getPageInfo(jsonObject, httpServletRequest, userService);
-        Integer id = pageInfo.get("id");
+    @PostMapping("/sheetPages")
+    public Result getSheetsInPages(@RequestBody String jsonObject, HttpServletRequest httpServletRequest) {
+        HashMap<String, Integer> pageInfo = PageUtil.getPageInfo(JSONUtil.parseObj(jsonObject), httpServletRequest, userService);
+        Integer uid = pageInfo.get("uid");
         Integer pageIndex = pageInfo.get("pageIndex");
         Integer sizePerPage = pageInfo.get("sizePerPage");
-
-
-        return sheetService.getSheetsInPages(id, pageIndex, sizePerPage);
+        return sheetService.getSheetsInPages(uid, pageIndex, sizePerPage);
     }
 
-    @PostMapping("/pass/{id}")
-    public Result showSheetAnswers(@PathVariable String id) {
-        Result answersBySheetId = answerService.getAnswersBySheetId(Integer.parseInt(id));
-        String data = (String) answersBySheetId.getData();
-        JSONArray objects = JSONUtil.parseArray(data);
-        List<Answer> answers = JSONUtil.toList(objects, Answer.class);
-
-        ResultUtil.quickSet(
-                result,
-                ErrorCode.ALL_SET,
-                "查询成功",
-                JSONUtil.toJsonPrettyStr(answers)
-        );
-
-        return result;
+    @PostMapping("/answerPages")
+    public Result showSheetAnswersInPages(@RequestBody String jsonObject, HttpServletRequest httpServletRequest) {
+        HashMap<String, Integer> pageInfo = PageUtil.getPageInfo(JSONUtil.parseObj(jsonObject), httpServletRequest, userService);
+        Integer uid = pageInfo.get("uid");
+        Integer pageIndex = pageInfo.get("pageIndex");
+        Integer sizePerPage = pageInfo.get("sizePerPage");
+        return answerService.getAnswerInPagesByUserId(uid, pageIndex, sizePerPage);
     }
 
     /*
@@ -114,7 +88,7 @@ public class SheetController {
             "pass":0
         }
      */
-    @PostMapping("/pass")
+    @PostMapping("/pass/show")
     public Result passSheetAnswers(@RequestBody String data) {
 
         JSONObject entries = JSONUtil.parseObj(data);
@@ -123,5 +97,20 @@ public class SheetController {
 
         return sheetService.checkSheetAnswer(id, pass);
     }
+
+
+    /*
+        {
+            "sheetId":1,
+            "mode":0               //0:checked,1:unchecked
+        }
+     */
+    @PostMapping("/pass/check")
+    public Result showCheckedOrUncheckedAnswers(@RequestBody String data) {
+
+        return null;
+    }
+
+
 
 }
