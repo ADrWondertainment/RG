@@ -58,4 +58,8 @@ public class ErrorCode {
 
     public static final Integer PASS_FAILURE = 20160;
     public static final Integer SHEET_STRUCTURE_CONTAMINATED = 20170;
+
+    public static final Integer CUSER_ID_UNREGISTERED = 20180;
+
+    public static final Integer ILLEGAL_COMPANY_USER = 20190;
 }

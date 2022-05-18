@@ -41,9 +41,9 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template> i
     public Result createOrUpdateTemplateByBean(Template template, JsonBeanTemplate jsonBeanTemplate) {
 
         JSONObject data = JSONUtil.parseObj(template.getData());
-        int type = jsonBeanTemplate.getType();
+        String type = jsonBeanTemplate.getType();
 
-        if (type != 0 && type != 1) {
+        if (!(type.equals("0") || type.equals("1"))) {
             throw new FrontException(ErrorCode.TEMPLATE_DATA_NULL, "模板名称和内容不能为空捏~");
 //            ResultUtil.quickSet(
 //                    result,
@@ -158,7 +158,6 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template> i
         }
         JSONArray jsonArray = JSONUtil.parseArray(transfers);
 
-        System.out.println(JSONUtil.toJsonPrettyStr(jsonArray));
 
         ResultUtil.quickSet(
                 result,

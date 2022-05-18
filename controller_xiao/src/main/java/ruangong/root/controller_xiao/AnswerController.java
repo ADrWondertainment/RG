@@ -7,17 +7,16 @@ import org.springframework.web.bind.annotation.*;
 import ruangong.root.bean.*;
 import ruangong.root.exception.BackException;
 import ruangong.root.exception.ErrorCode;
+import ruangong.root.exception.FrontException;
 import ruangong.root.service_tao.UserService;
-import ruangong.root.service_xiao.AnswerService;
-import ruangong.root.service_xiao.PageUtil;
-import ruangong.root.service_xiao.SheetService;
-import ruangong.root.service_xiao.TemplateService;
+import ruangong.root.service_xiao.*;
 import ruangong.root.utils.AnswerUtil;
 import ruangong.root.utils.ResultUtil;
 import ruangong.root.utils.TemplateUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.List;
@@ -50,6 +49,9 @@ public class AnswerController {
     private UserService userService;
 
     @Resource
+    private CuserService cuserService;
+
+    @Resource
     private Result result;
 
     /*
@@ -66,8 +68,15 @@ public class AnswerController {
 
         String email = (String) httpServletRequest.getSession().getAttribute("email");
         Result userByEmail = userService.GetUserByEmail(email);
-        User userFromData = ResultUtil.getBeanFromData(userByEmail, User.class);
+        User userFromData = (User) userByEmail.getData();
+        if (!answerService.checkUserCompany(userFromData, answer.getSid()))
+            throw new FrontException(ErrorCode.ILLEGAL_COMPANY_USER, "该用户不是公司用户");
 
+        int sid = answer.getSid();
+        Result sheetById = sheetService.getSheetById(sid);
+        Sheet sheetFromData = ResultUtil.getBeanFromData(sheetById, Sheet.class);
+        Result templateById = templateService.getTemplateById(sheetFromData.getTid());
+        Template templateFromData = ResultUtil.getBeanFromData(templateById, Template.class);
 
 
         JSONArray jsonArray = JSONUtil.parseArray(userFromData.getSheets());
@@ -80,21 +89,18 @@ public class AnswerController {
             if (answerFromData.getSid().equals(answer.getSid())) {
                 answerService.checkAnswerStatus(answerFromData);
                 Object data1 = answerFromData.getData();
+                JSONObject entries = JSONUtil.createObj().putOnce("unfinished", data1).putOnce("template", templateFromData.getData());
                 ResultUtil.quickSet(
                         result,
                         ErrorCode.ALL_SET,
                         "找到用户未完成答案",
-                        data1
+                        JSONUtil.toJsonPrettyStr(entries)
                 );
+                return result;
             }
 
         }
 
-        int sid = answer.getSid();
-        Result sheetById = sheetService.getSheetById(sid);
-        Sheet sheetFromData = ResultUtil.getBeanFromData(sheetById, Sheet.class);
-        Result templateById = templateService.getTemplateById(sheetFromData.getTid());
-        Template templateFromData = ResultUtil.getBeanFromData(templateById, Template.class);
 
         ResultUtil.quickSet(
                 result,
@@ -109,27 +115,29 @@ public class AnswerController {
 
 
         {
-            "id":,
-            "uid":1,
-            "sid":7,
-            "data":[{"id": "0", "value": "A"}, {"id": "1", "value": ["5555"]}]
+            "sheetId":7,
+            "answers":[{"id": "0", "value": "A"}, {"id": "1", "value": ["5555"]}]
         }
 
      */
 
     @PostMapping("/submit")
-    public Result collectAnswer(@RequestBody String data) {
-
+    public Result collectAnswer(@RequestBody String data, HttpServletRequest httpServletRequest) {
+        HttpSession session = httpServletRequest.getSession();
+        Integer uid = (Integer) session.getAttribute("uid");
         Answer strToAnswer = AnswerUtil.strToAnswer(data);
-        answerService.insertAnswer(answer);
+        strToAnswer.setUid(uid);
+        result = answerService.insertAnswer(strToAnswer);
         return result;
 
     }
 
     @PostMapping("/save")
-    public Result saveAnswer(@RequestBody String data){
+    public Result saveAnswer(@RequestBody String data, HttpServletRequest httpServletRequest) {
+        HttpSession session = httpServletRequest.getSession();
+        Integer uid = (Integer) session.getAttribute("uid");
         Answer strToAnswer = AnswerUtil.strToAnswer(data);
-        answerService.saveTempAnswer(answer);
+        result = answerService.saveTempAnswer(strToAnswer);
         return result;
 
     }
@@ -215,14 +223,13 @@ public class AnswerController {
      */
 
     @GetMapping()
-    public Result getAnswersInPage(@RequestBody JSONObject jsonObject, HttpServletRequest request){
+    public Result getAnswersInPage(@RequestBody JSONObject jsonObject, HttpServletRequest request) {
         HashMap<String, Integer> pageInfo = PageUtil.getPageInfo(jsonObject, request, userService);
 
         return answerService.getAnswersByUserID(pageInfo.get("id"), pageInfo.get("pageIndex"), pageInfo.get("sizePerPage"));
 
 
     }
-
 
 
 }

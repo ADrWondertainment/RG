@@ -43,6 +43,7 @@ public class TemplateController {
     @PostMapping
     public Result createOrUpdateTemplate(@RequestBody String data, HttpServletRequest request) {
 
+
         JSONObject entries = JSONUtil.parseObj(data);
         String json = (String) entries.get("json");
         if (json == null) {
@@ -69,6 +70,8 @@ public class TemplateController {
 
         result = templateService.createOrUpdateTemplateByBean(template, jsonBeanTemplate);
 
+        System.out.println(result);
+
         return result;
     }
 
@@ -84,11 +87,16 @@ public class TemplateController {
         "size":5
     }
      */
-    @GetMapping
-    public Result getTemplatesInPages(@RequestBody JSONObject jsonObject, HttpServletRequest request) {
-        HashMap<String, Integer> pageInfo = PageUtil.getPageInfo(jsonObject, request, userService);
+    @PostMapping("/get")
+    public Result getTemplatesInPages(@RequestBody String jsonObject, HttpServletRequest request) {
+        JSONObject entries = JSONUtil.parseObj(jsonObject);
+        HashMap<String, Integer> pageInfo = PageUtil.getPageInfo(entries, request, userService);
 
-        return templateService.getTemplatesInPages(pageInfo.get("id"), pageInfo.get("pageIndex"), pageInfo.get("sizePerPage"));
+        Result templatesInPages = templateService.getTemplatesInPages(pageInfo.get("id"), pageInfo.get("pageIndex"), pageInfo.get("sizePerPage"));
+
+        System.out.println(JSONUtil.toJsonPrettyStr(templatesInPages));
+
+        return templatesInPages;
     }
 
 

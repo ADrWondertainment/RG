@@ -16,6 +16,7 @@ import ruangong.root.utils.ResultUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.List;
@@ -38,27 +39,32 @@ public class SheetController {
     /*
     {
         "tid":1,
-        "uid":2,
-        "cid":1,
+//        "uid":2,
+//        "cid":1,
         "did":3,
         "name":"test",
         "description":"sample sheet",
         "start":"2022-05-15",
         "end":"2022-05-18",
-        "type":1,
-        "length":4
+//        "type":1,
+//        "length":4
     }
     */
+
+
     @PostMapping
     public Result debutSheet(@RequestBody Sheet sheet, HttpServletRequest httpServletRequest) {
-        String email = (String) httpServletRequest.getSession().getAttribute("email");
+        HttpSession session = httpServletRequest.getSession();
+        String email = (String) session.getAttribute("email");
         if (email == null) {
             throw new BackException(ErrorCode.USER_ILLEGAL_ACCESS, "用户未登录");
         }
-        Result result = userService.GetUserByEmail(email);
-        User user = (User) result.getData();
 
-        return sheetService.fastCreateSheet(sheet, user.getId());
+        Integer uid = (Integer) session.getAttribute("uid");
+        Integer cid = (Integer) session.getAttribute("cid");
+
+
+        return sheetService.fastCreateSheet(sheet, cid, uid);
     }
 
 
