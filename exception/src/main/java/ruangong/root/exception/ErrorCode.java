@@ -11,9 +11,21 @@ public class ErrorCode {
     public static final Integer USER_LOGIN_SUCCESS = 10050;
     public static final Integer USER_CHANGEPASS_FAILURE = 10060;
     public static final Integer USER_CHANGEPASS_SUCCESS = 10070;
-
     public static final Integer USER_ILLEGAL_ACCESS = 20070;
 
+    public static final Integer COMPANY_NAME_DUPLICATED = 10080;
+    public static final Integer COMPANY_INVITE_DUPLICATED = 10090;
+    public static final Integer COMPANY_NAME_UNFINDED = 10081;
+    public static final Integer COMPANY_INVITE_UNFINDED = 10091;
+    public static final Integer COMPANY_NAME_INVITE_DUPLICATED =10085;
+    public static final Integer COMPANY_REGISTER_SUCCESS =10101;
+    public static final Integer COMPANY_REGISTER_FAILURE =10100;
+    public static final Integer JOIN_COMPANY_FAILURE =10110;
+    public static final Integer JOIN_COMPANY_SUCCESS =10111;
+    public static final Integer USER_UNJOIN =10120;
+    public static final Integer USER_UPDATE_ROLE = 10130;
+    public static final Integer USER_UPDATE_DEPARTMENT = 10140;
+    public static final Integer USER_UPDATE_LEVEL = 10150;
 
     public static final Integer SUCCESS = 1;
     public static final Integer FAIL = 0;
