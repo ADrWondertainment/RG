@@ -102,12 +102,13 @@ public class AnswerController {
 
         }
 
+        JSONObject entries2 = JSONUtil.createObj().putOnce("unfinished", null).putOnce("template", templateFromData.getData());
 
         ResultUtil.quickSet(
                 result,
                 ErrorCode.ALL_SET,
                 "用户第一次填写该问卷",
-                templateFromData.getData()
+                JSONUtil.toJsonPrettyStr(entries2)
         );
         return result;
     }
