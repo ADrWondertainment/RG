@@ -158,23 +158,11 @@ public class AnswerController {
             Integer tid = sheet.getTid();
             Result templateById = templateService.getTemplateById(tid);
             template = ResultUtil.getBeanFromData(templateById, Template.class);
-
             Integer length = template.getLength();
-
             List<JsonBeanTemplateContentsContent> content = JSONUtil.toBean(template.getData(), JsonBeanTemplate.class).getContent();
-
-
             Result answersBySheetId = answerService.getAnswersBySheetId(sheetId);
-
             String data1 = (String) answersBySheetId.getData();
-
             List<Answer> list = JSONUtil.toList(data1, Answer.class);
-
-
-//        AnswerList answerList = ResultUtil.getBeanFromData(answersBySheetId, AnswerList.class);
-//
-//        List<Answer> list = answerList.getList();
-
             try {
                 for (Answer o : list) {
                     String data = o.getData();
@@ -193,8 +181,6 @@ public class AnswerController {
                             Integer count = value.get(index) + 1;
                             value.put(index, count);
                         }
-
-
                     }
 
                 }
@@ -211,9 +197,16 @@ public class AnswerController {
                     "问卷结果返回成功",
                     JSONUtil.toJsonPrettyStr(template.getData())
             );
+            return result;
 
         }
 
+        ResultUtil.quickSet(
+                result,
+                ErrorCode.SHEET_TYPE_ERROR,
+                "不是问卷表",
+                null
+        );
 
         return result;
     }
@@ -228,10 +221,7 @@ public class AnswerController {
     @GetMapping()
     public Result getAnswersInPage(@RequestBody JSONObject jsonObject, HttpServletRequest request) {
         HashMap<String, Integer> pageInfo = PageUtil.getPageInfo(jsonObject, request, userService);
-
         return answerService.getAnswersByUserID(pageInfo.get("id"), pageInfo.get("pageIndex"), pageInfo.get("sizePerPage"));
-
-
     }
 
 

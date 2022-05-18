@@ -64,4 +64,26 @@ public class PageUtil {
 
     }
 
+    public static <T, S> JSONArray getPageRecordsById(Integer[] ids, Integer pageIndex, Integer sizePerPage, String[] columnNames, Class<T> tClass, BaseMapper<T> baseMapper) {
+
+        if (ids.length != columnNames.length)
+            throw new BackException(ErrorCode.UTIL_ERROR, "分页工具类错误，ids与columns数量不匹配");
+
+        IPage<T> page = new Page(pageIndex, sizePerPage);
+        QueryWrapper<T> query = Wrappers.query();
+
+        int length = ids.length;
+        for (int i = 0; i < length; i++) {
+            query.eq(columnNames[i], ids[i]);
+        }
+
+        IPage<T> sheetIPage = baseMapper.selectPage(page, query);
+        if (sheetIPage == null) {
+            throw new BackException(ErrorCode.SHEET_SELECT_FAILURE, "分页数据查询失败");
+        }
+        return JSONUtil.parseArray(sheetIPage.getRecords());
+
+
+    }
+
 }

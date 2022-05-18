@@ -119,7 +119,6 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
         userMapper.updateById(user);
 
 
-
         if (!insert) {
             throw new BackException(ErrorCode.ANSWER_INSERT_FAILURE, "回答插入失败");
         }
@@ -141,7 +140,7 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
     public Result getAnswersBySheetId(Integer sheetId) {
 
         QueryWrapper<Answer> query = Wrappers.query();
-        query.eq("sid", sheetId);
+        query.eq("sid", sheetId).eq("done", 1);
         List<Answer> answers = answerMapper.selectList(query);
 
         if (answers.size() == 0) {
@@ -172,6 +171,19 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
                 JSONUtil.toJsonStr(recordsById)
         );
 
+        return result;
+    }
+
+    @Override
+    public Result getCheckingAnswers(Integer[] ids, Integer pageIndex, Integer size, String[] columns) {
+
+        JSONArray pageRecordsById = PageUtil.getPageRecordsById(ids, pageIndex, size, columns, Answer.class, answerMapper);
+        ResultUtil.quickSet(
+                result,
+                ErrorCode.ALL_SET,
+                "查询成功",
+                JSONUtil.toJsonStr(pageRecordsById)
+        );
         return result;
     }
 
@@ -238,25 +250,12 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
     @Override
     public Result getAnswersByUserID(Integer id, Integer pageNum, Integer size) {
 
-        IPage<Answer> page = new Page(pageNum, size);
-
-        QueryWrapper<Answer> query = Wrappers.query();
-        query.eq("uid", id);
-        IPage<Answer> answerIPage = answerMapper.selectPage(page, query);
-        if (answerIPage == null) {
-            throw new BackException(ErrorCode.TEMPLATE_SELECT_FAILURE, "分页数据查询失败");
-        }
-
-        List<Answer> records = answerIPage.getRecords();
-        JSONArray jsonArray = JSONUtil.parseArray(records);
-
-        System.out.println(JSONUtil.toJsonPrettyStr(jsonArray));
-
+        JSONArray recordsById = PageUtil.getPageRecordsById(id, pageNum, size, "uid", Answer.class, answerMapper);
         ResultUtil.quickSet(
                 result,
                 ErrorCode.ALL_SET,
                 "查询成功",
-                JSONUtil.toJsonPrettyStr(jsonArray)
+                JSONUtil.toJsonPrettyStr(recordsById)
         );
 
 

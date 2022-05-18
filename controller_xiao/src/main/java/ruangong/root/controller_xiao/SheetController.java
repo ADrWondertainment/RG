@@ -1,16 +1,19 @@
 package ruangong.root.controller_xiao;
 
 
+import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import org.springframework.web.bind.annotation.*;
 import ruangong.root.bean.*;
+import ruangong.root.dao.AnswerMapper;
 import ruangong.root.exception.BackException;
 import ruangong.root.exception.ErrorCode;
 import ruangong.root.service_tao.UserService;
 import ruangong.root.service_xiao.AnswerService;
 import ruangong.root.service_xiao.SheetService;
 import ruangong.root.service_xiao.PageUtil;
+import ruangong.root.utils.ResultUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -28,6 +31,9 @@ public class SheetController {
 
     @Resource
     private AnswerService answerService;
+
+    @Resource
+    private AnswerMapper answerMapper;
 
     /*
     {
@@ -88,7 +94,7 @@ public class SheetController {
             "pass":0
         }
      */
-    @PostMapping("/pass/show")
+    @PostMapping("/pass/check")
     public Result passSheetAnswers(@RequestBody String data) {
 
         JSONObject entries = JSONUtil.parseObj(data);
@@ -102,15 +108,25 @@ public class SheetController {
     /*
         {
             "sheetId":1,
-            "mode":0               //0:checked,1:unchecked
+            "pageIndex":1,
+            "size":4,
+            "mode":0,               //1:unchecked, 2:通过, 3:不通过
         }
      */
-    @PostMapping("/pass/check")
+    @PostMapping("/pass/show")
     public Result showCheckedOrUncheckedAnswers(@RequestBody String data) {
+        JSONObject entries = JSONUtil.parseObj(data);
+        Integer sheetId = (Integer) entries.get("sheetId");
+        Integer mode = (Integer) entries.get("mode");
 
-        return null;
+        Integer pageIndex = (Integer) entries.get("pageIndex");
+        Integer size = (Integer) entries.get("size");
+        Integer[] ids = {sheetId, mode, 1};
+        String[] columns = {"sid", "pass", "done"};
+
+        return answerService.getCheckingAnswers(ids, pageIndex, size, columns);
+
     }
-
 
 
 }

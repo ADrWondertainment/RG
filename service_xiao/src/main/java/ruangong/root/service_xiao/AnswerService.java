@@ -22,6 +22,8 @@ public interface AnswerService {
 
     public Result getAnswerInPagesByUserId(Integer uid, Integer pageIndex, Integer size);
 
+    public Result getCheckingAnswers(Integer[] ids,Integer pageIndex,Integer size,String[] columns);
+
     public boolean checkAnswerTime(Answer answer);
 
     public boolean closeAnswer(Answer answer);
