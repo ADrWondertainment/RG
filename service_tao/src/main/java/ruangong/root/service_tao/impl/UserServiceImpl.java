@@ -2,6 +2,7 @@ package ruangong.root.service_tao.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,8 @@ import java.util.List;
 @Service
 @Transactional
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
+
+
 
     @Autowired
     private UserMapper userMapper;
@@ -135,18 +138,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         QueryWrapper<User> wrapper = new QueryWrapper<>();
         wrapper.eq("email", email);
         User user_result = userMapper.selectOne(wrapper);
-        if (user_result == null) {
-            throw new BackException(ErrorCode.USER_NAME_UNFINDED, "该用户不存在");
-        }
 //        if (user_result == null) {
-//            ResultUtil.quickSet(
-//                    result,
-//                    ErrorCode.USER_NAME_UNFINDED,
-//                    "该用户不存在",
-//                    null
-//            );
-//            return result;
+//            throw new BackException(ErrorCode.USER_NAME_UNFINDED, "该用户不存在");
 //        }
+        if (user_result == null) {
+            ResultUtil.quickSet(
+                    result,
+                    ErrorCode.USER_NAME_UNFINDED,
+                    "该用户不存在",
+                    null
+            );
+            return result;
+        }
         ResultUtil.quickSet(
                 result,
                 ErrorCode.SUCCESS,
@@ -367,6 +370,43 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         userData.setRole(roleMapper.selectById(rid).getName());
 
         return userData;
+    }
+
+    @Override
+    public UserData GetAllData(String email) {
+        User user = getUserByEmail(email);
+        Integer id = user.getId();
+        userData.setId(user.getId());
+        userData.setEmail(user.getEmail());
+
+        Integer company_id =user.getType();
+        if(company_id==null){
+            return userData;
+        }
+        userData.setCid(company_id);
+        Company company = companyMapper.selectById(company_id);
+        userData.setCompany(company.getName());
+
+        Cuser cuser_result = (Cuser) SelectByUid(id).getData();
+        Integer rid =cuser_result.getRid();
+        Integer did =cuser_result.getDid();
+        userData.setRid(rid);
+        userData.setDid(did);
+        userData.setLevel(cuser_result.getLevel());
+        userData.setDepartment(deptMapper.selectById(did).getName());
+        userData.setRole(roleMapper.selectById(rid).getName());
+
+        return userData;
+
+    }
+
+    @Override
+    public User getUserByEmail(String email) {
+
+        QueryWrapper<User> query = Wrappers.query();
+        query.eq("email", email);
+
+        return userMapper.selectOne(query);
     }
 
     @Override

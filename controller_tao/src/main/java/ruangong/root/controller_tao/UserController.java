@@ -42,9 +42,9 @@ public class UserController {
     @PostMapping("/login")
     public Result login(HttpServletRequest request, @RequestBody User user) {
         result = userService.login(user);
-        if (result.getErrorCode() == ErrorCode.USER_LOGIN_SUCCESS) {
+        if (result.getErrorCode().equals(ErrorCode.USER_LOGIN_SUCCESS)) {
             HttpSession session = request.getSession();
-            UserData userData = userService.GetAllData(user.getId());
+            UserData userData = userService.GetAllData(user.getEmail());
             HttpSessionUtil.quickSetAttribute(session,userData);
         }
         return result;
@@ -98,7 +98,7 @@ public class UserController {
         return userService.GetAllCompanyUser(cid);
     }
 
-    @PutMapping
+    @PutMapping("/role")
     public Result updaterole(HttpServletRequest request,String role){
         HttpSession session = request.getSession();
         Integer cid =(Integer) session.getAttribute("cid");
@@ -109,7 +109,7 @@ public class UserController {
         return result;
     }
 
-    @PutMapping
+    @PutMapping("/dept")
     public Result updatedept(HttpServletRequest request,String department){
         HttpSession session = request.getSession();
         Integer cid =(Integer) session.getAttribute("cid");

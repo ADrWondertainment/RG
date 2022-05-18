@@ -26,6 +26,8 @@ import java.util.List;
 public class SheetController {
 
     @Resource
+    private UrlResourcedLocation urlResourcedLocation;
+    @Resource
     private SheetService sheetService;
     @Resource
     private UserService userService;
@@ -60,7 +62,7 @@ public class SheetController {
             throw new BackException(ErrorCode.USER_ILLEGAL_ACCESS, "用户未登录");
         }
 
-        Integer uid = (Integer) session.getAttribute("uid");
+        Integer uid = (Integer) session.getAttribute("id");
         Integer cid = (Integer) session.getAttribute("cid");
 
 
@@ -69,9 +71,13 @@ public class SheetController {
 
 
     @PostMapping("/url")
-    public Result enableSheetUrl(@RequestBody UrlResourcedLocation urlResourcedLocation) {
+    public Result enableSheetUrl(@RequestBody String data) {
+        JSONObject entries = JSONUtil.parseObj(data);
+        String url = (String)entries.get("url");
+        Integer id = (Integer) entries.get("id");
+        urlResourcedLocation.setUrl(url);
+        urlResourcedLocation.setId(id);
         return sheetService.updateLocatedUrl(urlResourcedLocation);
-
     }
 
     @GetMapping

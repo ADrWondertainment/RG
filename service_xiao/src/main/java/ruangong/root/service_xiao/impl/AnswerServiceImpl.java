@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ruangong.root.bean.*;
 import ruangong.root.dao.AnswerMapper;
 import ruangong.root.dao.TemplateMapper;
+import ruangong.root.dao.UserMapper;
 import ruangong.root.exception.BackException;
 import ruangong.root.exception.ErrorCode;
 import ruangong.root.exception.FrontException;
@@ -36,6 +37,9 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
 
     @Resource
     private Result result;
+
+    @Resource
+    private UserMapper userMapper;
 
     @Resource
     private SheetService sheetService;
@@ -84,17 +88,35 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
     }
 
     @Override
-    public Result insertAnswer(Answer answer) {
+    public Result insertAnswer(Answer answer, User user) {
 
 
         if (!checkAnswerTime(answer)) {
             throw new FrontException(ErrorCode.ILLEGAL_ANSWER_TIME, "该问卷回答时间已结束");
         }
 
-        checkAnswerStatus(answer);
+        if (!checkAnswerStatus(answer)) {
+            throw new FrontException(ErrorCode.ANSWER_ALREADY_DONE, "已提交该问卷的答案");
+        }
 
 
         boolean insert = saveOrUpdate(answer);
+        Integer id = answer.getId();
+        String submittedAnswers = user.getSheets();
+        if (submittedAnswers != null) {
+            List<String> strings = JSONUtil.parseArray(submittedAnswers).toList(String.class);
+            strings.add(Integer.toString(id));
+            JSONArray objects = JSONUtil.parseArray(strings);
+            String newString = JSONUtil.toJsonStr(objects);
+            user.setSheets(newString);
+        } else {
+            JSONArray array = JSONUtil.createArray();
+            array.add(Integer.toString(id));
+            user.setSheets(JSONUtil.toJsonStr(array));
+        }
+
+        userMapper.updateById(user);
+
 
 
         if (!insert) {
@@ -180,7 +202,7 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
 
     @Override
     public boolean checkAnswerStatus(Answer answer) {
-        if(answer.getDone()!=null)
+        if (answer.getDone() != null)
             return answer.getDone() == 1;
         return true;
     }
@@ -227,13 +249,17 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
     public boolean checkUserCompany(User user, Integer sheetID) {
         Result sheetById = sheetService.getSheetById(sheetID);
         Sheet sheetFromData = ResultUtil.getBeanFromData(sheetById, Sheet.class);
-        int cid = sheetFromData.getCid();
-        int did = sheetFromData.getDid();
-        if (cid == 0 && did == 0) {
+        Integer cid = sheetFromData.getCid();
+        Integer did = sheetFromData.getDid();
+        boolean cCheck, dCheck;
+        cCheck = cid != null && cid != 0;
+        dCheck = did != null && did != 0;
+
+        if (!cCheck && !dCheck) {
             return true;
-        } else if (cid == 0) {
+        } else if (!cCheck) {
             throw new BackException(ErrorCode.SHEET_STRUCTURE_CONTAMINATED, "发布sheet结构异常");
-        } else if (did == 0) {
+        } else if (!dCheck) {
             if (user.getType() == null)
                 return false;
             Cuser cuserByTypeID = cuserService.getCuserByTypeID(user.getType());

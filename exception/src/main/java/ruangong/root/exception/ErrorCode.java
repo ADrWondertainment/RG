@@ -17,12 +17,12 @@ public class ErrorCode {
     public static final Integer COMPANY_INVITE_DUPLICATED = 10090;
     public static final Integer COMPANY_NAME_UNFINDED = 10081;
     public static final Integer COMPANY_INVITE_UNFINDED = 10091;
-    public static final Integer COMPANY_NAME_INVITE_DUPLICATED =10085;
-    public static final Integer COMPANY_REGISTER_SUCCESS =10101;
-    public static final Integer COMPANY_REGISTER_FAILURE =10100;
-    public static final Integer JOIN_COMPANY_FAILURE =10110;
-    public static final Integer JOIN_COMPANY_SUCCESS =10111;
-    public static final Integer USER_UNJOIN =10120;
+    public static final Integer COMPANY_NAME_INVITE_DUPLICATED = 10085;
+    public static final Integer COMPANY_REGISTER_SUCCESS = 10101;
+    public static final Integer COMPANY_REGISTER_FAILURE = 10100;
+    public static final Integer JOIN_COMPANY_FAILURE = 10110;
+    public static final Integer JOIN_COMPANY_SUCCESS = 10111;
+    public static final Integer USER_UNJOIN = 10120;
     public static final Integer USER_UPDATE_ROLE = 10130;
     public static final Integer USER_UPDATE_DEPARTMENT = 10140;
     public static final Integer USER_UPDATE_LEVEL = 10150;
@@ -62,4 +62,5 @@ public class ErrorCode {
     public static final Integer CUSER_ID_UNREGISTERED = 20180;
 
     public static final Integer ILLEGAL_COMPANY_USER = 20190;
+    public static final Integer ANSWER_ALREADY_DONE = 20200;
 }

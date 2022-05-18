@@ -61,7 +61,7 @@ public class AnswerController {
             "answers":[{"id": "0", "value": "A"}, {"id": "1", "value": ["5555"]}]
         }
      */
-    @GetMapping("/pre")
+    @PostMapping("/pre")
     public Result preProcess(@RequestBody String data, HttpServletRequest httpServletRequest) {
         answer = AnswerUtil.strToAnswer(data);
         answerService.checkUserStatus(httpServletRequest);
@@ -90,11 +90,12 @@ public class AnswerController {
                 answerService.checkAnswerStatus(answerFromData);
                 Object data1 = answerFromData.getData();
                 JSONObject entries = JSONUtil.createObj().putOnce("unfinished", data1).putOnce("template", templateFromData.getData());
+                String s = JSONUtil.toJsonPrettyStr(entries);
                 ResultUtil.quickSet(
                         result,
                         ErrorCode.ALL_SET,
                         "找到用户未完成答案",
-                        JSONUtil.toJsonPrettyStr(entries)
+                        s
                 );
                 return result;
             }
@@ -124,10 +125,11 @@ public class AnswerController {
     @PostMapping("/submit")
     public Result collectAnswer(@RequestBody String data, HttpServletRequest httpServletRequest) {
         HttpSession session = httpServletRequest.getSession();
-        Integer uid = (Integer) session.getAttribute("uid");
+        Integer uid = (Integer) session.getAttribute("id");
         Answer strToAnswer = AnswerUtil.strToAnswer(data);
+        User userByEmail = userService.getUserByEmail((String) session.getAttribute("email"));
         strToAnswer.setUid(uid);
-        result = answerService.insertAnswer(strToAnswer);
+        result = answerService.insertAnswer(strToAnswer, userByEmail);
         return result;
 
     }

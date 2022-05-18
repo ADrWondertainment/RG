@@ -26,6 +26,7 @@ public interface UserService extends IService<User> {
 
     public UserData GetAllData(Integer id);
 
+
     public Result SelectByUid(Integer uid);
 
     public List<CompanyUser> GetAllCompanyUser(Integer cid);
@@ -35,4 +36,10 @@ public interface UserService extends IService<User> {
     public Result UpdateDept(Integer uid,Integer cid,String department);
 
     public Result UpdateLevel(Integer uid,Integer level);
+
+//----------------------------------------------------------------------------
+    public UserData GetAllData(String email);
+
+    public User getUserByEmail(String email);
+
 }

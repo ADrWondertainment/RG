@@ -59,16 +59,16 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template> i
         Template uniqueCheck = templateMapper.selectOne(queryWrapper);
 
 
-        if (uniqueCheck != null) {
-            throw new FrontException(ErrorCode.TEMPLATE_NAME_DUPLICATED, "模板重名了捏，请重新起一个名字~");
-//            ResultUtil.quickSet(
-//                    result,
-//                    ErrorCode.TEMPLATE_NAME_DUPLICATED,
-//                    "模板重名了捏，请重新起一个名字~",
-//                    null
-//            );
-//            return result;
-        }
+//        if (uniqueCheck != null) {
+//            throw new FrontException(ErrorCode.TEMPLATE_NAME_DUPLICATED, "模板重名了捏，请重新起一个名字~");
+////            ResultUtil.quickSet(
+////                    result,
+////                    ErrorCode.TEMPLATE_NAME_DUPLICATED,
+////                    "模板重名了捏，请重新起一个名字~",
+////                    null
+////            );
+////            return result;
+//        }
 
         boolean isUpdated = saveOrUpdate(template);
 

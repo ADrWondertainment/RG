@@ -57,14 +57,20 @@ public class SheetServiceImpl extends ServiceImpl<SheetMapper, Sheet> implements
         Result templateById = templateService.getTemplateById(sheet.getTid());
         Template templateFromData = ResultUtil.getBeanFromData(templateById, Template.class);
         sheet.setLength(templateFromData.getLength());
-        Integer type = (Integer) JSONUtil.parseObj(templateFromData.getData()).get("type");
-        sheet.setType(type);
+        String type = (String) JSONUtil.parseObj(templateFromData.getData()).get("type");
+
+        sheet.setType(Integer.parseInt(type));
 
 
         int insertCheck = sheetMapper.insert(sheet);
         if (insertCheck != 1) {
             throw new BackException(ErrorCode.FAST_CREAT_SHEET_FAILURE, "快速创建sheet失败");
         }
+
+        sheet.setUrl("http://localhost:9090/#/justFillForm/" + sheet.getId());
+
+        sheetMapper.updateById(sheet);
+
         ResultUtil.quickSet(
                 result,
                 ErrorCode.ALL_SET,

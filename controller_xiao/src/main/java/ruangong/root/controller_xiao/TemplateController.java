@@ -18,6 +18,7 @@ import ruangong.root.utils.TemplateUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.sql.ResultSet;
 import java.util.HashMap;
 
 @RestController
@@ -38,6 +39,12 @@ public class TemplateController {
     @Resource
     private JsonBeanTemplate jsonBeanTemplate;
 
+
+    @PostMapping("/modify")
+    public Result modifyTemplate(){
+
+        return null;
+    }
 
 
     @PostMapping

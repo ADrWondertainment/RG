@@ -16,7 +16,7 @@ public interface AnswerService {
 
     public Result collectAnswerAndUpdate(JsonBeanSurvey jsonBeanSurvey);
 
-    public Result insertAnswer(Answer answer);
+    public Result insertAnswer(Answer answer, User user);
 
     public Result getAnswersBySheetId(Integer sheetId);
 
