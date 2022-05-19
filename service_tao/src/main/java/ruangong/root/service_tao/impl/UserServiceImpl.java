@@ -1,5 +1,6 @@
 package ruangong.root.service_tao.impl;
 
+import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -11,6 +12,7 @@ import ruangong.root.bean.*;
 import ruangong.root.dao.*;
 import ruangong.root.exception.BackException;
 import ruangong.root.exception.ErrorCode;
+import ruangong.root.exception.FrontException;
 import ruangong.root.service_tao.UserService;
 import ruangong.root.utils.ResultUtil;
 
@@ -19,7 +21,6 @@ import java.util.List;
 @Service
 @Transactional
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
-
 
 
     @Autowired
@@ -172,26 +173,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
 
         if (!oldpass.equals(user_result.getPass())) {
-            ResultUtil.quickSet(
-                    result,
-                    ErrorCode.USER_PASSWORD_UNMATCH,
-                    "密码错误，请重新输入",
-                    null
-            );
-            return result;
+            throw new FrontException(ErrorCode.USER_PASSWORD_UNMATCH, "密码错误，请重新输入");
         }
 
         user_result.setPass(newpass);
         int update = userMapper.updateById(user_result);
 
         if (update != 1) {
-            ResultUtil.quickSet(
-                    result,
-                    ErrorCode.USER_CHANGEPASS_FAILURE,
-                    "修改密码失败，请稍后再试",
-                    null
-            );
-            return result;
+            throw new BackException(ErrorCode.USER_CHANGEPASS_FAILURE, "修改密码失败，请稍后再试");
         }
 
         ResultUtil.quickSet(
@@ -208,7 +197,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         QueryWrapper<Company> wrapper = new QueryWrapper<>();
         wrapper.eq("name", name);
         Company company_result = companyMapper.selectOne(wrapper);
-        if(company_result ==null){
+        if (company_result == null) {
             ResultUtil.quickSet(
                     result,
                     ErrorCode.COMPANY_NAME_UNFINDED,
@@ -231,7 +220,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         QueryWrapper<Company> wrapper = new QueryWrapper<>();
         wrapper.eq("invite", invite);
         Company company_result = companyMapper.selectOne(wrapper);
-        if(company_result ==null){
+        if (company_result == null) {
             ResultUtil.quickSet(
                     result,
                     ErrorCode.COMPANY_INVITE_UNFINDED,
@@ -246,81 +235,95 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 "查询成功",
                 company_result
         );
-        return result;    }
-
-    @Override
-    public Result CompanyRegister(Company company) {
-        String name =company.getName();
-        String invite =company.getInvite();
-
-        Result name_result =SelectByName(name);
-        Result invite_result =SelectByInvite(invite);
-
-        if(name_result.getData()!=null && invite_result.getData()!=null) {
-            ResultUtil.quickSet(
-                    result,
-                    ErrorCode.COMPANY_NAME_INVITE_DUPLICATED,
-                    "公司名、邀请码均重复，请重新输入",
-                    null
-            );
-            return result;
-        }
-        if(name_result.getData()!=null){
-            ResultUtil.quickSet(
-                    result,
-                    ErrorCode.COMPANY_NAME_DUPLICATED,
-                    "公司名重复，请重新输入",
-                    null
-            );
-            return result;
-        }
-        if(invite_result.getData()!=null){
-            ResultUtil.quickSet(
-                    result,
-                    ErrorCode.COMPANY_INVITE_DUPLICATED,
-                    "邀请码重复，请重新输入",
-                    null
-            );
-            return result;
-        }
-        int insert = companyMapper.insert(company);
-        if(insert == 1){
-            root_user.setEmail(name+"_root");
-            root_user.setPass(invite);
-            root_user.setType(company.getId());
-            userMapper.insert(root_user);
-            root_cuser.setUid(root_user.getId());
-            root_cuser.setCid(company.getId());
-            root_cuser.setLevel(0);
-            cuserMapper.insert(root_cuser);
-            ResultUtil.quickSet(
-                    result,
-                    ErrorCode.COMPANY_REGISTER_SUCCESS,
-                    "注册成功，用户输入邀请码即可加入企业",
-                    1
-            );
-            return result;
-        }
-        ResultUtil.quickSet(
-                result,
-                ErrorCode.COMPANY_REGISTER_FAILURE,
-                "注册失败，请重试",
-                1
-        );
         return result;
     }
 
     @Override
-    public Result JoinCompany(String invite,Integer id) {
-        Result invite_result =SelectByInvite(invite);
-        if(invite_result.getData()==null){
+    public Result CompanyRegister(Company company) {
+        String name = company.getName();
+//        String invite = company.getInvite();
+
+        Result name_result = SelectByName(name);
+//        Result invite_result = SelectByInvite(invite);
+
+//        if (name_result.getData() != null && invite_result.getData() != null) {
+//            ResultUtil.quickSet(
+//                    result,
+//                    ErrorCode.COMPANY_NAME_INVITE_DUPLICATED,
+//                    "公司名、邀请码均重复，请重新输入",
+//                    null
+//            );
+//            return result;
+//        }
+        if (name_result.getData() != null) {
+            throw new FrontException(ErrorCode.COMPANY_NAME_DUPLICATED, "公司名重复，请重新输入");
+
+//            ResultUtil.quickSet(
+//                    result,
+//                    ErrorCode.COMPANY_NAME_DUPLICATED,
+//                    "公司名重复，请重新输入",
+//                    null
+//            );
+//            return result;
+        }
+//        if (invite_result.getData() != null) {
+//            ResultUtil.quickSet(
+//                    result,
+//                    ErrorCode.COMPANY_INVITE_DUPLICATED,
+//                    "邀请码重复，请重新输入",
+//                    null
+//            );
+//            return result;
+//        }
+
+        String invite = IdUtil.simpleUUID();
+
+        company.setInvite(invite);
+
+        int insert = companyMapper.insert(company);
+        if (insert != 1) {
+            throw new BackException(ErrorCode.COMPANY_REGISTER_FAILURE, "注册失败，请重试");
+
+//            ResultUtil.quickSet(
+//                    result,
+//                    ErrorCode.COMPANY_REGISTER_FAILURE,
+//                    "注册失败，请重试",
+//                    1
+//            );
+//            return  result;
+
+        }
+
+        root_user.setEmail(name + "_root");
+        root_user.setPass(invite);
+        root_user.setType(company.getId());
+        userMapper.insert(root_user);
+        root_cuser.setUid(root_user.getId());
+        root_cuser.setCid(company.getId());
+        root_cuser.setLevel(0);
+        cuserMapper.insert(root_cuser);
+        ResultUtil.quickSet(
+                result,
+                ErrorCode.COMPANY_REGISTER_SUCCESS,
+                "注册成功，用户输入邀请码即可加入企业",
+                1
+        );
+        return result;
+
+
+    }
+
+    @Override
+    public Result JoinCompany(String invite, Integer id) {
+        Result invite_result = SelectByInvite(invite);
+        if (invite_result.getData() == null) {
             return result;
         }
-        Company company =(Company) invite_result.getData();
+        Company company = (Company) invite_result.getData();
         Integer cid = company.getId();
         //修改user表
         UpdateWrapper<User> wrap = new UpdateWrapper<>();
-        wrap.set("type",cid).eq("id",id);
+        wrap.eq("id", id).set("type", cid);
         int update = userMapper.update(null, wrap);
         //增加cuser表
         cuser.setCid(cid);
@@ -328,32 +331,35 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         cuser.setUid(id);
         int insert = cuserMapper.insert(cuser);
 
-        if(update!=0 && insert!=0){
-            ResultUtil.quickSet(
-                    result,
-                    ErrorCode.JOIN_COMPANY_SUCCESS,
-                    "加入公司成功",
-                    1
-            );
-            return result;
+        if (update == 0 || insert == 0) {
+
+            throw new BackException(ErrorCode.JOIN_COMPANY_FAILURE, "加入公司失败");
+
+//            ResultUtil.quickSet(
+//                    result,
+//                    ErrorCode.JOIN_COMPANY_FAILURE,
+//                    "加入公司失败",
+//                    null
+//            );
+//            return result;
         }
         ResultUtil.quickSet(
                 result,
                 ErrorCode.JOIN_COMPANY_FAILURE,
-                "加入公司失败",
-                null
+                "加入公司成功",
+                1
         );
         return result;
     }
 
     @Override
     public UserData GetAllData(Integer id) {
-        User user =userMapper.selectById(id);
+        User user = userMapper.selectById(id);
         userData.setId(id);
         userData.setEmail(user.getEmail());
 
-        Integer company_id =user.getType();
-        if(company_id==null){
+        Integer company_id = user.getType();
+        if (company_id == null) {
             return userData;
         }
         userData.setCid(company_id);
@@ -361,8 +367,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         userData.setCompany(company.getName());
 
         Cuser cuser_result = (Cuser) SelectByUid(id).getData();
-        Integer rid =cuser_result.getRid();
-        Integer did =cuser_result.getDid();
+        Integer rid = cuser_result.getRid();
+        Integer did = cuser_result.getDid();
         userData.setRid(rid);
         userData.setDid(did);
         userData.setLevel(cuser_result.getLevel());
@@ -379,8 +385,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         userData.setId(user.getId());
         userData.setEmail(user.getEmail());
 
-        Integer company_id =user.getType();
-        if(company_id==null){
+        Integer company_id = user.getType();
+        if (company_id == null) {
             return userData;
         }
         userData.setCid(company_id);
@@ -388,8 +394,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         userData.setCompany(company.getName());
 
         Cuser cuser_result = (Cuser) SelectByUid(id).getData();
-        Integer rid =cuser_result.getRid();
-        Integer did =cuser_result.getDid();
+        Integer rid = cuser_result.getRid();
+        Integer did = cuser_result.getDid();
         userData.setRid(rid);
         userData.setDid(did);
         userData.setLevel(cuser_result.getLevel());
@@ -413,8 +419,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public Result SelectByUid(Integer uid) {
         QueryWrapper<Cuser> wrapper = new QueryWrapper<>();
         wrapper.eq("uid", uid);
-        Cuser cuser_result =cuserMapper.selectOne(wrapper);
-        if(cuser_result ==null){
+        Cuser cuser_result = cuserMapper.selectOne(wrapper);
+        if (cuser_result == null) {
             ResultUtil.quickSet(
                     result,
                     ErrorCode.USER_UNJOIN,
@@ -434,12 +440,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public List<CompanyUser> GetAllCompanyUser(Integer cid) {
-        QueryWrapper<User> wrapper = new QueryWrapper<>();
-        wrapper.eq("type", cid);
-        List<User> users = userMapper.selectList(wrapper);
-        for (User tmp_user:
-             users) {
-            list_user.add(GetAllData(tmp_user.getId()));
+        QueryWrapper<Cuser> wrapper = new QueryWrapper<>();
+        wrapper.eq("cid", cid);
+        List<Cuser> users = cuserMapper.selectList(wrapper);
+        for (Cuser tmp_user :
+                users) {
+            list_user.add(GetAllData(tmp_user.getUid()));
         }
         return list_user;
     }
@@ -450,7 +456,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         role_user.setName(role);
         roleMapper.insert(role_user);
         UpdateWrapper<Cuser> wrap = new UpdateWrapper<>();
-        wrap.set("rid",role_user.getId()).eq("uid",uid);
+        wrap.set("rid", role_user.getId()).eq("uid", uid);
         cuserMapper.update(null, wrap);
         ResultUtil.quickSet(
                 result,
@@ -467,7 +473,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         dept_user.setName(department);
         deptMapper.insert(dept_user);
         UpdateWrapper<Cuser> wrap = new UpdateWrapper<>();
-        wrap.set("did",dept_user.getId()).eq("uid",uid);
+        wrap.set("did", dept_user.getId()).eq("uid", uid);
         cuserMapper.update(null, wrap);
         ResultUtil.quickSet(
                 result,
@@ -481,7 +487,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public Result UpdateLevel(Integer uid, Integer level) {
         UpdateWrapper<Cuser> wrap = new UpdateWrapper<>();
-        wrap.set("level",level).eq("uid",uid);
+        wrap.set("level", level).eq("uid", uid);
         cuserMapper.update(null, wrap);
         ResultUtil.quickSet(
                 result,

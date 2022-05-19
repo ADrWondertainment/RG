@@ -11,6 +11,7 @@ import ruangong.root.service_tao.UserService;
 import ruangong.root.utils.HttpSessionUtil;
 import ruangong.root.utils.ResultUtil;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -19,12 +20,14 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserController {
 
-    @Autowired
+    @Resource
     private UserService userService;
-    @Autowired
+    @Resource
     private Result result;
-    @Autowired
+    @Resource
     private User user;
+    @Resource
+    private Company company;
 
     @PostMapping("/register")
     public Result reg(@RequestBody String data) {
@@ -45,7 +48,7 @@ public class UserController {
         if (result.getErrorCode().equals(ErrorCode.USER_LOGIN_SUCCESS)) {
             HttpSession session = request.getSession();
             UserData userData = userService.GetAllData(user.getEmail());
-            HttpSessionUtil.quickSetAttribute(session,userData);
+            HttpSessionUtil.quickSetAttribute(session, userData);
         }
         return result;
     }
@@ -64,7 +67,9 @@ public class UserController {
     }
 
     @PostMapping("/changepass")
-    public Result changepassword(HttpServletRequest request, @RequestBody JSONObject pass) {
+    public Result changepassword(HttpServletRequest request, @RequestBody String data) {
+
+        JSONObject pass = JSONUtil.parseObj(data);
         String oldpass = (String) pass.get("oldpass");
         String newpass = (String) pass.get("newpass");
         user.setEmail((String) request.getSession().getAttribute("email"));
@@ -74,59 +79,60 @@ public class UserController {
     }
 
     @PostMapping("/companyregister")
-    public Result companyregister(@RequestBody Company company){
-        result =userService.CompanyRegister(company);
-        return result;
+    public Result companyregister(@RequestBody String data) {
+        JSONObject entries = JSONUtil.parseObj(data);
+        company = JSONUtil.toBean(entries, Company.class);
+        return userService.CompanyRegister(company);
     }
 
-    @PostMapping ("/joincompany")
-    public Result joincompany(HttpServletRequest request, @RequestBody String invite){
+    @PostMapping("/joincompany")
+    public Result joincompany(HttpServletRequest request, @RequestBody String invite) {
         HttpSession session = request.getSession();
         Integer id = (Integer) session.getAttribute("id");
-        result =userService.JoinCompany(invite,id);
-        if(result.getErrorCode().equals(ErrorCode.JOIN_COMPANY_SUCCESS)){
+        result = userService.JoinCompany(invite, id);
+        if (result.getErrorCode().equals(ErrorCode.JOIN_COMPANY_SUCCESS)) {
             UserData userData = userService.GetAllData(id);
-            HttpSessionUtil.quickUpdateAttribute(session,userData);
+            HttpSessionUtil.quickUpdateAttribute(session, userData);
         }
         return result;
     }
 
     @GetMapping
-    public List<CompanyUser> showallcuser(HttpServletRequest request){
-        HttpSession session=request.getSession();
-        Integer cid =(Integer) session.getAttribute("cid");
+    public List<CompanyUser> showallcuser(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        Integer cid = (Integer) session.getAttribute("cid");
         return userService.GetAllCompanyUser(cid);
     }
 
     @PutMapping("/role")
-    public Result updaterole(HttpServletRequest request,String role){
+    public Result updaterole(HttpServletRequest request, String role) {
         HttpSession session = request.getSession();
-        Integer cid =(Integer) session.getAttribute("cid");
-        Integer id =(Integer) session.getAttribute("id");
-        result = userService.UpdateRole(id,cid,role);
+        Integer cid = (Integer) session.getAttribute("cid");
+        Integer id = (Integer) session.getAttribute("id");
+        result = userService.UpdateRole(id, cid, role);
         UserData userData = userService.GetAllData(id);
-        HttpSessionUtil.quickUpdateAttribute(session,userData);
+        HttpSessionUtil.quickUpdateAttribute(session, userData);
         return result;
     }
 
     @PutMapping("/dept")
-    public Result updatedept(HttpServletRequest request,String department){
+    public Result updatedept(HttpServletRequest request, String department) {
         HttpSession session = request.getSession();
-        Integer cid =(Integer) session.getAttribute("cid");
-        Integer id =(Integer) session.getAttribute("id");
-        result = userService.UpdateRole(id,cid,department);
+        Integer cid = (Integer) session.getAttribute("cid");
+        Integer id = (Integer) session.getAttribute("id");
+        result = userService.UpdateRole(id, cid, department);
         UserData userData = userService.GetAllData(id);
-        HttpSessionUtil.quickUpdateAttribute(session,userData);
+        HttpSessionUtil.quickUpdateAttribute(session, userData);
         return result;
     }
 
     @PutMapping
-    public Result updatelevel(HttpServletRequest request,Integer level){
+    public Result updatelevel(HttpServletRequest request, Integer level) {
         HttpSession session = request.getSession();
-        Integer id =(Integer) session.getAttribute("id");
-        result = userService.UpdateLevel(id,level);
+        Integer id = (Integer) session.getAttribute("id");
+        result = userService.UpdateLevel(id, level);
         UserData userData = userService.GetAllData(id);
-        HttpSessionUtil.quickUpdateAttribute(session,userData);
+        HttpSessionUtil.quickUpdateAttribute(session, userData);
         return result;
     }
 }
