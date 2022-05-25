@@ -7,6 +7,9 @@ import lombok.experimental.Accessors;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author pangx
+ */
 @EqualsAndHashCode(callSuper = true)
 @Component
 @Scope("prototype")

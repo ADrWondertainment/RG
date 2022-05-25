@@ -9,7 +9,11 @@ import java.util.List;
 @Component
 @Scope("prototype")
 @Data
-/*
+
+/**
+ * @author pangx
+
+ *
             {
          "uid": 1,
          "name": "123",
@@ -57,6 +61,7 @@ import java.util.List;
          ]
         }
 */
+
 public class JsonBeanTemplate {
     private int uid;
     private String name;

@@ -8,30 +8,27 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import org.springframework.stereotype.Component;
-import ruangong.root.bean.Result;
-import ruangong.root.bean.Sheet;
-import ruangong.root.bean.User;
 import ruangong.root.exception.BackException;
 import ruangong.root.exception.ErrorCode;
 import ruangong.root.service_tao.UserService;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 
 
+/**
+ * @author pangx
+ */
 public class PageUtil {
 
 
-    /*
-        {
-            "pageNum":1,
-            "size":5
-        }
-
+    /**
+     * 接收json格式如下
+     * {
+     * "pageNum":1,
+     * "size":5
+     * }
      */
-
     public static HashMap<String, Integer> getPageInfo(JSONObject jsonObject, HttpServletRequest httpServletRequest, UserService userService) {
 
         Integer uid = (Integer) httpServletRequest.getSession().getAttribute("id");
@@ -42,7 +39,7 @@ public class PageUtil {
         Integer pageNum = (Integer) jsonObject.get("pageNum");
         Integer size = (Integer) jsonObject.get("size");
 
-        HashMap<String, Integer> map = new HashMap<>();
+        HashMap<String, Integer> map = new HashMap<>(10);
         map.put("uid", uid);
         map.put("pageIndex", pageNum);
         map.put("sizePerPage", size);
@@ -66,8 +63,9 @@ public class PageUtil {
 
     public static <T, S> JSONArray getPageRecordsById(Integer[] ids, Integer pageIndex, Integer sizePerPage, String[] columnNames, Class<T> tClass, BaseMapper<T> baseMapper) {
 
-        if (ids.length != columnNames.length)
+        if (ids.length != columnNames.length) {
             throw new BackException(ErrorCode.UTIL_ERROR, "分页工具类错误，ids与columns数量不匹配");
+        }
 
         IPage<T> page = new Page(pageIndex, sizePerPage);
         QueryWrapper<T> query = Wrappers.query();

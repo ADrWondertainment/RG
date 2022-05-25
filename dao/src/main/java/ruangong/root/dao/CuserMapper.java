@@ -6,6 +6,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import ruangong.root.bean.Cuser;
 
+/**
+ * @author tao
+ */
 @Mapper
 @Repository
 public interface CuserMapper extends BaseMapper<Cuser> {

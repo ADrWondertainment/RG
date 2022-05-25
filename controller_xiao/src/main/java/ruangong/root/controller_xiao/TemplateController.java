@@ -21,6 +21,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.sql.ResultSet;
 import java.util.HashMap;
 
+/**
+ * @author pangx
+ */
 @RestController
 @RequestMapping("/templates")
 public class TemplateController {
@@ -83,17 +86,17 @@ public class TemplateController {
         return templateService.deleteTemplateById(Integer.parseInt(id));
     }
 
-    /*
-    {
-        "pageNum":1,
-        "size":5
-    }
+    /**
+     * {
+     * "pageNum":1,
+     * "size":5
+     * }
      */
     @PostMapping("/get")
     public Result getTemplatesInPages(@RequestBody String jsonObject, HttpServletRequest request) {
         JSONObject entries = JSONUtil.parseObj(jsonObject);
         HashMap<String, Integer> pageInfo = PageUtil.getPageInfo(entries, request, userService);
-        return templateService.getTemplatesInPages(pageInfo.get("id"), pageInfo.get("pageIndex"), pageInfo.get("sizePerPage"));
+        return templateService.getTemplatesInPages(pageInfo.get("uid"), pageInfo.get("pageIndex"), pageInfo.get("sizePerPage"));
     }
 
 

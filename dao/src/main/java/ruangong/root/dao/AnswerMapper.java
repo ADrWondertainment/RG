@@ -5,6 +5,9 @@ import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 import ruangong.root.bean.Answer;
 
+/**
+ * @author pangx
+ */
 @Mapper
 @Repository
 public interface AnswerMapper extends BaseMapper<Answer> {

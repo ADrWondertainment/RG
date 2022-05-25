@@ -12,17 +12,17 @@ import ruangong.root.service_tao.UserService;
 import ruangong.root.service_xiao.*;
 import ruangong.root.utils.AnswerUtil;
 import ruangong.root.utils.ResultUtil;
-import ruangong.root.utils.TemplateUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 
+/**
+ * @author pangx
+ */
 @RestController
 @RequestMapping("/answers")
 public class AnswerController {
@@ -54,8 +54,8 @@ public class AnswerController {
     @Resource
     private Result result;
 
-    /*
-
+    /**
+     * 接收json字符串格式如下
         {
             "sheetId":7,
             "answers":[{"id": "0", "value": "A"}, {"id": "1", "value": ["5555"]}]
@@ -66,11 +66,16 @@ public class AnswerController {
         answer = AnswerUtil.strToAnswer(data);
         answerService.checkUserStatus(httpServletRequest);
 
+
         String email = (String) httpServletRequest.getSession().getAttribute("email");
         Result userByEmail = userService.GetUserByEmail(email);
         User userFromData = (User) userByEmail.getData();
-        if (!answerService.checkUserCompany(userFromData, answer.getSid()))
+
+
+
+        if (!answerService.checkUserCompany(userFromData, answer.getSid())) {
             throw new FrontException(ErrorCode.ILLEGAL_COMPANY_USER, "该用户不是公司用户");
+        }
 
         int sid = answer.getSid();
         Result sheetById = sheetService.getSheetById(sid);
@@ -84,11 +89,15 @@ public class AnswerController {
 
         for (String str : strings) {
 
-            Result result1 = answerService.selectAnswerByAnswerID(Integer.parseInt(str));
+            Result result1 = answerService.selectAnswerByAnswerId(Integer.parseInt(str));
             Answer answerFromData = ResultUtil.getBeanFromData(result1, Answer.class);
             if (answerFromData.getSid().equals(answer.getSid())) {
                 answerService.checkAnswerStatus(answerFromData);
                 Object data1 = answerFromData.getData();
+
+                JSONArray objects = JSONUtil.parseArray(JSONUtil.toJsonStr(data1));
+
+
                 JSONObject entries = JSONUtil.createObj().putOnce("unfinished", data1).putOnce("template", templateFromData.getData());
                 String s = JSONUtil.toJsonPrettyStr(entries);
                 ResultUtil.quickSet(
@@ -113,16 +122,14 @@ public class AnswerController {
         return result;
     }
 
-    /*
-
-
+    /**
+     * 接收json字符串格式如下
         {
             "sheetId":7,
             "answers":[{"id": "0", "value": "A"}, {"id": "1", "value": ["5555"]}]
         }
 
      */
-
     @PostMapping("/submit")
     public Result collectAnswer(@RequestBody String data, HttpServletRequest httpServletRequest) {
         HttpSession session = httpServletRequest.getSession();
@@ -138,9 +145,11 @@ public class AnswerController {
     @PostMapping("/save")
     public Result saveAnswer(@RequestBody String data, HttpServletRequest httpServletRequest) {
         HttpSession session = httpServletRequest.getSession();
-        Integer uid = (Integer) session.getAttribute("uid");
+        Integer uid = (Integer) session.getAttribute("id");
         Answer strToAnswer = AnswerUtil.strToAnswer(data);
-        result = answerService.saveTempAnswer(strToAnswer);
+        User userByEmail = userService.getUserByEmail((String) session.getAttribute("email"));
+        strToAnswer.setUid(uid);
+        result = answerService.saveTempAnswer(strToAnswer, userByEmail);
         return result;
 
     }
@@ -172,13 +181,16 @@ public class AnswerController {
 
                         JsonBeanTemplateContentsContent tempContent = content.get(t);
                         JsonBeanSurveysAnswers tempAnswer = answers.get(t);
-                        if (tempContent.getType().equals("input")) {
-                            tempContent.getValue().put(tempAnswer.getValue(), 0);
-                        } else {
-                            String index = tempAnswer.getValue();
-                            Map<String, Integer> value = tempContent.getValue();
-                            Integer count = value.get(index) + 1;
-                            value.put(index, count);
+                        List<String> value1 = tempAnswer.getValue();
+                        for (String tempValue : value1) {
+                            if ("input".equals(tempContent.getType())) {
+                                tempContent.getValue().put(tempValue, 0);
+                            } else {
+                                Map<String, Integer> value = tempContent.getValue();
+                                Integer count = value.get(tempValue) + 1;
+                                value.put(tempValue, count);
+                            }
+
                         }
                     }
 
@@ -210,17 +222,17 @@ public class AnswerController {
         return result;
     }
 
-    /*
-    {
+    /**
+     * 接收json字符串格式如下
+        {
         "pageNum":1,
         "size":5
-    }
+        }
      */
-
     @GetMapping()
     public Result getAnswersInPage(@RequestBody JSONObject jsonObject, HttpServletRequest request) {
         HashMap<String, Integer> pageInfo = PageUtil.getPageInfo(jsonObject, request, userService);
-        return answerService.getAnswersByUserID(pageInfo.get("id"), pageInfo.get("pageIndex"), pageInfo.get("sizePerPage"));
+        return answerService.getAnswersByUserId(pageInfo.get("id"), pageInfo.get("pageIndex"), pageInfo.get("sizePerPage"));
     }
 
 

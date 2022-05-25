@@ -4,20 +4,16 @@ import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ruangong.root.bean.*;
 import ruangong.root.dao.AnswerMapper;
-import ruangong.root.dao.TemplateMapper;
 import ruangong.root.dao.UserMapper;
 import ruangong.root.exception.BackException;
 import ruangong.root.exception.ErrorCode;
 import ruangong.root.exception.FrontException;
-import ruangong.root.service_tao.UserService;
 import ruangong.root.service_xiao.AnswerService;
 import ruangong.root.service_xiao.CuserService;
 import ruangong.root.service_xiao.PageUtil;
@@ -26,12 +22,13 @@ import ruangong.root.utils.ResultUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 
+/**
+ * @author pangx
+ */
 @Service
 @Transactional
 public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> implements AnswerService {
@@ -56,7 +53,7 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
     public Result insertAnswer(Answer answer, User user) {
 
 
-        if (!checkAnswerTime(answer)) {
+        if (checkAnswerTime(answer)) {
             throw new FrontException(ErrorCode.ILLEGAL_ANSWER_TIME, "该问卷回答时间已结束");
         }
 
@@ -65,8 +62,18 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
         }
 
 
-        boolean insert = saveOrUpdate(answer);
-        Integer id = answer.getId();
+        boolean insert;
+        int insert1 = 0;
+        int insert2 = 0;
+        if (0 == answerMapper.selectCount(new QueryWrapper<Answer>().eq("uid", user.getId()))) {
+            insert2 = answerMapper.insert(answer);
+        } else {
+            insert1 = answerMapper.update(answer, new UpdateWrapper<Answer>().eq("uid", user.getId()));
+        }
+
+        insert = (insert1 + insert2 != 0);
+        Answer answer1 = answerMapper.selectOne(new QueryWrapper<Answer>().eq("sid", answer.getSid()).eq("uid", user.getId()));
+        Integer id = answer1.getId();
         String submittedAnswers = user.getSheets();
         if (submittedAnswers != null) {
             List<String> strings = JSONUtil.parseArray(submittedAnswers).toList(String.class);
@@ -87,7 +94,7 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
             throw new BackException(ErrorCode.ANSWER_INSERT_FAILURE, "回答插入失败");
         }
 
-        boolean b = closeAnswer(answer);
+        closeAnswer(answer1);
 
 
         ResultUtil.quickSet(
@@ -157,38 +164,76 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
         Result sheetById = sheetService.getSheetById(answer.getSid());
         Sheet beanFromData = ResultUtil.getBeanFromData(sheetById, Sheet.class);
         Date date = new Date();
-        return beanFromData.getEnd().getTime() > date.getTime();
+        return beanFromData.getEnd().getTime() <= date.getTime();
 
 
     }
 
     @Override
-    public boolean closeAnswer(Answer answer) {
+    public void closeAnswer(Answer answer) {
 
         UpdateWrapper<Answer> update = Wrappers.update();
         update.eq("id", answer.getId()).set("done", 1);
         int update1 = answerMapper.update(null, update);
-        return update1 == 1;
     }
 
     @Override
-    public Result saveTempAnswer(Answer answer) {
-        if (!checkAnswerTime(answer)) {
+    public Result saveTempAnswer(Answer answer, User user) {
+
+
+        if (checkAnswerTime(answer)) {
             throw new FrontException(ErrorCode.ILLEGAL_ANSWER_TIME, "该问卷回答时间已结束");
         }
 
-        checkAnswerStatus(answer);
+        if (!checkAnswerStatus(answer)) {
+            throw new FrontException(ErrorCode.ANSWER_ALREADY_DONE, "已提交该问卷的答案");
+        }
 
-        boolean insert = saveOrUpdate(answer);
+        boolean insert;
+        int insert1 = 0;
+        int insert2 = 0;
+        if (0 == answerMapper.selectCount(new QueryWrapper<Answer>().eq("uid", user.getId()))) {
+            insert2 = answerMapper.insert(answer);
+        } else {
+            insert1 = answerMapper.update(answer, new UpdateWrapper<Answer>().eq("uid", user.getId()));
+        }
+
+
+        insert = (insert1 + insert2 != 0);
+
+        Answer answer1 = answerMapper.selectOne(new QueryWrapper<Answer>().eq("sid", answer.getSid()).eq("uid", user.getId()));
+
+        Integer id = answer1.getId();
+        String submittedAnswers = user.getSheets();
+        if (submittedAnswers != null) {
+            List<String> strings = JSONUtil.parseArray(submittedAnswers).toList(String.class);
+            if (!strings.contains(Integer.toString(id))) {
+                strings.add(Integer.toString(id));
+                JSONArray objects = JSONUtil.parseArray(strings);
+                String newString = JSONUtil.toJsonStr(objects);
+                user.setSheets(newString);
+            }
+        } else {
+            JSONArray array = JSONUtil.createArray();
+            array.add(Integer.toString(id));
+            user.setSheets(JSONUtil.toJsonStr(array));
+        }
+
+        userMapper.updateById(user);
+
+
         if (!insert) {
             throw new BackException(ErrorCode.ANSWER_INSERT_FAILURE, "回答插入失败");
         }
+
+
         ResultUtil.quickSet(
                 result,
                 ErrorCode.ALL_SET,
                 "答案提交成功",
                 1
         );
+
         return result;
 
 
@@ -196,23 +241,23 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
 
     @Override
     public boolean checkAnswerStatus(Answer answer) {
-        if (answer.getDone() != null)
+        if (answer.getDone() != null) {
             return answer.getDone() == 1;
+        }
         return true;
     }
 
     @Override
-    public boolean checkUserStatus(HttpServletRequest httpServletRequest) {
+    public void checkUserStatus(HttpServletRequest httpServletRequest) {
         Object email = httpServletRequest.getSession().getAttribute("email");
         if (email == null) {
             throw new FrontException(ErrorCode.USER_ILLEGAL_ACCESS, "必须登录以填写问卷");
         }
 
-        return true;
     }
 
     @Override
-    public Result getAnswersByUserID(Integer id, Integer pageNum, Integer size) {
+    public Result getAnswersByUserId(Integer id, Integer pageNum, Integer size) {
 
         JSONArray recordsById = PageUtil.getPageRecordsById(id, pageNum, size, "uid", Answer.class, answerMapper);
         ResultUtil.quickSet(
@@ -227,8 +272,8 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
     }
 
     @Override
-    public boolean checkUserCompany(User user, Integer sheetID) {
-        Result sheetById = sheetService.getSheetById(sheetID);
+    public boolean checkUserCompany(User user, Integer sheetId) {
+        Result sheetById = sheetService.getSheetById(sheetId);
         Sheet sheetFromData = ResultUtil.getBeanFromData(sheetById, Sheet.class);
         Integer cid = sheetFromData.getCid();
         Integer did = sheetFromData.getDid();
@@ -241,21 +286,23 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
         } else if (!cCheck) {
             throw new BackException(ErrorCode.SHEET_STRUCTURE_CONTAMINATED, "发布sheet结构异常");
         } else if (!dCheck) {
-            if (user.getType() == null)
+            if (user.getType() == null) {
                 return false;
-            Cuser cuserByTypeID = cuserService.getCuserByTypeID(user.getType());
-            return cuserByTypeID.getCid() == cid;
+            }
+            Cuser cuserByTypeID = cuserService.getCuserByTypeId(user.getType());
+            return cuserByTypeID.getCid().equals(cid);
         } else {
-            if (user.getType() == null)
+            if (user.getType() == null) {
                 return false;
-            Cuser cuserByTypeID = cuserService.getCuserByTypeID(user.getType());
-            return cuserByTypeID.getCid() == cid && cuserByTypeID.getDid() == did;
+            }
+            Cuser cuserByTypeID = cuserService.getCuserByTypeId(user.getType());
+            return cuserByTypeID.getCid().equals(cid) && cuserByTypeID.getDid().equals(did);
         }
 
     }
 
     @Override
-    public Result selectAnswerByAnswerID(int id) {
+    public Result selectAnswerByAnswerId(int id) {
         Answer answer = answerMapper.selectById(id);
         if (answer == null) {
             throw new BackException(ErrorCode.ANSWER_SELECT_FAILURE, "未找到对应id的答案");

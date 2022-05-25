@@ -12,6 +12,9 @@ import org.springframework.stereotype.Component;
 
 import java.lang.annotation.Target;
 
+/**
+ * @author pangx
+ */
 @TableName(value = "users",schema = "ruangong")
 @Data
 @Component

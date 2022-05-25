@@ -7,13 +7,16 @@ import lombok.experimental.Accessors;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author pangx
+ */
 @EqualsAndHashCode(callSuper = true)
 @Component
 @Scope("prototype")
 @Data
 @AllArgsConstructor
 @Accessors(chain = true)
-public class UnknownException extends RuntimeException{
+public class UnknownException extends RuntimeException {
     private Integer errorCode;
     private String errorMessage;
 

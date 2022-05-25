@@ -3,13 +3,9 @@ package ruangong.root.service_xiao.impl;
 
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.json.JSONArray;
-import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +20,6 @@ import ruangong.root.service_xiao.TemplateService;
 import ruangong.root.utils.ResultUtil;
 
 import javax.annotation.Resource;
-import java.util.function.Consumer;
 
 @Service
 @Transactional
@@ -45,6 +40,7 @@ public class SheetServiceImpl extends ServiceImpl<SheetMapper, Sheet> implements
     @Resource
     private TemplateService templateService;
 
+    @Override
     public Result fastCreateSheet(Sheet sheet, Integer cid, Integer uid) {
 
         sheet.setLocation(IdUtil.simpleUUID());
@@ -98,22 +94,6 @@ public class SheetServiceImpl extends ServiceImpl<SheetMapper, Sheet> implements
     }
 
     @Override
-    public Result updateSheet(Sheet sheet) {
-
-        sheetMapper.updateById(sheet);
-
-        ResultUtil.quickSet(
-                result,
-                ErrorCode.ALL_SET,
-                "增加成功",
-                JSONUtil.toJsonPrettyStr(JSONUtil.createObj().putOnce("updated", true))
-        );
-
-
-        return result;
-    }
-
-    @Override
     public Result getSheetsInPages(Integer id, Integer pageIndex, Integer sizePerPage) {
 
         JSONArray pageRecordsById = PageUtil.getPageRecordsById(id, pageIndex, sizePerPage, "uid", Sheet.class, sheetMapper);
@@ -123,7 +103,6 @@ public class SheetServiceImpl extends ServiceImpl<SheetMapper, Sheet> implements
                 "查询成功",
                 JSONUtil.toJsonPrettyStr(pageRecordsById)
         );
-
 
         return result;
     }

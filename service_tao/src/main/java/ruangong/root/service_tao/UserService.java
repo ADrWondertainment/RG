@@ -6,10 +6,23 @@ import ruangong.root.bean.*;
 
 import java.util.List;
 
+/**
+ * @author tao
+ */
 @Service
 public interface UserService extends IService<User> {
+    /**
+     * 普通用户的注册，不涉及企业
+     * @param user 通过前端传入的数据构建新的User对象
+     * @return 返回前后端通信协议Result
+     */
     public Result register(User user);
 
+    /**
+     * 登录功能
+     * @param user 通过前端传入的数据构建新的User对象
+     * @return 返回前后端通信协议Result
+     */
     public Result login(User user);
 
     public Result GetUserByEmail(String email);

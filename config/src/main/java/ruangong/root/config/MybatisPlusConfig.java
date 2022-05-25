@@ -13,6 +13,9 @@ import org.springframework.context.annotation.Configuration;
 import javax.annotation.Resource;
 import javax.sql.DataSource;
 
+/**
+ * @author pangx
+ */
 @Configuration
 @MapperScan(basePackages = "ruangong.root.dao")
 public class MybatisPlusConfig {

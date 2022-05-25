@@ -20,6 +20,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 
+/**
+ * @author pangx
+ */
 @RestController
 @RequestMapping("/sheets")
 public class SheetController {
@@ -35,22 +38,16 @@ public class SheetController {
     @Resource
     private AnswerMapper answerMapper;
 
-    /*
-    {
-        "tid":1,
-//        "uid":2,
-//        "cid":1,
-        "did":3,
-        "name":"test",
-        "description":"sample sheet",
-        "start":"2022-05-15",
-        "end":"2022-05-18",
-//        "type":1,
-//        "length":4
-    }
-    */
-
-
+    /**
+     * {
+     * "tid":1,
+     * "did":3,
+     * "name":"test",
+     * "description":"sample sheet",
+     * "start":"2022-05-15",
+     * "end":"2022-05-18",
+     * }
+     */
     @PostMapping
     public Result debutSheet(@RequestBody Sheet sheet, HttpServletRequest httpServletRequest) {
         HttpSession session = httpServletRequest.getSession();
@@ -63,13 +60,12 @@ public class SheetController {
     }
 
 
-    /*
-    {
-        "pageNum":1
-        "size":3
-    }
+    /**
+     * {
+     * "pageNum":1
+     * "size":3
+     * }
      */
-
     @PostMapping("/sheetPages")
     public Result getSheetsInPages(@RequestBody String jsonObject, HttpServletRequest httpServletRequest) {
         HashMap<String, Integer> pageInfo = PageUtil.getPageInfo(JSONUtil.parseObj(jsonObject), httpServletRequest, userService);
@@ -88,11 +84,11 @@ public class SheetController {
         return answerService.getAnswerInPagesByUserId(uid, pageIndex, sizePerPage);
     }
 
-    /*
-        {
-            "id":1,
-            "pass":0
-        }
+    /**
+     * {
+     * "id":1,
+     * "pass":0
+     * }
      */
     @PostMapping("/pass/check")
     public Result passSheetAnswers(@RequestBody String data) {
@@ -105,13 +101,13 @@ public class SheetController {
     }
 
 
-    /*
-        {
-            "sheetId":1,
-            "pageIndex":1,
-            "size":4,
-            "mode":0,               //1:unchecked, 2:通过, 3:不通过
-        }
+    /**
+     * {
+     * "sheetId":1,
+     * "pageIndex":1,
+     * "size":4,
+     * "mode":0,               //1:unchecked, 2:通过, 3:不通过
+     * }
      */
     @PostMapping("/pass/show")
     public Result showCheckedOrUncheckedAnswers(@RequestBody String data) {

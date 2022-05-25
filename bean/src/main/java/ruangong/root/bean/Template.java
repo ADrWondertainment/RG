@@ -10,6 +10,9 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 
 
+/**
+ * @author pangx
+ */
 @Data
 @TableName("templates")
 @Component

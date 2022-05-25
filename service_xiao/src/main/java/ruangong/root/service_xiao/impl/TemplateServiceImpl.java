@@ -42,7 +42,7 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template> i
     public Result createOrUpdateTemplateByBean(Template template, JsonBeanTemplate jsonBeanTemplate) {
 
         String type = jsonBeanTemplate.getType();
-        if (!(type.equals("0") || type.equals("1"))) {
+        if (!("0".equals(type) || "1".equals(type))) {
             throw new FrontException(ErrorCode.TEMPLATE_DATA_NULL, "模板名称和内容不能为空捏~");
         }
         QueryWrapper<Template> queryWrapper = Wrappers.query();

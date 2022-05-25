@@ -16,7 +16,7 @@ public class CuserServiceImpl implements CuserService {
     private CuserMapper cuserMapper;
 
     @Override
-    public Cuser getCuserByTypeID(int id) {
+    public Cuser getCuserByTypeId(int id) {
 
         Cuser cuser = cuserMapper.selectById(id);
         if (cuser == null)

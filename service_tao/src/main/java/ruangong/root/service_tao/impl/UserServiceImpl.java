@@ -139,9 +139,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         QueryWrapper<User> wrapper = new QueryWrapper<>();
         wrapper.eq("email", email);
         User user_result = userMapper.selectOne(wrapper);
-//        if (user_result == null) {
-//            throw new BackException(ErrorCode.USER_NAME_UNFINDED, "该用户不存在");
-//        }
         if (user_result == null) {
             ResultUtil.quickSet(
                     result,
@@ -241,40 +238,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public Result CompanyRegister(Company company) {
         String name = company.getName();
-//        String invite = company.getInvite();
 
         Result name_result = SelectByName(name);
-//        Result invite_result = SelectByInvite(invite);
 
-//        if (name_result.getData() != null && invite_result.getData() != null) {
-//            ResultUtil.quickSet(
-//                    result,
-//                    ErrorCode.COMPANY_NAME_INVITE_DUPLICATED,
-//                    "公司名、邀请码均重复，请重新输入",
-//                    null
-//            );
-//            return result;
-//        }
         if (name_result.getData() != null) {
             throw new FrontException(ErrorCode.COMPANY_NAME_DUPLICATED, "公司名重复，请重新输入");
 
-//            ResultUtil.quickSet(
-//                    result,
-//                    ErrorCode.COMPANY_NAME_DUPLICATED,
-//                    "公司名重复，请重新输入",
-//                    null
-//            );
-//            return result;
         }
-//        if (invite_result.getData() != null) {
-//            ResultUtil.quickSet(
-//                    result,
-//                    ErrorCode.COMPANY_INVITE_DUPLICATED,
-//                    "邀请码重复，请重新输入",
-//                    null
-//            );
-//            return result;
-//        }
 
         String invite = IdUtil.simpleUUID();
 
@@ -283,14 +253,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         int insert = companyMapper.insert(company);
         if (insert != 1) {
             throw new BackException(ErrorCode.COMPANY_REGISTER_FAILURE, "注册失败，请重试");
-
-//            ResultUtil.quickSet(
-//                    result,
-//                    ErrorCode.COMPANY_REGISTER_FAILURE,
-//                    "注册失败，请重试",
-//                    1
-//            );
-//            return  result;
 
         }
 
@@ -335,13 +297,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
             throw new BackException(ErrorCode.JOIN_COMPANY_FAILURE, "加入公司失败");
 
-//            ResultUtil.quickSet(
-//                    result,
-//                    ErrorCode.JOIN_COMPANY_FAILURE,
-//                    "加入公司失败",
-//                    null
-//            );
-//            return result;
         }
         ResultUtil.quickSet(
                 result,

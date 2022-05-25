@@ -7,6 +7,10 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 
+/**
+ * @author tao
+ */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Component
 @Scope("prototype")

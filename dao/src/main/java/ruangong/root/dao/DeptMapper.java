@@ -5,6 +5,9 @@ import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 import ruangong.root.bean.Dept;
 
+/**
+ * @author tao
+ */
 @Mapper
 @Repository
 public interface DeptMapper extends BaseMapper<Dept> {

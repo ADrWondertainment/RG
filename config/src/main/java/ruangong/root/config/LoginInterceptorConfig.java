@@ -9,6 +9,9 @@ import ruangong.root.interceptor.LoginInterceptor;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author tao
+ */
 @Configuration
 public class LoginInterceptorConfig implements WebMvcConfigurer {
 

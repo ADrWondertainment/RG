@@ -5,6 +5,9 @@ import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 import ruangong.root.bean.Role;
 
+/**
+ * @author tao
+ */
 @Mapper
 @Repository
 public interface RoleMapper extends BaseMapper<Role> {
