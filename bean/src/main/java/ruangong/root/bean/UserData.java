@@ -18,4 +18,5 @@ public class UserData extends CompanyUser{
     Integer cid;
     Integer rid;
     Integer did;
+    Integer typeId;
 }

@@ -69,7 +69,7 @@ public class UserController {
         return result;
     }
 
-    @PostMapping("/changepass")
+    @PostMapping("/changepass") 
     public Result changepassword(HttpServletRequest request, @RequestBody String data) {
 
         JSONObject pass = JSONUtil.parseObj(data);

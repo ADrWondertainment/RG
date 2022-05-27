@@ -340,12 +340,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         userData.setId(user.getId());
         userData.setEmail(user.getEmail());
 
-        Integer company_id = user.getType();
-        if (company_id == null) {
+        Integer typeId = user.getType();
+        if (typeId == null) {
             return userData;
         }
-        userData.setCid(company_id);
-        Company company = companyMapper.selectById(company_id);
+        userData.setTypeId(typeId);
+        Integer cid = cuserMapper.selectById(typeId).getCid();
+        userData.setCid(cid);
+        Company company = companyMapper.selectById(cid);
         userData.setCompany(company.getName());
 
         Cuser cuser_result = (Cuser) SelectByUid(id).getData();

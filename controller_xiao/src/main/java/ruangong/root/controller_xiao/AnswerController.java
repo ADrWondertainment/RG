@@ -56,10 +56,10 @@ public class AnswerController {
 
     /**
      * 接收json字符串格式如下
-        {
-            "sheetId":7,
-            "answers":[{"id": "0", "value": "A"}, {"id": "1", "value": ["5555"]}]
-        }
+     * {
+     * "sheetId":7,
+     * "answers":[{"id": "0", "value": "A"}, {"id": "1", "value": ["5555"]}]
+     * }
      */
     @PostMapping("/pre")
     public Result preProcess(@RequestBody String data, HttpServletRequest httpServletRequest) {
@@ -70,7 +70,6 @@ public class AnswerController {
         String email = (String) httpServletRequest.getSession().getAttribute("email");
         Result userByEmail = userService.GetUserByEmail(email);
         User userFromData = (User) userByEmail.getData();
-
 
 
         if (!answerService.checkUserCompany(userFromData, answer.getSid())) {
@@ -94,8 +93,6 @@ public class AnswerController {
             if (answerFromData.getSid().equals(answer.getSid())) {
                 answerService.checkAnswerStatus(answerFromData);
                 Object data1 = answerFromData.getData();
-
-                JSONArray objects = JSONUtil.parseArray(JSONUtil.toJsonStr(data1));
 
 
                 JSONObject entries = JSONUtil.createObj().putOnce("unfinished", data1).putOnce("template", templateFromData.getData());
@@ -124,11 +121,10 @@ public class AnswerController {
 
     /**
      * 接收json字符串格式如下
-        {
-            "sheetId":7,
-            "answers":[{"id": "0", "value": "A"}, {"id": "1", "value": ["5555"]}]
-        }
-
+     * {
+     * "sheetId":7,
+     * "answers":[{"id": "0", "value": "A"}, {"id": "1", "value": ["5555"]}]
+     * }
      */
     @PostMapping("/submit")
     public Result collectAnswer(@RequestBody String data, HttpServletRequest httpServletRequest) {
@@ -224,10 +220,10 @@ public class AnswerController {
 
     /**
      * 接收json字符串格式如下
-        {
-        "pageNum":1,
-        "size":5
-        }
+     * {
+     * "pageNum":1,
+     * "size":5
+     * }
      */
     @GetMapping()
     public Result getAnswersInPage(@RequestBody JSONObject jsonObject, HttpServletRequest request) {
