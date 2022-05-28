@@ -139,7 +139,7 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
                 result,
                 ErrorCode.ALL_SET,
                 "成功获取调查信息",
-                JSONUtil.toJsonStr(recordsById)
+                JSONUtil.toJsonPrettyStr(recordsById)
         );
 
         return result;
@@ -242,7 +242,7 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
     @Override
     public boolean checkAnswerStatus(Answer answer) {
         if (answer.getDone() != null) {
-            return answer.getDone() == 1;
+            return answer.getDone() != 1;
         }
         return true;
     }

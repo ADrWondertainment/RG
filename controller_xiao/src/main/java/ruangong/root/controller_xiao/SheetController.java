@@ -87,7 +87,7 @@ public class SheetController {
         Integer uid = pageInfo.get("uid");
         Integer pageIndex = pageInfo.get("pageIndex");
         Integer sizePerPage = pageInfo.get("sizePerPage");
-        return sheetService.getQueriesInPages(uid, pageIndex, sizePerPage);
+        return sheetService.getApprovalsInPages(uid, pageIndex, sizePerPage);
     }
 
     @PostMapping("/answer")

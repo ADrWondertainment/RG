@@ -31,7 +31,8 @@ public class PageUtil {
      */
     public static HashMap<String, Integer> getPageInfo(JSONObject jsonObject, HttpServletRequest httpServletRequest, UserService userService) {
 
-        Integer uid = (Integer) httpServletRequest.getSession().getAttribute("id");
+//        Integer uid = (Integer) httpServletRequest.getSession().getAttribute("id");
+        Integer uid = 10;
         if (uid == null || uid == 0) {
             throw new BackException(ErrorCode.USER_ILLEGAL_ACCESS, "用户未登录");
         }

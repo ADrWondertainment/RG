@@ -76,6 +76,7 @@ public class AnswerController {
             throw new FrontException(ErrorCode.ILLEGAL_COMPANY_USER, "该用户不是公司用户");
         }
 
+
         int sid = answer.getSid();
         Result sheetById = sheetService.getSheetById(sid);
         Sheet sheetFromData = ResultUtil.getBeanFromData(sheetById, Sheet.class);
@@ -91,7 +92,9 @@ public class AnswerController {
             Result result1 = answerService.selectAnswerByAnswerId(Integer.parseInt(str));
             Answer answerFromData = ResultUtil.getBeanFromData(result1, Answer.class);
             if (answerFromData.getSid().equals(answer.getSid())) {
-                answerService.checkAnswerStatus(answerFromData);
+                if (!answerService.checkAnswerStatus(answerFromData)) {
+                    throw new FrontException(ErrorCode.MULTIPLE_ANSWER_INSERTION_ATTEMPTS, "不能重复提交");
+                }
                 Object data1 = answerFromData.getData();
 
 
@@ -164,12 +167,16 @@ public class AnswerController {
             Result templateById = templateService.getTemplateById(tid);
             template = ResultUtil.getBeanFromData(templateById, Template.class);
             Integer length = template.getLength();
-            List<JsonBeanTemplateContentsContent> content = JSONUtil.toBean(template.getData(), JsonBeanTemplate.class).getContent();
+            JsonBeanTemplate jsonBeanTemplate = JSONUtil.toBean(template.getData(), JsonBeanTemplate.class);
+            List<JsonBeanTemplateContentsContent> content = jsonBeanTemplate.getContent();
             Result answersBySheetId = answerService.getAnswersBySheetId(sheetId);
             String data1 = (String) answersBySheetId.getData();
             List<Answer> list = JSONUtil.toList(data1, Answer.class);
             try {
                 for (Answer o : list) {
+                    if (answerService.checkAnswerStatus(o)) {
+                        continue;
+                    }
                     String data = o.getData();
                     JSONArray content1 = JSONUtil.parseArray(data);
                     List<JsonBeanSurveysAnswers> answers = JSONUtil.toList(content1, JsonBeanSurveysAnswers.class);
@@ -179,7 +186,8 @@ public class AnswerController {
                         JsonBeanSurveysAnswers tempAnswer = answers.get(t);
                         List<String> value1 = tempAnswer.getValue();
                         for (String tempValue : value1) {
-                            if ("input".equals(tempContent.getType())) {
+                            String tempType = tempContent.getType();
+                            if ("input".equals(tempType) || "date-selector".equals(tempType) || "num-input".equals(tempType)) {
                                 tempContent.getValue().put(tempValue, 0);
                             } else {
                                 Map<String, Integer> value = tempContent.getValue();
@@ -192,19 +200,20 @@ public class AnswerController {
 
                 }
 
+                ResultUtil.quickSet(
+                        result,
+                        ErrorCode.ALL_SET,
+                        "问卷结果返回成功",
+                        JSONUtil.toJsonPrettyStr(jsonBeanTemplate)
+                );
+                return result;
+
+
             } catch (Exception e) {
                 e.printStackTrace();
                 throw new BackException(ErrorCode.ANSWER_PROCESS_FAILURE, "处理回答数据时出错");
             }
 
-
-            ResultUtil.quickSet(
-                    result,
-                    ErrorCode.ALL_SET,
-                    "问卷结果返回成功",
-                    JSONUtil.toJsonPrettyStr(template.getData())
-            );
-            return result;
 
         }
 
@@ -231,5 +240,8 @@ public class AnswerController {
         return answerService.getAnswersByUserId(pageInfo.get("id"), pageInfo.get("pageIndex"), pageInfo.get("sizePerPage"));
     }
 
-
+    @GetMapping("/one/{answerId}")
+    public Result getAnswerByAnswerId(@PathVariable String answerId) {
+        return answerService.selectAnswerByAnswerId(Integer.parseInt(answerId));
+    }
 }
