@@ -4,6 +4,9 @@ import ruangong.root.bean.UserData;
 
 import javax.servlet.http.HttpSession;
 
+/**
+ * @author tao
+ */
 public class HttpSessionUtil {
     public static void quickSetAttribute(HttpSession session, UserData userData){
         session.setAttribute("email",userData.getEmail());
@@ -14,6 +17,7 @@ public class HttpSessionUtil {
         session.setAttribute("did",userData.getDid());
         session.setAttribute("role",userData.getRole());
         session.setAttribute("department",userData.getDepartment());
+        session.setAttribute("typeId", userData.getTypeId());
     }
 
     public static void quickRemoveAttribute(HttpSession session){

@@ -65,10 +65,10 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
         boolean insert;
         int insert1 = 0;
         int insert2 = 0;
-        if (0 == answerMapper.selectCount(new QueryWrapper<Answer>().eq("uid", user.getId()))) {
+        if (0 == answerMapper.selectCount(new QueryWrapper<Answer>().eq("uid", user.getId()).eq("sid", answer.getSid()))) {
             insert2 = answerMapper.insert(answer);
         } else {
-            insert1 = answerMapper.update(answer, new UpdateWrapper<Answer>().eq("uid", user.getId()));
+            insert1 = answerMapper.update(answer, new UpdateWrapper<Answer>().eq("uid", user.getId()).eq("sid", answer.getSid()));
         }
 
         insert = (insert1 + insert2 != 0);
@@ -192,10 +192,10 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
         boolean insert;
         int insert1 = 0;
         int insert2 = 0;
-        if (0 == answerMapper.selectCount(new QueryWrapper<Answer>().eq("uid", user.getId()))) {
+        if (0 == answerMapper.selectCount(new QueryWrapper<Answer>().eq("uid", user.getId()).eq("sid", answer.getSid()))) {
             insert2 = answerMapper.insert(answer);
         } else {
-            insert1 = answerMapper.update(answer, new UpdateWrapper<Answer>().eq("uid", user.getId()));
+            insert1 = answerMapper.update(answer, new UpdateWrapper<Answer>().eq("uid", user.getId()).eq("sid", answer.getSid()));
         }
 
 

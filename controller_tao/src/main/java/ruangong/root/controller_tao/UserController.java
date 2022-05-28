@@ -45,14 +45,30 @@ public class UserController {
         return result;
     }
 
+    /**
+     * @return 将userData的数据全部返回前端，UserData字段如下：
+     * cid: companyId
+     * did: departmentId
+     * rid: roleId
+     * email: 用户名
+     * typeId: 外键连接到存储企业信息的表，若为null则说明不是企业用户
+     * company: 企业名称
+     * department: 部门名称
+     * id: 用户id
+     * level: 权限等级（陶沙的设想具体是什么我给忘了）
+     * role: 职位名称
+     */
     @PostMapping("/login")
     public Result login(HttpServletRequest request, @RequestBody User user) {
         result = userService.login(user);
+        HttpSession session = null;
+        UserData userData = null;
         if (result.getErrorCode().equals(ErrorCode.USER_LOGIN_SUCCESS)) {
-            HttpSession session = request.getSession();
-            UserData userData = userService.GetAllData(user.getEmail());
+            session = request.getSession();
+            userData = userService.GetAllData(user.getEmail());
             HttpSessionUtil.quickSetAttribute(session, userData);
         }
+        result.setData(JSONUtil.toJsonPrettyStr(userData));
         return result;
     }
 

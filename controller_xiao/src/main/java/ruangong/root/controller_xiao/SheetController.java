@@ -35,8 +35,6 @@ public class SheetController {
     @Resource
     private AnswerService answerService;
 
-    @Resource
-    private AnswerMapper answerMapper;
 
     /**
      * {
