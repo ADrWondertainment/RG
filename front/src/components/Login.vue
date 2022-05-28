@@ -65,7 +65,7 @@ export default {
         })
         .then(res => {
           console.log(res.data)
-          if (res.data.data == "1") {
+          if (res.data.errorCode == 10050) {
             this.$router.push({
               name: "UserInfo",
             });

@@ -20,6 +20,7 @@ import ruangong.root.service_xiao.TemplateService;
 import ruangong.root.utils.ResultUtil;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
 
 @Service
 @Transactional
@@ -104,6 +105,31 @@ public class SheetServiceImpl extends ServiceImpl<SheetMapper, Sheet> implements
                 JSONUtil.toJsonPrettyStr(pageRecordsById)
         );
 
+        return result;
+    }
+
+    @Override
+    public Result getQueriesInPages(Integer id, Integer pageIndex, Integer sizePerPage) {
+
+        JSONArray pageRecordsById = PageUtil.getPageRecordsById(new Integer[]{id, 0}, pageIndex, sizePerPage, new String[]{"uid", "type"}, Sheet.class, sheetMapper);
+        ResultUtil.quickSet(
+                result,
+                ErrorCode.ALL_SET,
+                "查询成功",
+                JSONUtil.toJsonPrettyStr(pageRecordsById)
+        );
+        return result;
+    }
+
+    @Override
+    public Result getApprovalsInPages(Integer id, Integer pageIndex, Integer sizePerPage) {
+        JSONArray pageRecordsById = PageUtil.getPageRecordsById(new Integer[]{id, 1}, pageIndex, sizePerPage, new String[]{"uid", "type"}, Sheet.class, sheetMapper);
+        ResultUtil.quickSet(
+                result,
+                ErrorCode.ALL_SET,
+                "查询成功",
+                JSONUtil.toJsonPrettyStr(pageRecordsById)
+        );
         return result;
     }
 

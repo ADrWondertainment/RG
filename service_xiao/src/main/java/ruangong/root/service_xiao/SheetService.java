@@ -40,6 +40,26 @@ public interface SheetService extends IService<Sheet> {
     Result getSheetsInPages(Integer id, Integer pageIndex, Integer sizePerPage);
 
     /**
+     * 通过userId查询该用户的sheets并以分页形式返回
+     *
+     * @param id          用户id
+     * @param pageIndex   查询第几页
+     * @param sizePerPage 一页有多少条数据
+     * @return 返回的是用户所有的问卷表信息
+     */
+    Result getQueriesInPages(Integer id, Integer pageIndex, Integer sizePerPage);
+
+    /**
+     * 通过userId查询该用户的sheets并以分页形式返回
+     *
+     * @param id          用户id
+     * @param pageIndex   查询第几页
+     * @param sizePerPage 一页有多少条数据
+     * @return 返回的是用户所有的审批表信息
+     */
+    Result getApprovalsInPages(Integer id, Integer pageIndex, Integer sizePerPage);
+
+    /**
      * 通过answerId来对审批表进行审批，通过或不通过
      *
      * @param id   answerId

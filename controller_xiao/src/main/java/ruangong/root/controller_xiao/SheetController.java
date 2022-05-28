@@ -64,7 +64,7 @@ public class SheetController {
      * "size":3
      * }
      */
-    @PostMapping("/sheetPages")
+    @PostMapping("/all")
     public Result getSheetsInPages(@RequestBody String jsonObject, HttpServletRequest httpServletRequest) {
         HashMap<String, Integer> pageInfo = PageUtil.getPageInfo(JSONUtil.parseObj(jsonObject), httpServletRequest, userService);
         Integer uid = pageInfo.get("uid");
@@ -72,8 +72,25 @@ public class SheetController {
         Integer sizePerPage = pageInfo.get("sizePerPage");
         return sheetService.getSheetsInPages(uid, pageIndex, sizePerPage);
     }
+    @PostMapping("/query")
+    public Result getQueriesInPages(@RequestBody String jsonObject, HttpServletRequest httpServletRequest) {
+        HashMap<String, Integer> pageInfo = PageUtil.getPageInfo(JSONUtil.parseObj(jsonObject), httpServletRequest, userService);
+        Integer uid = pageInfo.get("uid");
+        Integer pageIndex = pageInfo.get("pageIndex");
+        Integer sizePerPage = pageInfo.get("sizePerPage");
+        return sheetService.getQueriesInPages(uid, pageIndex, sizePerPage);
+    }
 
-    @PostMapping("/answerPages")
+    @PostMapping("/approval")
+    public Result getApprovalsInPages(@RequestBody String jsonObject, HttpServletRequest httpServletRequest) {
+        HashMap<String, Integer> pageInfo = PageUtil.getPageInfo(JSONUtil.parseObj(jsonObject), httpServletRequest, userService);
+        Integer uid = pageInfo.get("uid");
+        Integer pageIndex = pageInfo.get("pageIndex");
+        Integer sizePerPage = pageInfo.get("sizePerPage");
+        return sheetService.getQueriesInPages(uid, pageIndex, sizePerPage);
+    }
+
+    @PostMapping("/answer")
     public Result showSheetAnswersInPages(@RequestBody String jsonObject, HttpServletRequest httpServletRequest) {
         HashMap<String, Integer> pageInfo = PageUtil.getPageInfo(JSONUtil.parseObj(jsonObject), httpServletRequest, userService);
         Integer uid = pageInfo.get("uid");
