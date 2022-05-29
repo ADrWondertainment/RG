@@ -17,6 +17,7 @@ import DetailPM from "~/components/Pages/DetailPM.vue";
 import SignIn from '~/components/Pages/SignIn.vue'
 import SignInC from '~/components/Pages/SignInC.vue'
 import FormTemplates from '~/components/Pages/ManageFormTemplates.vue'
+import AllPublicForms from '~/components/Pages/AllPublicForms.vue'
 
 const routes = [
     {
@@ -71,6 +72,11 @@ const routes = [
                 path:'/DetailPM',
                 name:'DetailPM',
                 component:DetailPM
+            },
+            {
+                path:'/allPublicForms',
+                name:'AllPublicForms',
+                component:AllPublicForms
             }
         ]
     },
