@@ -60,35 +60,37 @@ export default {
   },
   methods: {
     login() {
-      axios
-        .post("api/users/login", {
-          email: this.logInfo.userName,
-          pass: this.logInfo.password,
-        })
-        .then((res) => {
-          console.log(res.data);
-          if (res.data.errorCode == 10050) {
-            sessionStorage["isLogin"]=true;
-            sessionStorage["userName"]=this.logInfo.userName;
-            if (sessionStorage.getItem("targetPage") === null) {
-              console.log(111)
-              this.$router.push({
-                name: "UserInfo",
-              });
-            } else {
-              console.log(222)
-              this.$router.push({
-                path: sessionStorage["targetPage"],
-              });
-            }
-          }
-        });
+      // 后端调试时解除此段注释
+      // axios
+      //   .post("api/users/login", {
+      //     email: this.logInfo.userName,
+      //     pass: this.logInfo.password,
+      //   })
+      //   .then((res) => {
+      //     console.log(res.data);
+      //     if (res.data.errorCode == 10050) {
+      //       sessionStorage["isLogin"]=true;
+      //       sessionStorage["userName"]=this.logInfo.userName;
+      //       if (sessionStorage.getItem("targetPage") === null) {
+      //         console.log(111)
+      //         this.$router.push({
+      //           name: "UserInfo",
+      //         });
+      //       } else {
+      //         console.log(222)
+      //         this.$router.push({
+      //           path: sessionStorage["targetPage"],
+      //         });
+      //       }
+      //     }
+      //   });
 
 
-      // sessionStorage["isLogin"] = true;
-      // sessionStorage["userName"] = "admin";
-      // 要用.getItem，否则报错，可能是sessionSrorage直接使用[]索引时没有出错处理
+      // 前端调试时解除此段注释
+      sessionStorage["isLogin"] = true;
+      sessionStorage["userName"] = "admin";
       if (sessionStorage.getItem("targetPage") === null) {
+        // 要用.getItem，否则报错，可能是sessionSrorage直接使用[]索引时没有出错处理
         this.$router.push({
           name: "UserInfo",
         });
@@ -97,6 +99,8 @@ export default {
           path: sessionStorage["targetPage"],
         });
       }
+
+
     },
     ToSignIn() {
       this.$router.push("/signIn");
