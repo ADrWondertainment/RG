@@ -12,7 +12,7 @@
       <el-icon><edit /></el-icon>
       <template #title>已发布模板</template>
     </el-menu-item>
-    <el-menu-item index="/allPublicForms">
+    <el-menu-item index="/allFormsIFilledOut">
       <el-icon><edit /></el-icon>
       <template #title>我填过的表单</template>
     </el-menu-item>
