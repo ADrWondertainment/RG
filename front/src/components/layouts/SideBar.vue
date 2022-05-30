@@ -10,7 +10,11 @@
     </el-menu-item>
     <el-menu-item index="/allPublicForms">
       <el-icon><edit /></el-icon>
-      <template #title>查看已发布模板</template>
+      <template #title>已发布模板</template>
+    </el-menu-item>
+    <el-menu-item index="/allPublicForms">
+      <el-icon><edit /></el-icon>
+      <template #title>我填过的表单</template>
     </el-menu-item>
     <el-menu-item index="/formApprove">
       <el-icon><edit /></el-icon>

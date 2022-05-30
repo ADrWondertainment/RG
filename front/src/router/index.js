@@ -4,6 +4,10 @@ import Main from '~/components/Main.vue'
 import Login from '~/components/Pages/Login.vue'
 import test from '~/components/card.vue'
 
+import PersonnelManagement from "~/components/Pages/PersonnelManagement.vue"
+import DetailPM from "~/components/Pages/DetailPM.vue";
+// import CreateInput from '~/components/CreateForm/CreateInput.vue'
+
 import UserPage from '~/components/Pages/UserPage.vue'
 import CreateForm from '~/components/Pages/CreateForm.vue'
 import BeforeMain from '~/components/Pages/BeforeMain.vue'
@@ -11,14 +15,11 @@ import FillForm from '~/components/Pages/FillForm.vue'
 import JustFillForm from '~/components/Pages/JustFillForm.vue'
 import FormApprove from '~/components/Pages/AllFormsToApprove.vue'
 import ShowFormApprove from '~/components/Pages/ShowFormApprove.vue'
-import PersonnelManagement from "~/components/Pages/PersonnelManagement.vue"
-import DetailPM from "~/components/Pages/DetailPM.vue";
-// import CreateInput from '~/components/CreateForm/CreateInput.vue'
 import SignIn from '~/components/Pages/SignIn.vue'
 import SignInC from '~/components/Pages/SignInC.vue'
 import FormTemplates from '~/components/Pages/ManageFormTemplates.vue'
 import AllPublicForms from '~/components/Pages/AllPublicForms.vue'
-
+import AllFormsIFilledOut from '~/components/Pages/AllFormsIFilledOut.vue'
 const routes = [
     {
         path: '/',
@@ -77,6 +78,11 @@ const routes = [
                 path:'/allPublicForms',
                 name:'AllPublicForms',
                 component:AllPublicForms
+            },
+            {
+                path:'/allFormsIFilledOut',
+                name:'AllFormsIFilledOut',
+                component:AllFormsIFilledOut
             }
         ]
     },
