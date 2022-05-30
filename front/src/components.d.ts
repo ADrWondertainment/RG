@@ -5,6 +5,7 @@ import '@vue/runtime-core'
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    AllFormsIFilledOut: typeof import('./components/Pages/AllFormsIFilledOut.vue')['default']
     AllFormsToApprove: typeof import('./components/Pages/AllFormsToApprove.vue')['default']
     AllPublicForms: typeof import('./components/Pages/AllPublicForms.vue')['default']
     BaseHeader: typeof import('./components/layouts/BaseHeader.vue')['default']
@@ -18,7 +19,6 @@ declare module '@vue/runtime-core' {
     ElAffix: typeof import('element-plus/es')['ElAffix']
     ElAside: typeof import('element-plus/es')['ElAside']
     ElButton: typeof import('element-plus/es')['ElButton']
-    ElButtonGroup: typeof import('element-plus/es')['ElButtonGroup']
     ElCard: typeof import('element-plus/es')['ElCard']
     ElCheckbox: typeof import('element-plus/es')['ElCheckbox']
     ElCheckboxGroup: typeof import('element-plus/es')['ElCheckboxGroup']
@@ -58,6 +58,7 @@ declare module '@vue/runtime-core' {
     ManageFormTemplates: typeof import('./components/Pages/ManageFormTemplates.vue')['default']
     MultiCheck: typeof import('./components/FormComponents/MultiCheck.vue')['default']
     PersonnelManagement: typeof import('./components/Pages/PersonnelManagement.vue')['default']
+    ResultOfOneForm: typeof import('./components/Pages/ResultOfOneForm.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     ShowFormApprove: typeof import('./components/Pages/ShowFormApprove.vue')['default']

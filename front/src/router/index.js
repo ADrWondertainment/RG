@@ -20,6 +20,7 @@ import SignInC from '~/components/Pages/SignInC.vue'
 import FormTemplates from '~/components/Pages/ManageFormTemplates.vue'
 import AllPublicForms from '~/components/Pages/AllPublicForms.vue'
 import AllFormsIFilledOut from '~/components/Pages/AllFormsIFilledOut.vue'
+import ResultOfOneForm from '~/components/Pages/ResultOfOneForm.vue'
 const routes = [
     {
         path: '/',
@@ -78,6 +79,11 @@ const routes = [
                 path:'/allPublicForms',
                 name:'AllPublicForms',
                 component:AllPublicForms
+            },
+            {
+                path:'/resultOfOneForm',
+                name:'ResultOfOneForm',
+                component:ResultOfOneForm
             },
             {
                 path:'/allFormsIFilledOut',

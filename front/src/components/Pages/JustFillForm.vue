@@ -114,13 +114,13 @@
           <el-form-item
             :label="item.description"
             :rules="[
-                  {
-                    required: item.isRequired,
-                    message: '此项为必填项！',
-                    trigger: 'blur',
-                  },
-                  { validator: InstantSubmitForm, trigger: 'blur' },
-                ]"
+              {
+                required: item.isRequired,
+                message: '此项为必填项！',
+                trigger: 'blur',
+              },
+              { validator: InstantSubmitForm, trigger: 'blur' },
+            ]"
             :prop="'content[' + index + '].value'"
           >
             <el-checkbox-group v-model="formResult.content[index].value">
@@ -169,7 +169,6 @@
   <el-affix position="bottom" :offset="20" style="margin-left: 50%">
     <el-button type="primary" @click="SubmitForm">提交表单</el-button>
   </el-affix>
-
 </template>
 
 
@@ -182,7 +181,7 @@ export default {
     return {
       formObj: {},
       formDescriptionObj: {},
-      gettenData:{},
+      gettenData: {},
       formResult: {
         content: [],
       },
@@ -193,7 +192,7 @@ export default {
     axios
       .post("/api/answers/pre", {
         sheetId: this.$route.params.FormId,
-        answers: null
+        answers: null,
       })
       .then((res) => {
         console.log(res.data.data);
@@ -204,21 +203,25 @@ export default {
           console.log(this.gettenData);
           this.formObj = JSON.parse(this.formDescriptionObj.originContent);
           console.log(this.formObj);
-        }
-        var formItem;
-        // console.log(JSON.parse(this.gettenData.unfinished))
-        console.log(this.gettenData.unfinished)
-        if ('unfinished' in this.gettenData) {
-          this.formResult.content = JSON.parse(this.gettenData.unfinished);
-        } else {
-          for (formItem in this.formObj) {
-            // console.log(formItem);
-            // console.log(123456);
-            this.formResult.content.push({
-              id: formItem,
-              value: [],
-            });
+          var formItem;
+          // console.log(JSON.parse(this.gettenData.unfinished))
+          console.log(this.gettenData.unfinished);
+          if ("unfinished" in this.gettenData) {
+            this.formResult.content = JSON.parse(this.gettenData.unfinished);
+          } else {
+            for (formItem in this.formObj) {
+              // console.log(formItem);
+              // console.log(123456);
+              this.formResult.content.push({
+                id: formItem,
+                value: [],
+              });
+            }
           }
+        } else if (res.data.errorCode === 20220) {
+          ElMessage.info("您已完成过此表单的填写，请勿重复填写");
+        } else {
+          ElMessage.error('访问出错')
         }
       });
 
@@ -251,19 +254,19 @@ export default {
           sheetId: this.$route.params.FormId,
           answers: this.formResult.content,
         })
-        .then(res => {
+        .then((res) => {
           if (res.data.errorCode == 66666) {
             ElMessage.success("上传成功");
           }
         });
       ElMessage.success("上传成功");
     },
-    InstantSubmitForm(rule, value, callback){
+    InstantSubmitForm(rule, value, callback) {
       console.log(JSON.stringify(this.formResult.content));
-      axios.post('/api/answers/save/',{
+      axios.post("/api/answers/save/", {
         sheetId: this.$route.params.FormId,
         answers: this.formResult.content,
-      })
+      });
       ElMessage.success("上传成功");
     },
   },

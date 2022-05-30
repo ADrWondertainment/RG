@@ -135,7 +135,12 @@ export default{
 
         },
         viewFormResult(id){
-
+            this.$router.push({
+                name:'ResultOfOneForm',
+                params:{
+                    sid:id
+                }
+            })
         }
     },
     mounted(){
