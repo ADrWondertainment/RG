@@ -191,8 +191,8 @@ export default {
   },
   mounted() {
     this.formDescriptionObj = JSON.parse(this.$route.params.json);
-    this.formObj = JSON.parse(this.formDescriptionObj.originContent);
-    // this.formObj = this.formDescriptionObj.originContent;
+    // this.formObj = JSON.parse(this.formDescriptionObj.originContent); // 后端使用这一行
+    this.formObj = this.formDescriptionObj.originContent;           // 前端使用这一行
     // console.log(this.formObj);
     var formItem;
     for (formItem in this.formObj) {
