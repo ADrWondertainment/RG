@@ -119,7 +119,7 @@ export default {
     };
   },
   created() {
-    console.log(11231231);
+    console.log(1111111);
     var returnData;
     // axios.post('/api/sheets/all',{
     //     'pageNum':1,
