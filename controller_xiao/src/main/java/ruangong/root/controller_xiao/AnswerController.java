@@ -200,11 +200,15 @@ public class AnswerController {
 
                 }
 
+                JSONObject entries = JSONUtil.parseObj(jsonBeanTemplate);
+                JSONArray originContent = JSONUtil.parseArray(entries.get("originContent"));
+                entries.set("originContent", originContent);
+
                 ResultUtil.quickSet(
                         result,
                         ErrorCode.ALL_SET,
                         "问卷结果返回成功",
-                        JSONUtil.toJsonPrettyStr(jsonBeanTemplate)
+                        entries
                 );
                 return result;
 

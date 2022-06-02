@@ -102,7 +102,7 @@ public class SheetServiceImpl extends ServiceImpl<SheetMapper, Sheet> implements
                 result,
                 ErrorCode.ALL_SET,
                 "查询成功",
-                JSONUtil.toJsonPrettyStr(pageRecordsById)
+                pageRecordsById
         );
 
         return result;
@@ -116,7 +116,7 @@ public class SheetServiceImpl extends ServiceImpl<SheetMapper, Sheet> implements
                 result,
                 ErrorCode.ALL_SET,
                 "查询成功",
-                JSONUtil.toJsonPrettyStr(pageRecordsById)
+                pageRecordsById
         );
         return result;
     }
@@ -128,7 +128,7 @@ public class SheetServiceImpl extends ServiceImpl<SheetMapper, Sheet> implements
                 result,
                 ErrorCode.ALL_SET,
                 "查询成功",
-                JSONUtil.toJsonPrettyStr(pageRecordsById)
+                pageRecordsById
         );
         return result;
     }

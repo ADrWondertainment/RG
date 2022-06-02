@@ -48,7 +48,7 @@ public class PageUtil {
         return map;
     }
 
-    public static <T, S> JSONArray getPageRecordsById(Integer id, Integer pageIndex, Integer sizePerPage, String columnName, Class<T> tClass, BaseMapper<T> baseMapper) {
+    public static <T> JSONArray getPageRecordsById(Integer id, Integer pageIndex, Integer sizePerPage, String columnName, Class<T> tClass, BaseMapper<T> baseMapper) {
 
         IPage<T> page = new Page(pageIndex, sizePerPage);
         QueryWrapper<T> query = Wrappers.query();

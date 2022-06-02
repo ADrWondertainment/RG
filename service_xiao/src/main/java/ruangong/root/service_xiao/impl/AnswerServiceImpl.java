@@ -1,6 +1,7 @@
 package ruangong.root.service_xiao.impl;
 
 import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
@@ -134,12 +135,18 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
         JSONArray recordsById = PageUtil.getPageRecordsById(uid, pageIndex, sizePerPage,
                 "uid", Answer.class, answerMapper);
 
+        for (Object object : recordsById) {
+            JSONObject temp = (JSONObject) object;
+            Object data = temp.get("data");
+            JSONArray objects = JSONUtil.parseArray(data);
+            temp.set("data", objects);
+        }
 
         ResultUtil.quickSet(
                 result,
                 ErrorCode.ALL_SET,
                 "成功获取调查信息",
-                JSONUtil.toJsonPrettyStr(recordsById)
+                recordsById
         );
 
         return result;
@@ -312,7 +319,7 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
                 result,
                 ErrorCode.ALL_SET,
                 "成功找到答案",
-                JSONUtil.toJsonStr(answer)
+                answer
         );
 
         return result;
