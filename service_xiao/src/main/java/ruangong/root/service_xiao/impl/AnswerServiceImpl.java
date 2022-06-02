@@ -140,7 +140,11 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
             Object data = temp.get("data");
             JSONArray objects = JSONUtil.parseArray(data);
             temp.set("data", objects);
+            Integer sid = temp.get("sid", Integer.class);
+            Sheet sheetFromData = ResultUtil.getBeanFromData(sheetService.getSheetById(sid), Sheet.class);
+            temp.putOnce("name", sheetFromData.getName());
         }
+
 
         ResultUtil.quickSet(
                 result,
