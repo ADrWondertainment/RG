@@ -1,5 +1,6 @@
 package ruangong.root.bean;
 
+
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -7,17 +8,20 @@ import lombok.Data;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.Type;
+import java.util.List;
+
 /**
- * @author tao
+ * @author pangx
  */
-@Data
-@TableName("companies")
 @Component
 @Scope("prototype")
-public class Company {
+@Data
+@TableName(value = "groups", autoResultMap = true)
+public class Group {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
-    private String name;
-    private String invite;
-    private String groups;
+    private Integer cid;
+    private Integer gid;
 }
+
