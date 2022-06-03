@@ -3,6 +3,6 @@ package ruangong.root.bean.dataflow;
 /**
  * @author pangx
  */
-public abstract class Cathedral extends Transmitter implements Crucifix, Prayer {
+public abstract class Cathedral<LOW> extends Transmitter implements Crucifix<LOW>, Prayer<LOW> {
 
 }
