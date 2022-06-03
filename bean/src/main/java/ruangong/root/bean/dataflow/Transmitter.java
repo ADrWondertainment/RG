@@ -1,4 +1,4 @@
 package ruangong.root.bean.dataflow;
 
-public abstract class Transmitter implements Semipermeable {
+public abstract class Transmitter {
 }

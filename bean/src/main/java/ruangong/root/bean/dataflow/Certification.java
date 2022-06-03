@@ -1,6 +1,8 @@
 package ruangong.root.bean.dataflow;
 
+import lombok.Data;
+
 public interface Certification<LOW> {
-    LOW atone(Object... args);
-    LOW process(LOW cube);
+    AIMDiffusionField<LOW> atone(Object... args);
+    AIMDiffusionField<LOW> process(AIMDiffusionField<LOW> cube);
 }
