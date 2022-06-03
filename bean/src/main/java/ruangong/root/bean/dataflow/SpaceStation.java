@@ -36,41 +36,29 @@ public abstract class SpaceStation<MEMBER extends Astronaut<LOW>, LOW> extends C
             case POWERLESS:
             case DAMAGED:
             case DISORIENTED:
-                restore(field);
+                recycle(field);
             case ENERGETIC:
                 field.setStatus(AIMDiffusionField.StatusCode.POWERLESS);
         }
         storage.offer(oracle(field));
     }
 
-    private void restore(AIMDiffusionField<LOW> field) {
-        if (!recycle(field)) {
-            deprecate(field);
-        }
-    }
 
-    private boolean recycle(AIMDiffusionField<LOW> field) {
+    private void recycle(AIMDiffusionField<LOW> field) {
         switch (field.getStatus()) {
             case DISORIENTED:
                 SpacePort.disoriented.offer(field);
-                return true;
             case DAMAGED:
                 SpacePort.damaged.offer(field);
-                return true;
             case POWERLESS:
                 SpacePort.powerless.offer(field);
-                return true;
             case FINISHED:
                 SpacePort.finished.offer(field);
-                return true;
-            default:
-                return false;
+            case DEPRECATED:
+                SpacePort.deprecated.offer(field);
         }
     }
 
-    private void deprecate(AIMDiffusionField<LOW> field) {
-
-    }
 
     private boolean transmit() {
         if (semi.peek() == null) {
@@ -79,7 +67,7 @@ public abstract class SpaceStation<MEMBER extends Astronaut<LOW>, LOW> extends C
         AIMDiffusionField<LOW> prayed = pray(semi.element());
         if (prayed != null) {
             if (!prayed.shoot()) {
-                restore(prayed);
+                recycle(prayed);
                 return false;
             }
             semi.remove();

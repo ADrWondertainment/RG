@@ -16,6 +16,7 @@ public abstract class SpacePort {
     protected static Queue<AIMDiffusionField> powerless;
     protected static Queue<AIMDiffusionField> disoriented;
     protected static Queue<AIMDiffusionField> damaged;
+    protected static Queue<AIMDiffusionField> deprecated;
 
     protected static void registerStation(SpaceStation spaceStation) {
         stations.add(spaceStation);

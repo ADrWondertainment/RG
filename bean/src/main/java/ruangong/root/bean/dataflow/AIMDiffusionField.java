@@ -11,7 +11,7 @@ import java.util.Queue;
 public abstract class AIMDiffusionField<LOW> {
     private LOW content;
     private Queue<Integer> sequence;
-    private StatusCode status;
+    private StatusCode status = StatusCode.ENERGETIC;
 
     protected boolean shoot() {
         Integer target = sequence.peek();
@@ -29,7 +29,7 @@ public abstract class AIMDiffusionField<LOW> {
     }
 
     protected static enum StatusCode {
-        POWERLESS, ENERGETIC, DISORIENTED, DAMAGED, FINISHED
+        POWERLESS, ENERGETIC, DISORIENTED, DAMAGED, FINISHED, DEPRECATED
     }
 
 }
