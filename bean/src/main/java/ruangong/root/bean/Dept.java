@@ -19,4 +19,5 @@ public class Dept {
     private Integer id;
     private Integer cid;
     private String name;
+    private Integer fid;
 }

@@ -16,7 +16,9 @@ import ruangong.root.exception.FrontException;
 import ruangong.root.service_tao.UserService;
 import ruangong.root.utils.ResultUtil;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -54,13 +56,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private User root_user;
 
     @Autowired
-    private List<CompanyUser> list_user;
-
-    @Autowired
     private Role role_user;
 
     @Autowired
     private Dept dept_user;
+
+    @Autowired
+    private List<CompanyUser> companyUsers;
 
     @Override
     public Result register(User user) {
@@ -291,6 +293,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         cuser.setCid(cid);
         cuser.setLevel(1);
         cuser.setUid(id);
+        cuser.setDid(0);
         int insert = cuserMapper.insert(cuser);
 
         if (update == 0 || insert == 0) {
@@ -302,6 +305,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 result,
                 ErrorCode.JOIN_COMPANY_FAILURE,
                 "加入公司成功",
+                1
+        );
+        return result;
+    }
+
+    @Override
+    public Result RemoveCompanyUser(Integer id) {
+        UpdateWrapper<Cuser> wrap = new UpdateWrapper<>();
+        wrap.eq("uid", id);
+        cuserMapper.delete(wrap);
+        ResultUtil.quickSet(
+                result,
+                ErrorCode.REMOVE_COMPANY_USER,
+                "删除成员成功",
                 1
         );
         return result;
@@ -396,18 +413,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public List<CompanyUser> GetAllCompanyUser(Integer cid) {
-        QueryWrapper<Cuser> wrapper = new QueryWrapper<>();
-        wrapper.eq("cid", cid);
-        List<Cuser> users = cuserMapper.selectList(wrapper);
-        for (Cuser tmp_user :
-                users) {
-            list_user.add(GetAllData(tmp_user.getUid()));
-        }
-        return list_user;
-    }
-
-    @Override
     public Result UpdateRole(Integer uid, Integer cid, String role) {
         role_user.setCid(cid);
         role_user.setName(role);
@@ -425,17 +430,47 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public Result UpdateDept(Integer uid, Integer cid, String department) {
+    public Result CreateDept(Integer cid, String department,Integer fid) {
         dept_user.setCid(cid);
         dept_user.setName(department);
+        dept_user.setFid(fid);
         deptMapper.insert(dept_user);
-        UpdateWrapper<Cuser> wrap = new UpdateWrapper<>();
-        wrap.set("did", dept_user.getId()).eq("uid", uid);
-        cuserMapper.update(null, wrap);
+        ResultUtil.quickSet(
+                result,
+                ErrorCode.USER_CREATE_DEPARTMENT,
+                "部门创建成功",
+                1
+        );
+        return result;
+    }
+
+    @Override
+    public Result UpdateDept(Integer did, String department) {
+        UpdateWrapper<Dept> wrap = new UpdateWrapper<>();
+        wrap.set("name", department).eq("id", did);
+        deptMapper.update(null,wrap);
         ResultUtil.quickSet(
                 result,
                 ErrorCode.USER_UPDATE_DEPARTMENT,
                 "部门更新成功",
+                1
+        );
+        return result;
+    }
+
+    @Override
+    public Result RemoveDept(Integer did, Integer fid) {
+        UpdateWrapper<Cuser> wrap = new UpdateWrapper<>();
+        wrap.set("did", 0).eq("did", did);
+        cuserMapper.update(null, wrap);
+        UpdateWrapper<Dept> dwrap = new UpdateWrapper<>();
+        wrap.set("fid", fid).eq("fid", did);
+        deptMapper.update(null,dwrap);
+        deptMapper.deleteById(did);
+        ResultUtil.quickSet(
+                result,
+                ErrorCode.USER_DELETE_DEPARTMENT,
+                "部门删除成功",
                 1
         );
         return result;
@@ -453,5 +488,39 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 1
         );
         return result;
+    }
+
+    @Override
+    public Map<Dept,Integer> GetCompanyUserList(Integer cid,Integer did) {
+        Map<Dept,Integer> cuserbydept = new HashMap<>();
+        List<Dept> all_dept =GetAllDept(cid,did);
+        if (!all_dept.isEmpty()){
+            for (Dept tmp_dept:
+                    all_dept) {
+                List<CompanyUser> tmp_companyUsers = GetComanyUserByDepartment(cid,tmp_dept.getId());
+                cuserbydept.put(tmp_dept,tmp_companyUsers.size());
+            }
+        }
+        return cuserbydept;
+    }
+
+    @Override
+    public List<CompanyUser> GetComanyUserByDepartment(Integer cid,Integer did) {
+        companyUsers.clear();
+        QueryWrapper<Cuser> wrapper = new QueryWrapper<>();
+        wrapper.eq("did", did).eq("cid",cid);
+        List<Cuser> cuserList = cuserMapper.selectList(wrapper);
+        for (Cuser tmp_user :
+                cuserList) {
+            companyUsers.add(GetAllData(tmp_user.getUid()));
+        }
+        return companyUsers;
+    }
+
+    @Override
+    public List<Dept> GetAllDept(Integer cid,Integer did) {
+        QueryWrapper<Dept> wrapper = new QueryWrapper<>();
+        wrapper.eq("cid", cid).eq("fid",did);
+        return deptMapper.selectList(wrapper);
     }
 }

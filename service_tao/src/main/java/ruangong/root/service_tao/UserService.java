@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ruangong.root.bean.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author tao
@@ -37,22 +38,33 @@ public interface UserService extends IService<User> {
 
     public Result JoinCompany(String invite,Integer id);
 
-    public UserData GetAllData(Integer id);
+    public Result RemoveCompanyUser(Integer id);
 
+    public UserData GetAllData(Integer id);
 
     public Result SelectByUid(Integer uid);
 
-    public List<CompanyUser> GetAllCompanyUser(Integer cid);
-
     public Result UpdateRole(Integer uid,Integer cid,String role);
 
-    public Result UpdateDept(Integer uid,Integer cid,String department);
+    public Result CreateDept(Integer cid,String department,Integer fid);
+
+    public Result UpdateDept(Integer did,String department);
+
+    public Result RemoveDept(Integer did,Integer fid);
 
     public Result UpdateLevel(Integer uid,Integer level);
 
-//----------------------------------------------------------------------------
+    public Map<Dept,Integer> GetCompanyUserList(Integer cid,Integer did);
+
+    public List<CompanyUser> GetComanyUserByDepartment(Integer cid,Integer did);
+
+    public List<Dept> GetAllDept(Integer cid,Integer did);
+
+    //----------------------------------------------------------------------------
     public UserData GetAllData(String email);
 
     public User getUserByEmail(String email);
+
+
 
 }
