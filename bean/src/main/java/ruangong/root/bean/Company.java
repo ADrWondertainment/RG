@@ -12,12 +12,12 @@ import ruangong.root.bean.dataflow.SpacePort;
 /**
  * @author tao
  */
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode()
 @Data
 @TableName("companies")
 @Component
 @Scope("prototype")
-public class Company extends SpacePort {
+public class Company {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
     private String name;

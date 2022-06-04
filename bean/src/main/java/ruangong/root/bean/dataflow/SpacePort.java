@@ -11,6 +11,7 @@ public abstract class SpacePort {
     protected static List<Integer> registeredAstronauts;
 
     protected static List<SpaceStation> stations;
+    protected static List<Astronaut> astronauts;
 
     protected static Queue<AIMDiffusionField> finished;
     protected static Queue<AIMDiffusionField> powerless;
@@ -20,7 +21,16 @@ public abstract class SpacePort {
 
     protected static void registerStation(SpaceStation spaceStation) {
         stations.add(spaceStation);
-        registeredSpaceStations.add(stations.indexOf(spaceStation));
+        int index = stations.indexOf(spaceStation);
+        registeredSpaceStations.add(index);
+        spaceStation.setRegisterId(index);
+    }
+
+    protected static void registerAstronaut(Astronaut astronaut) {
+        astronauts.add(astronaut);
+        int index = astronauts.indexOf(astronaut);
+        registeredAstronauts.add(index);
+        astronaut.setRegisterId(index);
     }
 
     protected static boolean checkSpaceStation(Integer id) {

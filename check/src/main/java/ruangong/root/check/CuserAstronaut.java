@@ -1,10 +1,11 @@
-package ruangong.root.bean;
+package ruangong.root.check;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import ruangong.root.bean.Answer;
 import ruangong.root.bean.dataflow.AIMDiffusionField;
 import ruangong.root.bean.dataflow.Astronaut;
 
@@ -16,7 +17,7 @@ import ruangong.root.bean.dataflow.Astronaut;
 @Scope("prototype")
 @Data
 @TableName("cuser_view")
-public class CuserView extends Astronaut<Answer> {
+public class CuserAstronaut extends Astronaut<Answer> {
 
     private Integer id;
     private Integer uid;
