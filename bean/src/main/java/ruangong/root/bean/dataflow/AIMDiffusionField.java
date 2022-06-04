@@ -1,7 +1,9 @@
 package ruangong.root.bean.dataflow;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 
+import java.util.LinkedList;
 import java.util.Queue;
 
 /**
@@ -9,8 +11,13 @@ import java.util.Queue;
  */
 @Data
 public abstract class AIMDiffusionField<LOW> {
-    private LOW content;
-    private Queue<Integer> sequence;
+    @TableField(exist = false)
+    private LOW content = null;
+
+    @TableField(exist = false)
+    private Queue<Integer> sequence = new LinkedList<>();
+
+    @TableField(exist = false)
     private StatusCode status = StatusCode.POWERLESS;
 
     protected boolean shoot() {

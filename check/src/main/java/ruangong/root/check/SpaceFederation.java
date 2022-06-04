@@ -34,10 +34,12 @@ public class SpaceFederation extends SpacePort {
     @PostConstruct
     public void init() {
 
+
+
         List<GroupStation> raw = groupStationMapper.selectList(null);
         for (GroupStation station : raw) {
 
-            registerStation(station);
+            super.registerStation(station);
 
             char[] array = station.getMember().toCharArray();
             for (char c : array) {

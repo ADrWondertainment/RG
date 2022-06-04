@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
@@ -12,19 +14,22 @@ import java.util.Queue;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
+
 public abstract class SpaceStation<MEMBER extends Astronaut<LOW>, LOW> extends Cathedral<LOW> implements Sentinel<MEMBER> {
 
     @TableField(exist = false)
     private Integer registerId;
 
     @TableField(exist = false)
-    private List<MEMBER> dormitory;
+    private List<MEMBER> dormitory = new ArrayList<>();
 
     @TableField(exist = false)
-    private Queue<AIMDiffusionField<LOW>> storage;
+    private Queue<AIMDiffusionField<LOW>> storage = new LinkedList<>();
 
     @TableField(exist = false)
-    private Queue<AIMDiffusionField<LOW>> semi;
+    private Queue<AIMDiffusionField<LOW>> semi = new LinkedList<>();
+
+
 
     public boolean attend(MEMBER member) {
         if (!SpacePort.checkAstronauts(member.getRegisterId())) {

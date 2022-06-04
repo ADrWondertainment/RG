@@ -21,12 +21,12 @@ public class Approve extends AIMDiffusionField<Approve> {
     private String data;
     private Integer done;
     private Integer pass;
-    private String order;
+    private String flow;
 
     public static void init(List<Approve> approveList) {
         for (Approve approve : approveList) {
             approve.setContent(approve);
-            char[] chars = approve.getOrder().toCharArray();
+            char[] chars = approve.getFlow().toCharArray();
             Queue<Integer> integers = new LinkedList<>();
             for (char c : chars) {
                 integers.offer(c - '0');

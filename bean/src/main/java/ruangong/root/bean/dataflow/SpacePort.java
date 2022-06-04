@@ -1,12 +1,12 @@
 package ruangong.root.bean.dataflow;
 
 import lombok.Data;
+import org.springframework.stereotype.Component;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 @Data
+@Component
 public abstract class SpacePort {
     protected static List<Integer> registeredSpaceStations;
     protected static List<Integer> registeredAstronauts;
@@ -19,6 +19,20 @@ public abstract class SpacePort {
     protected static Queue<AIMDiffusionField> disoriented;
     protected static Queue<AIMDiffusionField> damaged;
     protected static Queue<AIMDiffusionField> deprecated;
+
+    static  {
+        registeredSpaceStations = new ArrayList<>();
+        registeredAstronauts = new ArrayList<>();
+
+        stations = new ArrayList<>();
+        astronauts = new ArrayList<>();
+
+        finished = new LinkedList<>();
+        powerless = new LinkedList<>();
+        disoriented = new LinkedList<>();
+        damaged = new LinkedList<>();
+        deprecated = new LinkedList<>();
+    }
 
     protected void load(List<? extends AIMDiffusionField> fields) {
         powerless.addAll(fields);
