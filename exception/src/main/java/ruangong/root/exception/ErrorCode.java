@@ -25,11 +25,14 @@ public class ErrorCode {
     public static final Integer COMPANY_REGISTER_FAILURE = 10100;
     public static final Integer JOIN_COMPANY_FAILURE = 10110;
     public static final Integer JOIN_COMPANY_SUCCESS = 10111;
+    public static final Integer REMOVE_COMPANY_USER = 10112;
     public static final Integer USER_UNJOIN = 10120;
     public static final Integer USER_UPDATE_ROLE = 10130;
     public static final Integer USER_UPDATE_DEPARTMENT = 10140;
+    public static final Integer USER_CREATE_DEPARTMENT = 10141;
+    public static final Integer USER_DELETE_DEPARTMENT = 10142;
     public static final Integer USER_UPDATE_LEVEL = 10150;
-
+    public static final Integer SELECT_USERS_BYDEPT =10160;
     public static final Integer SUCCESS = 1;
     /*----------------------------------------------------------------------------*/
     public static final Integer ALL_SET = 66666;

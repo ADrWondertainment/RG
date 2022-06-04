@@ -15,6 +15,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author tao
@@ -116,42 +117,54 @@ public class UserController {
         return result;
     }
 
+    @PutMapping("/rcuser")
+    public Result removecuser(Integer id){
+        return userService.RemoveCompanyUser(id);
+    }
+
     @GetMapping
-    public List<CompanyUser> showallcuser(HttpServletRequest request) {
+    public Map<Dept,Integer> showdept(HttpServletRequest request, Integer did){
         HttpSession session = request.getSession();
-        Integer cid = (Integer) session.getAttribute("cid");
-        return userService.GetAllCompanyUser(cid);
+        Integer cid =(Integer) session.getAttribute("cid");
+        return userService.GetCompanyUserList(cid,did);
+    }
+
+    @GetMapping
+    public List<CompanyUser> showuserbydept(HttpServletRequest request, Integer did){
+        HttpSession session = request.getSession();
+        Integer cid =(Integer) session.getAttribute("cid");
+        return userService.GetComanyUserByDepartment(cid,did);
     }
 
     @PutMapping("/role")
-    public Result updaterole(HttpServletRequest request, String role) {
+    public Result updaterole(HttpServletRequest request, String role,Integer uid) {
         HttpSession session = request.getSession();
         Integer cid = (Integer) session.getAttribute("cid");
-        Integer id = (Integer) session.getAttribute("id");
-        result = userService.UpdateRole(id, cid, role);
-        UserData userData = userService.GetAllData(id);
-        HttpSessionUtil.quickUpdateAttribute(session, userData);
+        result = userService.UpdateRole(uid, cid, role);
         return result;
     }
 
-    @PutMapping("/dept")
-    public Result updatedept(HttpServletRequest request, String department) {
+    @PutMapping("/cdept")
+    public Result createdept(HttpServletRequest request, String department,Integer fid) {
         HttpSession session = request.getSession();
         Integer cid = (Integer) session.getAttribute("cid");
-        Integer id = (Integer) session.getAttribute("id");
-        result = userService.UpdateRole(id, cid, department);
-        UserData userData = userService.GetAllData(id);
-        HttpSessionUtil.quickUpdateAttribute(session, userData);
+        result = userService.CreateDept(cid, department,fid);
         return result;
+    }
+
+    @PostMapping("/udept")
+    public Result updatedept(Integer did,String department){
+        return userService.UpdateDept(did,department);
+    }
+
+    @PostMapping("/ddept")
+    public Result deletedept(Integer did,Integer fid){
+        return userService.RemoveDept(did,fid);
     }
 
     @PutMapping
-    public Result updatelevel(HttpServletRequest request, Integer level) {
-        HttpSession session = request.getSession();
-        Integer id = (Integer) session.getAttribute("id");
-        result = userService.UpdateLevel(id, level);
-        UserData userData = userService.GetAllData(id);
-        HttpSessionUtil.quickUpdateAttribute(session, userData);
+    public Result updatelevel(Integer level,Integer uid) {
+        result = userService.UpdateLevel(uid, level);
         return result;
     }
 }
