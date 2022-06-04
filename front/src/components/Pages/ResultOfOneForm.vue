@@ -5,7 +5,7 @@
     <el-table :data="formResultObj" stripe>
       <el-table-column type="expand">
         <template #default="props">
-          <el-card style="margin-left:10%;width:80%;">
+          <el-card style="margin-left: 10%; width: 80%">
             <el-table
               :data="allValueArray[props.row.id]"
               v-if="
@@ -129,24 +129,27 @@ export default {
     };
   },
   mounted() {
-    // let id = this.$route.params.id;
-    // axios.get('/api/answers/result/'+id).then(
-    //     res => {
-    //         if(res.data.errorCode === 66666){
-    //             this.formDescriptionObj = JSON.parse(res.data.data)
-    //             this.formObj = JSON.parse(this.formDescriptionObj.originContent)
-    //             this.formResultObj = JSON.parse(this.formDescriptionObj.content)
-    //         }
-    //     }
-    // )
-    this.formDescriptionObj = JSON.parse(this.testStr);
-    this.formObj = this.formDescriptionObj.data.originContent;
-    this.formResultObj = this.formDescriptionObj.data.content;
+    let id = this.$route.params.id;
+    axios.get("/api/answers/result/" + id).then((res) => {
+      if (res.data.errorCode === 66666) {
+        this.formDescriptionObj = JSON.parse(res.data.data);
+        this.formObj = JSON.parse(this.formDescriptionObj.originContent);
+        this.formResultObj = JSON.parse(this.formDescriptionObj.content);
+        console.log(this.formDescriptionObj);
+        console.log(this.formObj);
+        console.log(this.formResultObj);
+      }
+    });
+
+    // this.formDescriptionObj = JSON.parse(this.testStr);
+    // this.formObj = this.formDescriptionObj.data.originContent;
+    // this.formResultObj = this.formDescriptionObj.data.content;
+
     // console.log(this.formDescriptionObj);
     // console.log(this.formObj);
     // console.log(this.formResultObj);
-    console.log(this.allValueArray);
-    this.Obj2Array(this.testObj);
+    // console.log(this.allValueArray);
+    // this.Obj2Array(this.testObj);
     for (let oneFormResult of this.formResultObj) {
       console.log(oneFormResult);
       this.allValueArray.push(this.Obj2Array(oneFormResult));

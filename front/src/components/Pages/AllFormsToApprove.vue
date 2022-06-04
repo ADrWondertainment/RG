@@ -1,105 +1,112 @@
 <template>
-  <el-card>
-    <el-row>
-      <el-col :span="4"></el-col>
-      <el-col :span="16">
-        <h1 title="123">待审批的表单</h1>
-      </el-col>
-    </el-row>
-    <el-table :data="formInfo" style="width: 100%">
-      <el-table-column prop="id" label="模板编号" width="180" align="center" />
-      <el-table-column
-        prop="name"
-        label="模板名称"
-        width="180"
-        align="center"
-      />
-      <el-table-column
-        prop="description"
-        label="模板描述"
-        width="180"
-        align="center"
-      />
-      <el-table-column label="操作" align="center">
-        <template #default="scope">
-          <el-button
-            size="small"
-            @click="ToApproveForm(scope.$index, scope.row.id)"
-            title="查看审批表的具体内容"
-            type="success"
-            plain
-            round
-            >查看申请内容</el-button
-          >
-        </template>
-      </el-table-column>
-    </el-table>
-    <el-divider style="margin-top: 0"></el-divider>
-  </el-card>
+  <div>
+    <el-card>
+      <el-row>
+        <el-col :span="4"></el-col>
+        <el-col :span="16">
+          <h1 title="123">待审批的表单</h1>
+        </el-col>
+      </el-row>
+      <el-table :data="formInfo" style="width: 100%">
+        <el-table-column
+          prop="id"
+          label="模板编号"
+          width="180"
+          align="center"
+        />
+        <el-table-column
+          prop="name"
+          label="模板名称"
+          width="180"
+          align="center"
+        />
+        <el-table-column
+          prop="description"
+          label="模板描述"
+          width="180"
+          align="center"
+        />
+        <el-table-column label="操作" align="center">
+          <template #default="scope">
+            <el-button
+              size="small"
+              @click="ToApproveForm(scope.$index, scope.row.id)"
+              title="查看审批表的具体内容"
+              type="success"
+              plain
+              round
+              >查看申请内容</el-button
+            >
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-divider style="margin-top: 0"></el-divider>
+    </el-card>
 
-  <el-dialog v-model="drawer" title="请输入表单的信息">
-    <!-- <template #title>
+    <el-dialog v-model="drawer" title="请输入表单的信息">
+      <!-- <template #title>
       <h4>请输入表单的信息</h4>
     </template>
     <template #default> -->
-    <el-form>
-      <el-row>
-        <el-col :span="24">
-          <el-form-item label="请输入表单名称"
-            ><el-input
-              v-model="sheetDescription.name"
-              placeholder="要发布的表单名称"
-              type="textarea"
-              :rows="2"
-            ></el-input
-          ></el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="24">
-          <el-form-item label="请输入表单描述"
-            ><el-input
-              v-model="sheetDescription.description"
-              placeholder="对表单的描述"
-              type="textarea"
-              :rows="4"
-            ></el-input
-          ></el-form-item>
-        </el-col>
-      </el-row>
+      <el-form>
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="请输入表单名称"
+              ><el-input
+                v-model="sheetDescription.name"
+                placeholder="要发布的表单名称"
+                type="textarea"
+                :rows="2"
+              ></el-input
+            ></el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="请输入表单描述"
+              ><el-input
+                v-model="sheetDescription.description"
+                placeholder="对表单的描述"
+                type="textarea"
+                :rows="4"
+              ></el-input
+            ></el-form-item>
+          </el-col>
+        </el-row>
 
-      <el-row>
-        <el-col :span="24">
-          <el-form-item label="表单起始时间">
-            <el-date-picker
-              v-model="sheetDescription.start"
-              type="datetime"
-              placeholder="表单起始时间"
-            />
-          </el-form-item>
-        </el-col>
-      </el-row>
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="表单起始时间">
+              <el-date-picker
+                v-model="sheetDescription.start"
+                type="datetime"
+                placeholder="表单起始时间"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
 
-      <el-row>
-        <el-col :span="24">
-          <el-form-item label="表单截止时间">
-            <el-date-picker
-              v-model="sheetDescription.end"
-              type="datetime"
-              placeholder="表单截止时间"
-            />
-          </el-form-item>
-        </el-col>
-      </el-row>
-    </el-form>
-    <!-- </template> -->
-    <template #footer>
-      <div style="flex: auto">
-        <el-button type="info" @click="cancelClick">取消</el-button>
-        <el-button type="primary" @click="confirmClick">确认</el-button>
-      </div>
-    </template>
-  </el-dialog>
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="表单截止时间">
+              <el-date-picker
+                v-model="sheetDescription.end"
+                type="datetime"
+                placeholder="表单截止时间"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <!-- </template> -->
+      <template #footer>
+        <div style="flex: auto">
+          <el-button type="info" @click="cancelClick">取消</el-button>
+          <el-button type="primary" @click="confirmClick">确认</el-button>
+        </div>
+      </template>
+    </el-dialog>
+  </div>
 </template>
 
 
@@ -225,20 +232,21 @@ export default {
   },
 
   mounted() {
-    console.log(111111)
-        axios.post("/api/sheets/pass/show", {
-          sheetId:18,
-          pageIndex:1,
-          size:4,
-          mode:0,
-        })
-        .then(res => {
-          if (res.data.errorCode == 66666) {
-            console.log(res.data.data)
-            this.formInfo = JSON.parse(res.data.data)
-            console.log(this.formInfo)
-          }
-        });
+    console.log(111111);
+    axios
+      .post("/api/sheets/pass/show", {
+        sheetId: 18,
+        pageIndex: 1,
+        size: 4,
+        mode: 0,
+      })
+      .then((res) => {
+        if (res.data.errorCode == 66666) {
+          console.log(res.data.data);
+          this.formInfo = JSON.parse(res.data.data);
+          console.log(this.formInfo);
+        }
+      });
     // console.log(this.testStr)
     // console.log(JSON.parse(this.test2))
     // console.log(JSON.parse(this.testStr))

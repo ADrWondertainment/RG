@@ -121,35 +121,41 @@ export default {
   created() {
     console.log(1111111);
     var returnData;
-    // axios.post('/api/sheets/all',{
-    //     'pageNum':1,
-    //     'size':10
-    // }).then(res =>{
-    //     returnData = JSON.parse(res.data);
-    //     if(returnData.errorCode === 66666){
-    //         this.returnList = JSON.parse(returnData.data)
-    //     }
-    // })
-    returnData = JSON.parse(this.testData);
-    this.returnList = returnData.data;
-    console.log(this.returnList);
+    axios
+      .post("/api/sheets/all", {
+        pageNum: 1,
+        size: 10,
+      })
+      .then((res) => {
+        returnData = JSON.parse(res.data);
+        if (returnData.errorCode === 66666) {
+          console.log(returnData);
+          this.returnList = JSON.parse(returnData.data);
+        }
+      });
+    // returnData = JSON.parse(this.testData);
+    // this.returnList = returnData.data;
+    // console.log(this.returnList);
   },
   methods: {
     selectChange(value) {
       console.log(value);
       var returnData;
-      // axios.post('/api/sheets/'+value,{
-      //     'pageNum':1,
-      //     'size':10
-      // }).then(res =>{
-      //     returnData = JSON.parse(res.data);
-      //     if(returnData.errorCode === 66666){
-      //         this.returnList = JSON.parse(returnData.data)
-      //     }
-      // })
-      returnData = JSON.parse(this.testData);
-      this.returnList = returnData.data;
-      console.log(this.returnList);
+      axios
+        .post("/api/sheets/" + value, {
+          pageNum: 1,
+          size: 10,
+        })
+        .then((res) => {
+          returnData = JSON.parse(res.data);
+          if (returnData.errorCode === 66666) {
+            console.log(returnData)
+            this.returnList = JSON.parse(returnData.data);
+          }
+        });
+      // returnData = JSON.parse(this.testData);
+      // this.returnList = returnData.data;
+      // console.log(this.returnList);
     },
     judgeFormKind(row, column, cellValue, index) {
       // console.log(cellValue)
