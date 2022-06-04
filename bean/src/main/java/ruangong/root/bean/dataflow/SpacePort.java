@@ -2,6 +2,7 @@ package ruangong.root.bean.dataflow;
 
 import lombok.Data;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Queue;
 
@@ -19,14 +20,24 @@ public abstract class SpacePort {
     protected static Queue<AIMDiffusionField> damaged;
     protected static Queue<AIMDiffusionField> deprecated;
 
-    protected static void registerStation(SpaceStation spaceStation) {
+    protected void load(List<? extends AIMDiffusionField> fields) {
+        powerless.addAll(fields);
+    }
+
+    protected void assign() {
+        for (AIMDiffusionField field : powerless) {
+            field.shoot();
+        }
+    }
+
+    protected void registerStation(SpaceStation spaceStation) {
         stations.add(spaceStation);
         int index = stations.indexOf(spaceStation);
         registeredSpaceStations.add(index);
         spaceStation.setRegisterId(index);
     }
 
-    protected static void registerAstronaut(Astronaut astronaut) {
+    protected void registerAstronaut(Astronaut astronaut) {
         astronauts.add(astronaut);
         int index = astronauts.indexOf(astronaut);
         registeredAstronauts.add(index);
@@ -39,6 +50,12 @@ public abstract class SpacePort {
 
     protected static boolean checkAstronauts(Integer id) {
         return registeredAstronauts.contains(id);
+    }
+
+    public void show() {
+        System.out.println(registeredSpaceStations);
+        System.out.println(registeredAstronauts);
+        System.out.println(powerless);
     }
 
 }

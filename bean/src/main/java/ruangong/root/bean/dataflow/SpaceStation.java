@@ -1,5 +1,6 @@
 package ruangong.root.bean.dataflow;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -13,9 +14,16 @@ import java.util.Queue;
 @Data
 public abstract class SpaceStation<MEMBER extends Astronaut<LOW>, LOW> extends Cathedral<LOW> implements Sentinel<MEMBER> {
 
+    @TableField(exist = false)
     private Integer registerId;
+
+    @TableField(exist = false)
     private List<MEMBER> dormitory;
+
+    @TableField(exist = false)
     private Queue<AIMDiffusionField<LOW>> storage;
+
+    @TableField(exist = false)
     private Queue<AIMDiffusionField<LOW>> semi;
 
     public boolean attend(MEMBER member) {

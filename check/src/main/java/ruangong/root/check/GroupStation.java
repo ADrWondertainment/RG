@@ -14,25 +14,25 @@ import ruangong.root.bean.dataflow.SpaceStation;
 @Component
 @Scope("prototype")
 @TableName("group_view")
-public class GroupStation extends SpaceStation<CuserAstronaut, Answer> {
+public class GroupStation extends SpaceStation<CuserAstronaut, Approve> {
     private Integer id;
     private Integer cid;
     private Integer level;
     private String member;
 
-    @Override
-    public AIMDiffusionField<Answer> oracle(AIMDiffusionField<Answer> high) {
-        return null;
-    }
 
     @Override
-    public AIMDiffusionField<Answer> pray(AIMDiffusionField<Answer> received) {
-        return null;
-    }
-
-
-    @Override
-    public boolean guard(CuserAstronaut cuserView) {
+    public boolean guard(CuserAstronaut cuserAstronaut) {
         return true;
+    }
+
+    @Override
+    public AIMDiffusionField<Approve> oracle(AIMDiffusionField<Approve> high) {
+        return null;
+    }
+
+    @Override
+    public AIMDiffusionField<Approve> pray(AIMDiffusionField<Approve> received) {
+        return null;
     }
 }

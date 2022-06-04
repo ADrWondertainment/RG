@@ -5,11 +5,14 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
+import ruangong.root.bean.dataflow.AIMDiffusionField;
 import ruangong.root.bean.dataflow.SpacePort;
 import ruangong.root.dao.*;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import java.util.Arrays;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
@@ -24,6 +27,9 @@ public class SpaceFederation extends SpacePort {
 
     @Resource
     private CuserAstronautMapper cuserAstronautMapper;
+
+    @Resource
+    private ApproveMapper approveMapper;
 
     @PostConstruct
     public void init() {
@@ -40,8 +46,13 @@ public class SpaceFederation extends SpacePort {
                 registerAstronaut(view);
                 station.attend(view);
             }
-
         }
+        //假想得到的view都是powerless的
+        List<Approve> approves = approveMapper.selectList(null);
+        Approve.init(approves);
+        load(approves);
+        assign();
+
     }
 
 }

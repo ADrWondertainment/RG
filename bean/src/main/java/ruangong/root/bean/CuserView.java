@@ -11,12 +11,11 @@ import ruangong.root.bean.dataflow.Astronaut;
 /**
  * @author pangx
  */
-@EqualsAndHashCode(callSuper = true)
 @Component
 @Scope("prototype")
 @Data
 @TableName("cuser_view")
-public class CuserView extends Astronaut<Answer> {
+public class CuserView {
 
     private Integer id;
     private Integer uid;
@@ -25,13 +24,4 @@ public class CuserView extends Astronaut<Answer> {
     private String role;
     private String dept;
 
-    @Override
-    public AIMDiffusionField<Answer> atone(Object... args) {
-        return null;
-    }
-
-    @Override
-    public AIMDiffusionField<Answer> process(AIMDiffusionField<Answer> cube) {
-        return null;
-    }
 }

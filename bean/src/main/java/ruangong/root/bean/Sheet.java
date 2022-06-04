@@ -32,4 +32,5 @@ public class Sheet {
     private String location;
     private Integer type;
     private Integer length;
+    private String order;
 }
