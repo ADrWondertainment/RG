@@ -1,7 +1,9 @@
 <template>
     <!--1.首先，弹窗页面中要有el-dialog组件即弹窗组件，我们把弹窗中的内容放在el-dialog组件中-->
     <!--2.设置:visible.sync属性，动态绑定一个布尔值，通过这个属性来控制弹窗是否弹出-->
-    <el-dialog :visible.sync="detailVisible" title="编辑部门"  width="35%" model-value="1">
+    <!-- <el-dialog :visible.sync="detailVisible" title="编辑部门"  width="35%" model-value="1"> -->
+        <!-- visible.sync属性会报错，似乎可以直接使用v-model -->
+    <el-dialog v-model="detailVisible" title="编辑部门"  width="35%" model-value="1">
         <div>当前部门名：{{oldname}}</div>
         <div>请输入新的部门名:
         </div>
