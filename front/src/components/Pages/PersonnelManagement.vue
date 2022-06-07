@@ -60,6 +60,7 @@
         </el-table>
         <el-divider style="margin-top: 0"></el-divider>
         <edit-depart @childFn="finishEdit" v-if="editDepartVisible" ref="dialog"></edit-depart>
+        <add-depart></add-depart>
     </el-card>
 
 
