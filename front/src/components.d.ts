@@ -5,6 +5,7 @@ import '@vue/runtime-core'
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    AddDepart: typeof import('./components/Pages/AddDepart.vue')['default']
     AllFormsIFilledOut: typeof import('./components/Pages/AllFormsIFilledOut.vue')['default']
     AllFormsToApprove: typeof import('./components/Pages/AllFormsToApprove.vue')['default']
     AllPublicForms: typeof import('./components/Pages/AllPublicForms.vue')['default']
@@ -16,6 +17,7 @@ declare module '@vue/runtime-core' {
     CreateInput: typeof import('./components/CreateForm/CreateInput.vue')['default']
     CreatForm: typeof import('./components/Pages/CreatForm.vue')['default']
     DetailPM: typeof import('./components/Pages/DetailPM.vue')['default']
+    EditDepart: typeof import('./components/Pages/EditDepart.vue')['default']
     ElAffix: typeof import('element-plus/es')['ElAffix']
     ElAside: typeof import('element-plus/es')['ElAside']
     ElButton: typeof import('element-plus/es')['ElButton']
