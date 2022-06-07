@@ -1,4 +1,5 @@
 <template>
+
     <el-card>
         <el-row>
             <el-col :span="4"></el-col>
@@ -24,12 +25,6 @@
                     width="180"
                     align="center"
             />
-            <el-table-column
-                    prop="description"
-                    label="部门描述"
-                    width="180"
-                    align="center"
-            />
             <el-table-column label="操作" align="center">
                 <template #default="scope">
                     <el-button
@@ -43,7 +38,7 @@
                     >
                     <el-button
                             size="small"
-                            @click="ToChangeForm(scope.$index, scope.row.id)"
+                            @click="EditDepart(scope.$index)"
                             title="编辑部门"
                             type="success"
                             plain
@@ -59,123 +54,42 @@
                             round
                     >删除部门</el-button
                     >
+
                 </template>
             </el-table-column>
         </el-table>
         <el-divider style="margin-top: 0"></el-divider>
+        <edit-depart @childFn="finishEdit" v-if="editDepartVisible" ref="dialog"></edit-depart>
     </el-card>
 
-    <el-dialog v-model="dialog" title="请输入表单的信息">
-        <!-- <template #title>
-          <h4>请输入表单的信息</h4>
-        </template>
-        <template #default> -->
-        <el-form>
-            <el-row>
-                <el-col :span="24">
-                    <el-form-item label="请输入表单名称"
-                    ><el-input
-                            v-model="sheetDescription.name"
-                            placeholder="要发布的表单名称"
-                            type="textarea"
-                            :rows="2"
-                    ></el-input
-                    ></el-form-item>
-                </el-col>
-            </el-row>
-            <el-row>
-                <el-col :span="24">
-                    <el-form-item label="请输入表单描述"
-                    ><el-input
-                            v-model="sheetDescription.description"
-                            placeholder="对表单的描述"
-                            type="textarea"
-                            :rows="4"
-                    ></el-input
-                    ></el-form-item>
-                </el-col>
-            </el-row>
 
-            <el-row>
-                <el-col :span="24">
-                    <el-form-item label="表单起始时间">
-                        <el-date-picker
-                                v-model="sheetDescription.start"
-                                type="datetime"
-                                placeholder="表单起始时间"
-                        />
-                    </el-form-item>
-                </el-col>
-            </el-row>
-
-            <el-row>
-                <el-col :span="24">
-                    <el-form-item label="表单截止时间">
-                        <el-date-picker
-                                v-model="sheetDescription.end"
-                                type="datetime"
-                                placeholder="表单截止时间"
-                        />
-                    </el-form-item>
-                </el-col>
-            </el-row>
-
-            <el-row>
-                <el-col :span="24">
-                    <el-form-item label="是否发布企业表单">
-                        <el-switch
-                                v-model="ifCompany"
-                                inline-prompt
-                                active-text="是"
-                                inactive-text="否"
-                                @change="getDepartments"
-                        />
-                    </el-form-item>
-                </el-col>
-            </el-row>
-
-            <el-row v-if="ifCompany">
-                <el-col :span="24">
-                    <el-form-item label="请选择填写表单的部门">
-                        <el-select>
-                            <el-option v-for="item in departments" :key="item"></el-option>
-                        </el-select>
-                    </el-form-item>
-                </el-col>
-            </el-row>
-
-        </el-form>
-        <!-- </template> -->
-        <template #footer>
-            <div style="flex: auto">
-                <el-button type="info" @click="cancelClick">取消</el-button>
-                <el-button type="primary" @click="confirmClick">确认</el-button>
-            </div>
-        </template>
-    </el-dialog>
 </template>
 
 <script>
     import {ElMessage, ElMessageBox} from "element-plus";
     import axios from "axios";
+    import EditDepart from "./EditDepart.vue";
+    import AddDepart from "./AddDepart.vue";
 
     export default {
         name: "PersonnelManagement",
+        components: {EditDepart,AddDepart},
         data(){
             return{
                 formInfo:null,
+                editDepartVisible:false,
                 departs:`[
                     {
                         "id":1,
                         "name":"财务部",
-                        "num":10,
-                        "description":"管钱的"
+                        "num":10
+
                     },
                     {
                         "id":2,
                         "name":"人力资源部",
-                        "num":11,
-                        "description":"管人的"
+                        "num":11
+
                     }
 
                 ]`,
@@ -216,7 +130,24 @@
             },
             EnterDepartment(index,id){
                 this.$router.push({name:"DetailPM",params:{id:id}});
-            }
+            },
+            EditDepart(index){
+                this.editDepartVisible=true;
+                this.$nextTick(()=>{
+                    //这里的dialog与上面dialog-component组件里面的ref属性值是一致的
+                    //init调用的是dialog-component组件里面的init方法
+                    //data是传递给弹窗页面的值
+                    // console.log(this.formInfo[index].name);
+                    this.$refs.dialog.init(this.formInfo[index].name,index);
+
+                })
+            },
+            finishEdit(index,name){
+                this.editDepartVisible=false;
+                // console.log("成了");
+                console.log(index,name);
+                this.formInfo[index].name=name;
+            },
         }
     }
 </script>
