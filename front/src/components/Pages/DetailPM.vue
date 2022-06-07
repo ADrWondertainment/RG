@@ -26,6 +26,7 @@
             </el-col>
         </el-row>
         <el-table :data="formInfo" style="width: 100%">
+            <el-table-column type="selection" width="55" />
             <el-table-column prop="uid" label="编号" width="180" align="center" />
             <el-table-column
                     prop="name"
@@ -267,6 +268,7 @@
             },
             finishManageRight(index,id,value){
                 this.showManageDepart[index].display="none";
+                this.manageButton[index]="管理权限";
                 console.log(index);
                 // console.log(this.showManageDepart[0][index]);
                 // console.log(this.showManageDepart);
