@@ -11,7 +11,7 @@
                         style="padding: 20px"
                         title="新建部门"
                         type="primary"
-                        @click="ToCreateForm"
+                        @click="addDepart"
                         plain
                 >新建部门</el-button
                 >
@@ -60,7 +60,32 @@
         </el-table>
         <el-divider style="margin-top: 0"></el-divider>
         <edit-depart @childFn="finishEdit" v-if="editDepartVisible" ref="dialog"></edit-depart>
-        <add-depart></add-depart>
+        <add-depart  v-model="AddDepartVisible" ref="add" :before-close="closeAdd">
+<!--            <el-dialog v-model="quitAddVisible"-->
+<!--                       title="Tips" width="30%" draggable>-->
+<!--                <span>确定要退出吗？</span>-->
+<!--                <template #footer>-->
+<!--                <span class="dialog-footer">-->
+<!--                <el-button @click="quitAddVisible = false;">取消</el-button>-->
+<!--                <el-button type="primary" @click="this.reserveVisible=true"-->
+<!--                >确定</el-button-->
+<!--                >-->
+<!--                  </span>-->
+<!--                </template>-->
+<!--            </el-dialog>-->
+<!--            <el-dialog v-model="reserveVisible" title="Tips" width="30%" draggable>-->
+<!--                    <span>是否保留编辑？</span>-->
+<!--                    <template #footer>-->
+<!--                  <span class="dialog-footer">-->
+<!--                    <el-button @click="this.reserveVisible = false;this.quitAddVisible=false;this.reserveAdd=true;">否</el-button>-->
+<!--                    <el-button type="primary" @click="reserveVisible = false;this.quitAddVisible=false;this.reserveAdd=false"-->
+<!--                    >是</el-button-->
+<!--                    >-->
+<!--                  </span>-->
+<!--                </template>-->
+<!--            </el-dialog>-->
+        </add-depart>
+
     </el-card>
 
 
@@ -79,6 +104,8 @@
             return{
                 formInfo:null,
                 editDepartVisible:false,
+                AddDepartVisible:false,
+                reserveAdd:false,
                 departs:`[
                     {
                         "id":1,
@@ -148,6 +175,32 @@
                 // console.log("成了");
                 console.log(index,name);
                 this.formInfo[index].name=name;
+            },
+            addDepart(){
+                this.AddDepartVisible=true;
+            },
+            closeAdd(done){
+                ElMessageBox.confirm("你确定要退出吗？", "注意！", {
+                    confirmButtonText: "确定",
+                    cancelButtonText: "取消",
+                    type: "warning",
+                }).then(_=>{
+                    ElMessageBox.confirm("是否保存编辑？", "注意！", {
+                        confirmButtonText: "是",
+                        cancelButtonText: "否",
+                        type: "warning",
+                    }).then(_=>{
+                        this.reserveAdd=false;
+                        this.$refs.add.isReserve(this.reserveAdd);
+                        done();
+                    }).catch(_=>{
+                        this.reserveAdd=true;
+                        this.$refs.add.isReserve(this.reserveAdd);
+                        // console.log(this.reserveAdd);
+                        done();
+                    })
+                }).catch(_=>{
+                })
             },
         }
     }

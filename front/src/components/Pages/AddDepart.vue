@@ -23,8 +23,7 @@
                 <el-input v-model="depart" type="textarea" />
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" @click="">Create</el-button>
-                <el-button>Cancel</el-button>
+                <el-button type="primary" @click="">创建</el-button>
             </el-form-item>
         </el-form>
     </el-dialog>
@@ -97,6 +96,18 @@
                         "right":1
                     },
                 ]
+            }
+        },
+        methods:{
+            isReserve(bool){
+                if(bool){
+                    this.depart={
+                        name:"",
+                        menmber:[],
+                        num:0
+                    };
+                    this.addstaff=false;
+                }
             }
         }
     }

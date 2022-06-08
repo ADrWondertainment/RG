@@ -104,7 +104,7 @@
                 </template>
             </el-table-column>
         </el-table>
-        <el-divider style="margin-top: 0"></el-divider>
+        <el-divider style="margin-top: 0" ></el-divider>
     </el-card>
 </template>
 
@@ -125,7 +125,7 @@
                     {
                         "id":1,
                         "uid":"419210??",
-                        "pos":"林志康的儿",
+                        "pos":"林志康的爹",
                         "name":"杜沛霖",
                         "telephone":110,
                         "depart":"2",
@@ -134,7 +134,7 @@
                     {
                         "id":2,
                         "uid":41921011,
-                        "pos":"杜沛霖的爹",
+                        "pos":"林志康的爹",
                         "name":"杜沛霖",
                         "telephone":1881007821,
                         "depart":"1",
@@ -143,7 +143,7 @@
                     {
                         "id":3,
                         "uid":419212011,
-                        "pos":"杜沛霖的爹",
+                        "pos":"杜沛霖的儿",
                         "name":"林志康",
                         "telephone":1881007821,
                         "depart":"2",
@@ -152,7 +152,7 @@
                     {
                         "id":4,
                         "uid":4192111,
-                        "pos":"杜沛霖的爹",
+                        "pos":"林志康的爹",
                         "name":"陶沙",
                         "telephone":1881007821,
                         "depart":"1",
@@ -161,7 +161,7 @@
                     {
                         "id":5,
                         "uid":4192101,
-                        "pos":"杜沛霖的爹",
+                        "pos":"林志康的爹",
                         "name":"庞小博",
                         "telephone":1881007821,
                         "depart":"1",
@@ -170,7 +170,7 @@
                     {
                         "id":6,
                         "uid":419121011,
-                        "pos":"杜沛霖的爹",
+                        "pos":"林志康的爹",
                         "name":"ABC",
                         "telephone":1881007821,
                         "depart":"2",

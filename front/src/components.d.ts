@@ -49,7 +49,6 @@ declare module '@vue/runtime-core' {
     ElSwitch: typeof import('element-plus/es')['ElSwitch']
     ElTable: typeof import('element-plus/es')['ElTable']
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
-    ElTimePicker: typeof import('element-plus/es')['ElTimePicker']
     FillForm: typeof import('./components/Pages/FillForm.vue')['default']
     FillForm_bk: typeof import('./components/Pages/FillForm_bk.vue')['default']
     HeaderBar: typeof import('./components/layouts/HeaderBar.vue')['default']
