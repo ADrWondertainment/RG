@@ -26,13 +26,19 @@ public class GroupStation extends SpaceStation<CuserAstronaut, Approve> {
         return true;
     }
 
+
     @Override
-    public AIMDiffusionField<Approve> oracle(AIMDiffusionField<Approve> high) {
-        return null;
+    public Approve oracle(AIMDiffusionField<CuserAstronaut, Approve> high) {
+        return high.getContent();
     }
 
     @Override
-    public AIMDiffusionField<Approve> pray(AIMDiffusionField<Approve> received) {
-        return null;
+    public AIMDiffusionField<CuserAstronaut, Approve> pray(SpaceStation<CuserAstronaut, Approve>.CombinedField received) {
+
+        received.fieldStorage.setContent(received.storage);
+        if (received.storage.getPass() == 0) {
+            received.fieldStorage.setStatus(AIMDiffusionField.StatusCode.DEPRECATED);
+        }
+        return received.fieldStorage;
     }
 }

@@ -5,21 +5,23 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 import ruangong.root.bean.dataflow.AIMDiffusionField;
+import ruangong.root.bean.dataflow.Astronaut;
 import ruangong.root.bean.dataflow.SpacePort;
+import ruangong.root.bean.dataflow.SpaceStation;
 import ruangong.root.dao.*;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 @EqualsAndHashCode(callSuper = true)
 @Component
 @Scope("singleton")
 @Data
-public class SpaceFederation extends SpacePort {
+public class SpaceFederation extends SpacePort<CuserAstronaut, Approve> {
 
 
     @Resource
@@ -33,28 +35,27 @@ public class SpaceFederation extends SpacePort {
 
     @PostConstruct
     public void init() {
-
-
-
         List<GroupStation> raw = groupStationMapper.selectList(null);
         for (GroupStation station : raw) {
-
             super.registerStation(station);
-
             char[] array = station.getMember().toCharArray();
             for (char c : array) {
                 int temp = c - '0';
                 CuserAstronaut view = cuserAstronautMapper.selectOne(new QueryWrapper<CuserAstronaut>().eq("id", temp));
                 registerAstronaut(view);
+//                view.setStation(station);
                 station.attend(view);
             }
         }
         //假想得到的view都是powerless的
         List<Approve> approves = approveMapper.selectList(null);
-        Approve.init(approves);
-        load(approves);
+        List<ApproveField> init = ApproveField.init(this, approves);
+        load(init);
         assign();
+    }
 
+    public SpaceStation<CuserAstronaut, Approve> getRegisteredStation(int id) {
+        return stations.get(id);
     }
 
 }

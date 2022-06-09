@@ -14,8 +14,24 @@ import java.util.Queue;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
+public abstract class SpaceStation<MEMBER extends Astronaut<LOW>, LOW> extends Cathedral<MEMBER, LOW> implements Sentinel<MEMBER> {
 
-public abstract class SpaceStation<MEMBER extends Astronaut<LOW>, LOW> extends Cathedral<LOW> implements Sentinel<MEMBER> {
+    public class CombinedField {
+        @TableField(exist = false)
+        public LOW storage = null;
+
+        @TableField(exist = false)
+        public AIMDiffusionField<MEMBER, LOW> fieldStorage = null;
+
+
+    }
+
+    private CombinedField combinedFieldFactory(AIMDiffusionField<MEMBER, LOW> field) {
+        CombinedField temp = new CombinedField();
+        temp.fieldStorage = field;
+        temp.storage = field.getContent();
+        return temp;
+    }
 
     @TableField(exist = false)
     private Integer registerId;
@@ -24,15 +40,17 @@ public abstract class SpaceStation<MEMBER extends Astronaut<LOW>, LOW> extends C
     private List<MEMBER> dormitory = new ArrayList<>();
 
     @TableField(exist = false)
-    private Queue<AIMDiffusionField<LOW>> storage = new LinkedList<>();
+    private Queue<CombinedField> combinedFields;
 
     @TableField(exist = false)
-    private Queue<AIMDiffusionField<LOW>> semi = new LinkedList<>();
+    private Queue<LOW> semi = new LinkedList<>();
 
+    @TableField(exist = false)
+    private SpacePort<MEMBER, LOW> centralPort;
 
 
     public boolean attend(MEMBER member) {
-        if (!SpacePort.checkAstronauts(member.getRegisterId())) {
+        if (!centralPort.checkAstronauts(member.getRegisterId())) {
             return false;
         }
         dormitory.add(member);
@@ -43,69 +61,58 @@ public abstract class SpaceStation<MEMBER extends Astronaut<LOW>, LOW> extends C
         return dormitory.remove(member);
     }
 
-    protected void receive(AIMDiffusionField<LOW> field) {
+    protected void receive(AIMDiffusionField<MEMBER, LOW> field) {
         switch (field.getStatus()) {
             case FINISHED:
+            case DISORIENTED:
             case POWERLESS:
             case DAMAGED:
-            case DISORIENTED:
                 recycle(field);
+                return;
             case ENERGETIC:
                 field.setStatus(AIMDiffusionField.StatusCode.POWERLESS);
         }
-        storage.offer(oracle(field));
+        combinedFields.offer(combinedFieldFactory(field));
     }
 
 
-    private void recycle(AIMDiffusionField<LOW> field) {
+    private void recycle(AIMDiffusionField<MEMBER, LOW> field) {
         switch (field.getStatus()) {
             case DISORIENTED:
-                SpacePort.disoriented.offer(field);
+                centralPort.disoriented.offer(field);
             case DAMAGED:
-                SpacePort.damaged.offer(field);
+                centralPort.damaged.offer(field);
             case POWERLESS:
-                SpacePort.powerless.offer(field);
+                centralPort.powerless.offer(field);
             case FINISHED:
-                SpacePort.finished.offer(field);
+                centralPort.finished.offer(field);
             case DEPRECATED:
-                SpacePort.deprecated.offer(field);
+                centralPort.deprecated.offer(field);
         }
     }
 
 
-    private boolean transmit() {
-        if (semi.peek() == null) {
+    public boolean transmit(LOW selected) {
+        CombinedField temp = null;
+        for (CombinedField field : combinedFields) {
+            if (field.storage == selected) {
+                temp = field;
+            }
+        }
+        if (temp == null) {
             return false;
         }
-        AIMDiffusionField<LOW> prayed = pray(semi.element());
+        AIMDiffusionField<MEMBER, LOW> prayed = pray(temp);
         if (prayed != null) {
             if (!prayed.shoot()) {
                 recycle(prayed);
                 return false;
             }
-            semi.remove();
+            combinedFields.remove(temp);
             return true;
         }
-        semi.offer(semi.remove());
+        combinedFields.offer(combinedFields.remove());
         return false;
     }
 
-    private boolean work(MEMBER member) {
-        if (!guard(member) || storage.peek() == null) {
-            return false;
-        }
-        if (semi.offer(member.process(storage.element()))) {
-            storage.remove();
-            return true;
-        }
-        storage.offer(storage.remove());
-        return false;
-    }
-
-    private boolean atone(MEMBER member) {
-        if (!guard(member)) {
-            return false;
-        }
-        return semi.offer(member.atone());
-    }
 }

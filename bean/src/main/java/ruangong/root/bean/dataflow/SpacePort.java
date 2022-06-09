@@ -7,34 +7,21 @@ import java.util.*;
 
 @Data
 @Component
-public abstract class SpacePort {
-    protected static List<Integer> registeredSpaceStations;
-    protected static List<Integer> registeredAstronauts;
+public abstract class SpacePort<MEMBER extends Astronaut<LOW>, LOW> {
+    protected List<Integer> registeredSpaceStations;
+    protected List<Integer> registeredAstronauts;
 
-    protected static List<SpaceStation> stations;
-    protected static List<Astronaut> astronauts;
+    protected List<SpaceStation<MEMBER, LOW>> stations;
+    protected List<Astronaut<LOW>> astronauts;
 
-    protected static Queue<AIMDiffusionField> finished;
-    protected static Queue<AIMDiffusionField> powerless;
-    protected static Queue<AIMDiffusionField> disoriented;
-    protected static Queue<AIMDiffusionField> damaged;
-    protected static Queue<AIMDiffusionField> deprecated;
+    protected Queue<AIMDiffusionField<MEMBER, LOW>> finished;
+    protected Queue<AIMDiffusionField<MEMBER, LOW>> powerless;
+    protected Queue<AIMDiffusionField<MEMBER, LOW>> disoriented;
+    protected Queue<AIMDiffusionField<MEMBER, LOW>> damaged;
+    protected Queue<AIMDiffusionField<MEMBER, LOW>> deprecated;
 
-    static  {
-        registeredSpaceStations = new ArrayList<>();
-        registeredAstronauts = new ArrayList<>();
 
-        stations = new ArrayList<>();
-        astronauts = new ArrayList<>();
-
-        finished = new LinkedList<>();
-        powerless = new LinkedList<>();
-        disoriented = new LinkedList<>();
-        damaged = new LinkedList<>();
-        deprecated = new LinkedList<>();
-    }
-
-    protected void load(List<? extends AIMDiffusionField> fields) {
+    protected void load(List<? extends AIMDiffusionField<MEMBER, LOW>> fields) {
         powerless.addAll(fields);
     }
 
@@ -44,25 +31,27 @@ public abstract class SpacePort {
         }
     }
 
-    protected void registerStation(SpaceStation spaceStation) {
+    protected void registerStation(SpaceStation<MEMBER, LOW> spaceStation) {
         stations.add(spaceStation);
         int index = stations.indexOf(spaceStation);
         registeredSpaceStations.add(index);
         spaceStation.setRegisterId(index);
+        spaceStation.setCentralPort(this);
     }
 
-    protected void registerAstronaut(Astronaut astronaut) {
+    protected void registerAstronaut(Astronaut<LOW> astronaut) {
         astronauts.add(astronaut);
         int index = astronauts.indexOf(astronaut);
         registeredAstronauts.add(index);
         astronaut.setRegisterId(index);
+//        astronaut.setCentralPort(this);
     }
 
-    protected static boolean checkSpaceStation(Integer id) {
+    public boolean checkSpaceStation(Integer id) {
         return registeredSpaceStations.contains(id);
     }
 
-    protected static boolean checkAstronauts(Integer id) {
+    public boolean checkAstronauts(Integer id) {
         return registeredAstronauts.contains(id);
     }
 
