@@ -37,13 +37,13 @@ public class SpaceFederation extends SpacePort<CuserAstronaut, Approve> {
     public void init() {
         List<GroupStation> raw = groupStationMapper.selectList(null);
         for (GroupStation station : raw) {
-            super.registerStation(station);
+            super.registerStation(station, station.getId());
             char[] array = station.getMember().toCharArray();
             for (char c : array) {
                 int temp = c - '0';
                 CuserAstronaut view = cuserAstronautMapper.selectOne(new QueryWrapper<CuserAstronaut>().eq("id", temp));
-                registerAstronaut(view);
-//                view.setStation(station);
+                registerAstronaut(view, view.getUid());
+                view.setStationBelongsTo(station.getRegisterId());
                 station.attend(view);
             }
         }
@@ -55,7 +55,22 @@ public class SpaceFederation extends SpacePort<CuserAstronaut, Approve> {
     }
 
     public SpaceStation<CuserAstronaut, Approve> getRegisteredStation(int id) {
-        return stations.get(id);
+        for (SpaceStation<CuserAstronaut, Approve> temp : stations) {
+            if (temp.getRegisterId() == id) {
+                return temp;
+            }
+        }
+        return null;
     }
+
+    public Astronaut<Approve> getRegisteredAstronaut(int id) {
+        for (Astronaut<Approve> temp : astronauts) {
+            if (temp.getRegisterId() == id) {
+                return temp;
+            }
+        }
+        return null;
+    }
+
 
 }

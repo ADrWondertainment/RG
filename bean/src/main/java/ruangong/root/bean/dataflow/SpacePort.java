@@ -31,20 +31,18 @@ public abstract class SpacePort<MEMBER extends Astronaut<LOW>, LOW> {
         }
     }
 
-    protected void registerStation(SpaceStation<MEMBER, LOW> spaceStation) {
+    protected void registerStation(SpaceStation<MEMBER, LOW> spaceStation, int id) {
         stations.add(spaceStation);
-        int index = stations.indexOf(spaceStation);
-        registeredSpaceStations.add(index);
-        spaceStation.setRegisterId(index);
+        registeredSpaceStations.add(id);
+        spaceStation.setRegisterId(id);
         spaceStation.setCentralPort(this);
     }
 
-    protected void registerAstronaut(Astronaut<LOW> astronaut) {
+    protected void registerAstronaut(Astronaut<LOW> astronaut, int id) {
         astronauts.add(astronaut);
-        int index = astronauts.indexOf(astronaut);
-        registeredAstronauts.add(index);
-        astronaut.setRegisterId(index);
-//        astronaut.setCentralPort(this);
+        registeredAstronauts.add(id);
+        astronaut.setRegisterId(id);
+        astronaut.setCentralPort(this);
     }
 
     public boolean checkSpaceStation(Integer id) {

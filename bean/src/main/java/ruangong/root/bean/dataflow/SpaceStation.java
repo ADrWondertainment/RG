@@ -23,7 +23,6 @@ public abstract class SpaceStation<MEMBER extends Astronaut<LOW>, LOW> extends C
         @TableField(exist = false)
         public AIMDiffusionField<MEMBER, LOW> fieldStorage = null;
 
-
     }
 
     private CombinedField combinedFieldFactory(AIMDiffusionField<MEMBER, LOW> field) {

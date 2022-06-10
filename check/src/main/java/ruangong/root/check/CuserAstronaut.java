@@ -33,30 +33,46 @@ public class CuserAstronaut extends Astronaut<Approve> {
     private String dept;
 
     @TableField(exist = false)
+    private SpaceFederation spaceFederation;
+
+    @TableField(exist = false)
     private List<Approve> workList;
 
-    public void setStation(SpaceStation<Astronaut<Approve>, Approve> spaceStation) {
-        super.setStation(spaceStation);
-    }
 
-    public void getApproves() {
-        Queue<SpaceStation<Astronaut<Approve>, Approve>.CombinedField> work = super.getWork();
-        workList = new ArrayList<>();
-        for (SpaceStation<Astronaut<Approve>, Approve>.CombinedField field : work) {
-            workList.add(field.storage);
-        }
-    }
-
-    public void process(String data) {
+    public void approve(String data) {
         JSONObject entries = JSONUtil.parseObj(data);
         int index = Integer.parseInt((String) entries.get("index"));
         int pass = Integer.parseInt((String) entries.get("pass"));
         Approve selected = workList.get(index);
-        if (pass == 2) {
-            selected.setPass(2);
+        if (pass == 0) {
+            process(selected);
         }
-
-        stationBelongTo.transmit(selected);
+        spaceFederation.getRegisteredStation(stationBelongsTo).transmit(selected);
+        log();
     }
 
+    @Override
+    public void log(){
+
+    }
+
+
+    @Override
+    public void atone(Object... args) {
+
+    }
+
+    @Override
+    public void process(Approve data) {
+        data.setPass(0);
+    }
+
+    @Override
+    public void getWork() {
+        Queue<SpaceStation<CuserAstronaut, Approve>.CombinedField> work = spaceFederation.getRegisteredStation(stationBelongsTo).getCombinedFields();
+        workList = new ArrayList<>();
+        for (SpaceStation<CuserAstronaut, Approve>.CombinedField field : work) {
+            workList.add(field.storage);
+        }
+    }
 }

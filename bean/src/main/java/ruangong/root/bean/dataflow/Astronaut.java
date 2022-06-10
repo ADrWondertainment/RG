@@ -4,14 +4,15 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
-public abstract class Astronaut<LOW> extends Certification<LOW> {
+public abstract class Astronaut<LOW> implements Certification<LOW> {
     @TableField(exist = false)
     protected Integer registerId;
 
-    protected void setStation(SpaceStation<Astronaut<LOW>, LOW> spaceStation) {
-        super.stationBelongTo = spaceStation;
-    }
+    @TableField(exist = false)
+    protected Integer stationBelongsTo;
+
+    @TableField(exist = false)
+    protected SpacePort<? extends Astronaut<LOW>, LOW> centralPort;
 
 }
