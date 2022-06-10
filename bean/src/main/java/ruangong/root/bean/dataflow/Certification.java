@@ -7,7 +7,7 @@ import java.util.Queue;
 
 public abstract interface Certification<LOW> {
 
-    void log();
+    void log(LOW data);
 
     void atone(Object... args);
 

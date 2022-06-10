@@ -1,5 +1,7 @@
 package ruangong.root.check;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -13,8 +15,9 @@ import java.util.*;
 @Data
 @Component
 @Scope("prototype")
-@TableName("answer_view")
+@TableName("answers")
 public class Approve{
+    @TableId(type = IdType.AUTO)
     private Integer id;
     private Integer sid;
     private Integer uid;

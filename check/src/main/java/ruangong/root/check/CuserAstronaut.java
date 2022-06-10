@@ -8,10 +8,14 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import ruangong.root.bean.dataflow.AIMDiffusionField;
 import ruangong.root.bean.dataflow.Astronaut;
 import ruangong.root.bean.dataflow.SpaceStation;
+import ruangong.root.dao.ApproveMapper;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
@@ -33,11 +37,18 @@ public class CuserAstronaut extends Astronaut<Approve> {
     private String dept;
 
     @TableField(exist = false)
+    @Resource
+    private ApproveMapper approveMapper;
+
+    @TableField(exist = false)
+    @Resource
     private SpaceFederation spaceFederation;
 
     @TableField(exist = false)
     private List<Approve> workList;
 
+    @TableField(exist = false)
+    private LinkedList<SpaceStation<CuserAstronaut, Approve>.CombinedField> work;
 
     public void approve(String data) {
         JSONObject entries = JSONUtil.parseObj(data);
@@ -46,14 +57,24 @@ public class CuserAstronaut extends Astronaut<Approve> {
         Approve selected = workList.get(index);
         if (pass == 0) {
             process(selected);
+            log(selected);
         }
         spaceFederation.getRegisteredStation(stationBelongsTo).transmit(selected);
-        log();
     }
 
     @Override
-    public void log(){
-
+    public void log(Approve approve) {
+        int index = workList.indexOf(approve);
+        SpaceStation<CuserAstronaut, Approve>.CombinedField combinedField = work.get(index);
+        ApproveField field = (ApproveField) combinedField.fieldStorage;
+        field.setContent(approve);
+        Queue<Integer> sequence = field.getSequence();
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Integer integer : sequence) {
+            stringBuilder.append(integer);
+        }
+        approve.setFlow(stringBuilder.toString());
+        approveMapper.update(approve, null);
     }
 
 
@@ -69,7 +90,7 @@ public class CuserAstronaut extends Astronaut<Approve> {
 
     @Override
     public void getWork() {
-        Queue<SpaceStation<CuserAstronaut, Approve>.CombinedField> work = spaceFederation.getRegisteredStation(stationBelongsTo).getCombinedFields();
+        work = (LinkedList<SpaceStation<CuserAstronaut, Approve>.CombinedField>) spaceFederation.getRegisteredStation(stationBelongsTo).getCombinedFields();
         workList = new ArrayList<>();
         for (SpaceStation<CuserAstronaut, Approve>.CombinedField field : work) {
             workList.add(field.storage);
