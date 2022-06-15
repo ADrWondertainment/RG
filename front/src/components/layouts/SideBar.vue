@@ -28,6 +28,10 @@
       <el-icon><tickets /></el-icon>
       <template #title>人员管理</template>
     </el-menu-item>
+    <el-menu-item index="/organizationStructure">
+      <el-icon><tickets /></el-icon>
+      <template #title>组织管理</template>
+    </el-menu-item>
   </el-menu>
 </template>
 

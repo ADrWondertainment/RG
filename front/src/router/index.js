@@ -21,6 +21,8 @@ import FormTemplates from '~/components/Pages/ManageFormTemplates.vue'
 import AllPublicForms from '~/components/Pages/AllPublicForms.vue'
 import AllFormsIFilledOut from '~/components/Pages/AllFormsIFilledOut.vue'
 import ResultOfOneForm from '~/components/Pages/ResultOfOneForm.vue'
+import OrganizationStructure from '~/components/Pages/OrganizationStructure.vue'
+
 const routes = [
     {
         path: '/',
@@ -35,6 +37,11 @@ const routes = [
                 path: '/createForm',
                 name: 'CreateForm',
                 component: CreateForm,
+            },
+            {
+                path:'/organizationStructure',
+                name:'OrganizationStructure',
+                component: OrganizationStructure,
             },
             // {
             //     path: '/createInput',
