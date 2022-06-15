@@ -1,6 +1,7 @@
 package ruangong.root.controller_xiao;
 
 import cn.hutool.json.JSONUtil;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ruangong.root.bean.Result;
 import ruangong.root.bean.dataflow.AIMDiffusionField;
@@ -17,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.LinkedList;
 import java.util.Queue;
 
-@RestController
+@RestController("/approves")
 public class ApproveController {
 
     @Resource
@@ -26,6 +27,7 @@ public class ApproveController {
     @Resource
     private SpaceFederation spaceFederation;
 
+    @PostMapping("/show")
     public Result showSubmittedApproves(HttpServletRequest httpServletRequest) {
         Integer id = Integer.parseInt((String) httpServletRequest.getSession().getAttribute("id"));
         Queue<AIMDiffusionField<CuserAstronaut, Approve>> finished = spaceFederation.getFinished();
