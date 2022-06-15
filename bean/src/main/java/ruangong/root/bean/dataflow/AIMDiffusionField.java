@@ -38,7 +38,8 @@ public abstract class AIMDiffusionField<MEMBER extends Astronaut<LOW>, LOW> {
             return false;
         }
         this.setStatus(StatusCode.ENERGETIC);
-        centralPort.stations.get(target).receive(this);
+        int index = centralPort.registeredSpaceStations.get(target);
+        centralPort.stations.get(index).receive(this);
         return true;
     }
 

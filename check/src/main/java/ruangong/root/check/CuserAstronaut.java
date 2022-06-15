@@ -8,7 +8,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import ruangong.root.bean.dataflow.AIMDiffusionField;
 import ruangong.root.bean.dataflow.Astronaut;
 import ruangong.root.bean.dataflow.SpaceStation;
 import ruangong.root.dao.ApproveMapper;
@@ -22,11 +21,12 @@ import java.util.Queue;
 /**
  * @author pangx
  */
-@EqualsAndHashCode(callSuper = true)
+//@EqualsAndHashCode(callSuper = true)
+//@Data
+    //一用Lombok就报错，不懂为什么，我猜测是因为继承了抽象类
+@TableName(value = "cuser_view")
 @Component
 @Scope("prototype")
-@Data
-@TableName("cuser_view")
 public class CuserAstronaut extends Astronaut<Approve> {
 
     private Integer id;
@@ -95,5 +95,81 @@ public class CuserAstronaut extends Astronaut<Approve> {
         for (SpaceStation<CuserAstronaut, Approve>.CombinedField field : work) {
             workList.add(field.storage);
         }
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getUid() {
+        return uid;
+    }
+
+    public void setUid(Integer uid) {
+        this.uid = uid;
+    }
+
+    public Integer getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(Integer groupId) {
+        this.groupId = groupId;
+    }
+
+    public ApproveMapper getApproveMapper() {
+        return approveMapper;
+    }
+
+    public void setApproveMapper(ApproveMapper approveMapper) {
+        this.approveMapper = approveMapper;
+    }
+
+    public SpaceFederation getSpaceFederation() {
+        return spaceFederation;
+    }
+
+    public void setSpaceFederation(SpaceFederation spaceFederation) {
+        this.spaceFederation = spaceFederation;
+    }
+
+    public List<Approve> getWorkList() {
+        return workList;
+    }
+
+    public void setWorkList(List<Approve> workList) {
+        this.workList = workList;
+    }
+
+    public void setWork(LinkedList<SpaceStation<CuserAstronaut, Approve>.CombinedField> work) {
+        this.work = work;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public String getDept() {
+        return dept;
+    }
+
+    public void setDept(String dept) {
+        this.dept = dept;
     }
 }

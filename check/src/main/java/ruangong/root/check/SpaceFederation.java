@@ -35,6 +35,7 @@ public class SpaceFederation extends SpacePort<CuserAstronaut, Approve> {
 
     @PostConstruct
     public void init() {
+        super.init();
         List<GroupStation> raw = groupStationMapper.selectList(null);
         for (GroupStation station : raw) {
             super.registerStation(station, station.getId());

@@ -39,7 +39,7 @@ public abstract class SpaceStation<MEMBER extends Astronaut<LOW>, LOW> extends C
     private List<MEMBER> dormitory = new ArrayList<>();
 
     @TableField(exist = false)
-    private Queue<CombinedField> combinedFields;
+    private Queue<CombinedField> combinedFields = new LinkedList<>();
 
     @TableField(exist = false)
     private Queue<LOW> semi = new LinkedList<>();

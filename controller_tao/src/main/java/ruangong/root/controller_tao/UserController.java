@@ -129,7 +129,7 @@ public class UserController {
         return userService.GetCompanyUserList(cid,did);
     }
 
-    @GetMapping
+    @GetMapping("/showuserbydept")
     public List<CompanyUser> showuserbydept(HttpServletRequest request, Integer did){
         HttpSession session = request.getSession();
         Integer cid =(Integer) session.getAttribute("cid");

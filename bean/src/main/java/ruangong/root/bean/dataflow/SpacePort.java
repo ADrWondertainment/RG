@@ -3,13 +3,14 @@ package ruangong.root.bean.dataflow;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.*;
 
 @Data
 @Component
 public abstract class SpacePort<MEMBER extends Astronaut<LOW>, LOW> {
-    protected List<Integer> registeredSpaceStations;
-    protected List<Integer> registeredAstronauts;
+    protected Map<Integer, Integer> registeredSpaceStations;
+    protected Map<Integer, Integer> registeredAstronauts;
 
     protected List<SpaceStation<MEMBER, LOW>> stations;
     protected List<Astronaut<LOW>> astronauts;
@@ -20,6 +21,17 @@ public abstract class SpacePort<MEMBER extends Astronaut<LOW>, LOW> {
     protected Queue<AIMDiffusionField<MEMBER, LOW>> damaged;
     protected Queue<AIMDiffusionField<MEMBER, LOW>> deprecated;
 
+    public void init() {
+        registeredAstronauts = new HashMap<>();
+        registeredSpaceStations = new HashMap<>();
+        stations = new ArrayList<>();
+        astronauts = new ArrayList<>();
+        finished = new LinkedList<>();
+        powerless = new LinkedList<>();
+        disoriented = new LinkedList<>();
+        damaged = new LinkedList<>();
+        deprecated = new LinkedList<>();
+    }
 
     protected void load(List<? extends AIMDiffusionField<MEMBER, LOW>> fields) {
         powerless.addAll(fields);
@@ -33,24 +45,24 @@ public abstract class SpacePort<MEMBER extends Astronaut<LOW>, LOW> {
 
     protected void registerStation(SpaceStation<MEMBER, LOW> spaceStation, int id) {
         stations.add(spaceStation);
-        registeredSpaceStations.add(id);
+        registeredSpaceStations.put(id, stations.indexOf(spaceStation));
         spaceStation.setRegisterId(id);
         spaceStation.setCentralPort(this);
     }
 
     protected void registerAstronaut(Astronaut<LOW> astronaut, int id) {
         astronauts.add(astronaut);
-        registeredAstronauts.add(id);
+        registeredAstronauts.put(id, astronauts.indexOf(astronaut));
         astronaut.setRegisterId(id);
         astronaut.setCentralPort(this);
     }
 
     public boolean checkSpaceStation(Integer id) {
-        return registeredSpaceStations.contains(id);
+        return registeredSpaceStations.containsKey(id);
     }
 
     public boolean checkAstronauts(Integer id) {
-        return registeredAstronauts.contains(id);
+        return registeredAstronauts.containsKey(id);
     }
 
     public void show() {

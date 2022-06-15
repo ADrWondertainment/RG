@@ -2,6 +2,7 @@ package ruangong.root.controller_xiao;
 
 import cn.hutool.json.JSONUtil;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ruangong.root.bean.Result;
 import ruangong.root.bean.dataflow.AIMDiffusionField;
@@ -18,7 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.LinkedList;
 import java.util.Queue;
 
-@RestController("/approves")
+@RestController
+@RequestMapping("/approves")
 public class ApproveController {
 
     @Resource
