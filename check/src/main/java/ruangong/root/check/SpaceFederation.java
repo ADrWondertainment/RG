@@ -1,5 +1,6 @@
 package ruangong.root.check;
 
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -13,6 +14,7 @@ import ruangong.root.dao.*;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -39,9 +41,8 @@ public class SpaceFederation extends SpacePort<CuserAstronaut, Approve> {
         List<GroupStation> raw = groupStationMapper.selectList(null);
         for (GroupStation station : raw) {
             super.registerStation(station, station.getId());
-            char[] array = station.getMember().toCharArray();
-            for (char c : array) {
-                int temp = c - '0';
+            List<Integer> members = JSONUtil.toList(station.getMember(), Integer.class);
+            for (Integer temp : members) {
                 CuserAstronaut view = cuserAstronautMapper.selectOne(new QueryWrapper<CuserAstronaut>().eq("id", temp));
                 registerAstronaut(view, view.getUid());
                 view.setStationBelongsTo(station.getRegisterId());
@@ -49,7 +50,7 @@ public class SpaceFederation extends SpacePort<CuserAstronaut, Approve> {
             }
         }
         //假想得到的view都是powerless的
-        List<Approve> approves = approveMapper.selectList(null);
+        List<Approve> approves = approveMapper.selectList(new QueryWrapper<Approve>().eq("pass", 1).isNotNull("flow"));
         List<ApproveField> init = ApproveField.init(this, approves);
         load(init);
         assign();

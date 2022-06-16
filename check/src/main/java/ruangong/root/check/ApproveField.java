@@ -1,5 +1,6 @@
 package ruangong.root.check;
 
+import cn.hutool.json.JSONUtil;
 import ruangong.root.bean.dataflow.AIMDiffusionField;
 import ruangong.root.bean.dataflow.SpacePort;
 
@@ -14,11 +15,8 @@ public class ApproveField extends AIMDiffusionField<CuserAstronaut, Approve> {
             ApproveField temp = new ApproveField();
             temp.setContent(approve);
             temp.setCentralPort(centralPort);
-            char[] chars = approve.getFlow().toCharArray();
-            Queue<Integer> integers = new LinkedList<>();
-            for (char c : chars) {
-                integers.offer(c - '0');
-            }
+            List<Integer> flow = JSONUtil.toList(approve.getFlow(), Integer.class);
+            Queue<Integer> integers = new LinkedList<>(flow);
             temp.setSequence(integers);
             approveFields.add(temp);
         }

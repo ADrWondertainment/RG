@@ -23,7 +23,7 @@ import java.util.Queue;
  */
 //@EqualsAndHashCode(callSuper = true)
 //@Data
-    //一用Lombok就报错，不懂为什么，我猜测是因为继承了抽象类
+//一用Lombok就报错，不懂为什么，我猜测是因为继承了抽象类
 @TableName(value = "cuser_view")
 @Component
 @Scope("prototype")
@@ -69,11 +69,7 @@ public class CuserAstronaut extends Astronaut<Approve> {
         ApproveField field = (ApproveField) combinedField.fieldStorage;
         field.setContent(approve);
         Queue<Integer> sequence = field.getSequence();
-        StringBuilder stringBuilder = new StringBuilder();
-        for (Integer integer : sequence) {
-            stringBuilder.append(integer);
-        }
-        approve.setFlow(stringBuilder.toString());
+        approve.setFlow(JSONUtil.toJsonStr(sequence));
         approveMapper.update(approve, null);
     }
 
