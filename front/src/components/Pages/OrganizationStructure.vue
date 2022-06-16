@@ -1,24 +1,29 @@
 <template>
   <h1 title="123">组织结构管理</h1>
-  <el-tree
-    :data="data"
-    :props="defaultProps"
-    @node-click="handleNodeClick"
-    default-expand-all
-  />
   <el-card style="width: 70%; margin-left: 15%">
-    <el-tree
-      :data="data"
-      node-key="id"
-      default-expand-all
-      :expand-on-click-node="false"
-    >
+    <el-tree :data="data" default-expand-all :expand-on-click-node="false">
       <template #default="{ node, data }">
         <span class="custom-tree-node">
-          <span>{{ node.label }}</span>
+          <el-tag type="info" effect="plain">{{ node.label }}</el-tag>
           <span>
-            <el-button round size="small" type="success" @click="append(data)">
-              Append
+            <el-button
+              round
+              size="small"
+              type="success"
+              @click="append(data)"
+              plain
+            >
+              添加下设组织
+            </el-button>
+            <el-button
+              round
+              size="small"
+              type="primary"
+              style="margin-left: 30px"
+              @click="setPrincipalLog = true"
+              plain
+            >
+              设置负责人
             </el-button>
             <el-button
               round
@@ -26,21 +31,67 @@
               type="danger"
               @click="remove(node, data)"
               style="margin-left: 30px"
+              plain
             >
-              Delete
+              删除此组织
             </el-button>
           </span>
         </span>
       </template>
     </el-tree>
   </el-card>
+
+  <el-dialog
+    v-model="addLowerGroupLog"
+    title="添加组织结构"
+    width="50%"
+  >
+    <el-row :gutter="20">
+      <el-col :span="6">请输入下设组织名称</el-col>
+      <el-col :span="18"><el-input v-model="lowerGroupName" /></el-col>
+    </el-row>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="addLowerGroupLog = false">Cancel</el-button>
+        <el-button type="primary" @click="addLowerGroupLog = false"
+          >Confirm</el-button
+        >
+      </span>
+    </template>
+  </el-dialog>
+
+  <el-dialog
+    v-model="setPrincipalLog"
+    title="选择组织负责人"
+    width="50%"
+  >
+    <el-row :gutter="20">
+      <el-col :span="6">请输入负责人名称</el-col>
+      <el-col :span="18"><el-input v-model="principalName" /></el-col>
+    </el-row>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="setPrincipalLog = false">Cancel</el-button>
+        <el-button type="primary" @click="setPrincipalLog = false"
+          >Confirm</el-button
+        >
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <script >
+import { ElMessageBox } from "element-plus";
 export default {
   name: "App",
   data() {
     return {
+      addLowerGroupLog: false,
+      setPrincipalLog: false,
+
+      lowerGroupName: "",
+      principalName: "",
+
       defaultProps: {
         children: "children",
         label: "label",
@@ -111,7 +162,7 @@ export default {
       console.log(data);
     },
     remove(node, data) {
-      console.log(data)
+      console.log(data);
       const parent = node.parent;
       console.log(parent);
       const children = parent.data.children || parent.data;
@@ -119,7 +170,15 @@ export default {
       const index = children.findIndex((d) => d.id === data.id);
       children.splice(index, 1);
       // data.value = [...data.value]
-      console.log(this.data)
+      console.log(this.data);
+    },
+    append(data) {
+      this.addLowerGroupLog = true;
+      // const childNode = { label: "test", children: [] };
+      // if (!data.children) {
+      //   data.children = [];
+      // }
+      // data.children.push(childNode);
     },
   },
 };
@@ -133,5 +192,6 @@ export default {
   justify-content: space-between;
   font-size: 14px;
   padding-right: 8px;
+  height: 0px;
 }
 </style>
