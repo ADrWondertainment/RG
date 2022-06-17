@@ -103,7 +103,7 @@
                 if(bool){
                     this.depart={
                         name:"",
-                        menmber:[],
+                        member:[],
                         num:0
                     };
                     this.addstaff=false;
