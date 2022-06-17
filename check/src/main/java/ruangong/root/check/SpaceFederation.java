@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import ruangong.root.bean.Cuser;
 import ruangong.root.bean.dataflow.AIMDiffusionField;
 import ruangong.root.bean.dataflow.Astronaut;
 import ruangong.root.bean.dataflow.SpacePort;
@@ -34,6 +35,7 @@ public class SpaceFederation extends SpacePort<CuserAstronaut, Approve> {
 
     @Resource
     private ApproveMapper approveMapper;
+
 
     @PostConstruct
     public void init() {

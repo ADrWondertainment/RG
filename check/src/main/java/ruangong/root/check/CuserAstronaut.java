@@ -51,11 +51,18 @@ public class CuserAstronaut extends Astronaut<Approve> {
     private LinkedList<SpaceStation<CuserAstronaut, Approve>.CombinedField> work;
 
     public void approve(String data) {
+        getWork();
         JSONObject entries = JSONUtil.parseObj(data);
         int index = Integer.parseInt((String) entries.get("index"));
         int pass = Integer.parseInt((String) entries.get("pass"));
-        Approve selected = workList.get(index);
+        Approve selected = null;
+        for (Approve temp : workList) {
+            if (temp.getId() == index) {
+                selected = temp;
+            }
+        }
         if (pass == 0) {
+            assert selected != null;
             process(selected);
             log(selected);
         }
@@ -86,7 +93,7 @@ public class CuserAstronaut extends Astronaut<Approve> {
 
     @Override
     public void getWork() {
-        work = (LinkedList<SpaceStation<CuserAstronaut, Approve>.CombinedField>) spaceFederation.getRegisteredStation(stationBelongsTo).getCombinedFields();
+        work = (LinkedList<SpaceStation<CuserAstronaut, Approve>.CombinedField>) (((SpaceFederation) centralPort).getRegisteredStation(stationBelongsTo).getCombinedFields());
         workList = new ArrayList<>();
         for (SpaceStation<CuserAstronaut, Approve>.CombinedField field : work) {
             workList.add(field.storage);
