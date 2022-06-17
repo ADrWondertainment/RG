@@ -57,7 +57,7 @@
   </fieldset>
 
   <!-- 定义表单内容 -->
-  <fieldset style="width: 90%; margin-bottom: 500px">
+  <fieldset style="width: 90%; margin-bottom: 700px">
     <legend>表单内容</legend>
     <el-form label-width="200px" label-position="right">
       <!-- <el-form-item label="请选择表单结束时间0：">
@@ -354,7 +354,8 @@
     </el-form>
   </fieldset>
 
-  <el-affix position="bottom" :offset="0">
+  
+  <el-affix position="bottom" :offset="10">
     <el-button @click="CreateInput" style="padding: 10px" plain type="primary"
       >创建输入框</el-button
     >
