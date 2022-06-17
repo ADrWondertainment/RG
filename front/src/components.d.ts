@@ -49,6 +49,7 @@ declare module '@vue/runtime-core' {
     ElSwitch: typeof import('element-plus/es')['ElSwitch']
     ElTable: typeof import('element-plus/es')['ElTable']
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
+    ElTag: typeof import('element-plus/es')['ElTag']
     ElTree: typeof import('element-plus/es')['ElTree']
     FillForm: typeof import('./components/Pages/FillForm.vue')['default']
     FillForm_bk: typeof import('./components/Pages/FillForm_bk.vue')['default']
