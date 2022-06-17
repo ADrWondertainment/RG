@@ -160,7 +160,7 @@ export default {
   },
   mounted() {
     this.formObj = JSON.parse(this.$route.params.json);
-    // 与后端交互时，取消下面的注释
+
     this.formObj = this.formObj.data;
     // var formItem;
     // for (formItem in this.formObj.originContent) {

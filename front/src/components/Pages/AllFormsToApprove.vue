@@ -233,25 +233,28 @@ export default {
 
   mounted() {
     console.log(111111);
-    axios
-      .post("/api/sheets/pass/show", {
-        sheetId: 18,
-        pageIndex: 1,
-        size: 4,
-        mode: 0,
-      })
-      .then((res) => {
-        if (res.data.errorCode == 66666) {
-          console.log(res.data.data);
-          this.formInfo = JSON.parse(res.data.data);
-          console.log(this.formInfo);
-        }
-      });
+    // axios
+    //   .post("/api/sheets/pass/show", {
+    //     sheetId: 18,
+    //     pageIndex: 1,
+    //     size: 4,
+    //     mode: 0,
+    //   })
+    //   .then((res) => {
+    //     if (res.data.errorCode == 66666) {
+    //       console.log(res.data.data);
+    //       this.formInfo = JSON.parse(res.data.data);
+    //       console.log(this.formInfo);
+    //     }
+    //   });
+
     // console.log(this.testStr)
     // console.log(JSON.parse(this.test2))
     // console.log(JSON.parse(this.testStr))
-    // this.formInfo = JSON.parse(this.testStr);
-    // console.log(this.formInfo)
+    
+    // testStr符合正确格式
+    this.formInfo = JSON.parse(this.testStr);
+    console.log(this.formInfo)
   },
 
   methods: {

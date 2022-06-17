@@ -131,8 +131,10 @@ export default {
         if (returnData.errorCode === 66666) {
           console.log(returnData);
           this.returnList = JSON.parse(returnData.data);
+          console.log(this.returnList);
         }
       });
+
     // returnData = JSON.parse(this.testData);
     // this.returnList = returnData.data;
     // console.log(this.returnList);

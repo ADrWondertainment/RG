@@ -32,6 +32,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
   data() {
     return {
@@ -135,9 +136,9 @@ export default {
         this.formDescriptionObj = JSON.parse(res.data.data);
         this.formObj = JSON.parse(this.formDescriptionObj.originContent);
         this.formResultObj = JSON.parse(this.formDescriptionObj.content);
-        console.log(this.formDescriptionObj);
-        console.log(this.formObj);
-        console.log(this.formResultObj);
+        console.log('formDescriptionObj',this.formDescriptionObj);
+        console.log('formObj',this.formObj);
+        console.log('formResultObj',this.formResultObj);
       }
     });
 
