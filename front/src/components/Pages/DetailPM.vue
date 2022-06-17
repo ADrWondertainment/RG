@@ -19,12 +19,13 @@
                         style="padding: 20px"
                         title="编辑角色"
                         type="primary"
-                        @click="ToCreateForm"
+                        @click="EditPosition"
                         plain
                 >编辑角色</el-button
                 >
             </el-col>
         </el-row>
+<!--        主体表格-->
         <el-table :data="formInfo" style="width: 100%">
             <el-table-column type="selection" width="55" />
             <el-table-column prop="uid" label="编号" width="180" align="center" />
@@ -66,6 +67,15 @@
                     >
                     <el-button
                             size="small"
+                            @click="startManagePosition(scope.$index,scope.row.id)"
+                            :title="this.positionButton[scope.$index]"
+                            type="success"
+                            plain
+                            round
+                    >{{this.positionButton[scope.$index]}}</el-button
+                    >
+                    <el-button
+                            size="small"
                             @click="ToChangeForm(scope.$index, scope.row.id)"
                             title="移动人员"
                             type="success"
@@ -83,13 +93,12 @@
                     >删除人员</el-button
                     >
 <!--                    {{select[scope.$index]}}-->
+<!--                    管理权限选择框-->
                     <el-select :style="showManageDepart[scope.$index]"
                                v-model="value"
                                @change="finishManageRight(scope.$index,scope.row.id,value)"
                                :placeholder=scope.row.right
                                clearable="false"
-
-
                     >
 <!--                        <el-button @click="finishManageRight(scope.$index,scope.row.id,scope.$index.label)">确认</el-button>-->
                         <el-option
@@ -97,13 +106,67 @@
                                 :key="item.value"
                                 :label="item.label"
                                 :value="item.value"
-
                         />
                     </el-select>
-<!--                    <el-button :style="showManageDepart[scope.$index]" @click="finishManageRight(scope.$index,scope.row.id,scope.el-select)">确认</el-button>-->
+<!--<el-button :style="showManageDepart[scope.$index]" @click="finishManageRight(scope.$index,scope.row.id,scope.el-select)">确认</el-button>-->
+<!--                    编辑角色选择框-->
+                    <el-select :style="showManagePosition[scope.$index]"
+                               v-model="posvalue"
+                               @change="finishManagePosition(scope.$index,scope.row.id,posvalue)"
+                               :placeholder=scope.row.pos
+                               clearable="false"
+                    >
+                        <el-option
+                                v-for="item in PosOptions"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value"
+                        />
+                    </el-select>
+
                 </template>
             </el-table-column>
         </el-table>
+<!--        点击编辑角色后的弹窗-->
+        <el-dialog v-model="showEdit" title="编辑角色" >
+            <el-table :data="midPosition" style="width: 100%" >
+                    <el-table-column type="selection" width="55" />
+                <el-table-column
+                        prop="value"
+                        label="名称"
+                        width="180"
+                        align="center"
+                >
+<!--                    输入框-->
+                    <template #default="scope">
+                    <el-input  v-model="midPosition[scope.$index].value"
+                               :placeholder="midPosition[scope.$index].value"
+                               :disabled="midPosition[scope.$index].isntEditable"
+                    />
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作" align="center">
+                    <template #default="scope">
+                        <el-button
+                                size="small"
+                                type="danger"
+                                @click="ToDeleteTemplate(scope.$index, scope.row.id)"
+                                title="删除角色"
+                                plain
+                                round
+                        >删除角色</el-button
+                        >
+                    </template>
+                </el-table-column>
+            </el-table>
+            <template #footer>
+              <span class="dialog-footer">
+                <el-button @click="cancelEditPos">取消</el-button>
+                <el-button type="primary" @click="confirmEditPos">确认</el-button
+                >
+              </span>
+            </template>
+        </el-dialog>
         <el-divider style="margin-top: 0" ></el-divider>
     </el-card>
 </template>
@@ -119,8 +182,10 @@
             return{
                 id:99,
                 value:ref(''),
+                posvalue:ref(''),
                 formInfo:null,
                 staffnum:0,
+                showEdit:false,
                 staff:[
                     {
                         "id":1,
@@ -190,16 +255,46 @@
                     {
                         value:'3',
                         label:"3"
-                    },{
+                    },
+                    {
                         value:'4',
                         label:"4"
-                    },{
+                    },
+                    {
                         value:'5',
                         label:"5"
                     },
                 ],
+                PosOptions:[
+                    {
+                        value:"林志康的爹",
+                        label:"林志康的爹",
+                        isntEditable:true
+                    },
+                    {
+                        value:'杜沛霖的儿',
+                        label:"杜沛霖的儿",
+                        isntEditable:false
+                    },
+                    {
+                        value:'杜沛霖的孙儿',
+                        label:"杜沛霖的孙儿",
+                        isntEditable:false
+                    },{
+                        value:'杜沛霖的好孙儿',
+                        label:"杜沛霖的好孙儿",
+                        isntEditable:false
+                    },{
+                        value:"林志康的爷爷",
+                        label:"林志康的爷爷",
+                        isntEditable:false
+                    },
+                ],
                 showManageDepart:[],
+                showManagePosition:[],
                 manageButton:[],
+                positionButton:[],
+                midPosition:[]
                 // showManageDepartMid:[]
             }
         },
@@ -276,8 +371,42 @@
                 this.staff[index].right=value;
                 // this.getStaffbyId();
             },
+            startManagePosition(index,id){
+                var i;
+                for(i=0;i<this.staffnum;i++){
+                    if(this.showManagePosition[i].display=="block"){
+                        if(index==i)
+                            continue
+                        this.showManagePosition[i].display="none";
+                        this.positionButton[i]="管理角色";
+                    }
+                }
+                if(this.showManagePosition[index].display=="block") {
+                    this.showManagePosition[index].display = "none";
+                    this.positionButton[index]="管理角色";
+                }
+                else {
+                    this.showManagePosition[index].display = 'block';
+                    this.positionButton[index] = "取消";
+                    // console.log(this.staff);
+                }
+            },
+            finishManagePosition(index,id,value){
+                this.showManagePosition[index].display="none";
+                this.positionButton[index]="管理角色";
+                console.log(index);
+                // console.log(this.showManageDepart[0][index]);
+                // console.log(this.showManageDepart);
+                // console.log(index,id,value);
+                this.staff[index].pos=value;
+            },
+            changePosition(index,id,value){
+
+            },
+
             clearSelectStyle(index){
                 this.showManageDepart[index].display="none";
+                this.showManagePosition[index].display='none';
             },
             back(){
                 this.$router.push('/PersonnelManagement');
@@ -289,6 +418,8 @@
                 for(i=0;i<this.staffnum;i++){
                     this.showManageDepart.push({"display":"none"});
                     this.manageButton.push("管理权限");
+                    this.showManagePosition.push({"display":"none"});
+                    this.positionButton.push("管理角色");
                     // this.select.push({
                     //     "<el-select :style=\"showManageDepart[scope.$index]\"v-model=\"value\"\"item.value\":label=\"item.label\":value=\"item.value\" /> </el-select>'"
                     // })
@@ -297,6 +428,22 @@
                 // console.log(this.showManageDepart);
                 // console.log(this.showManageDepart[0]);
                 // this.showManageDepart=this.showManageDepartMid;
+            },
+            EditPosition(){
+                this.showEdit=true;
+                let mmid;
+                mmid=JSON.stringify(this.PosOptions);
+                this.midPosition=JSON.parse(mmid);
+                // console.log(this.PosOptions);
+            },
+            confirmEditPos(){
+                let mmid;
+                mmid=JSON.stringify(this.midPosition);
+                this.PosOptions=JSON.parse(mmid);
+                this.showEdit=false;
+            },
+            cancelEditPos(){
+                this.showEdit=false;
             }
         },
         created(){
@@ -313,7 +460,11 @@
             // this.formInfo=JSON.parse(this.staff);
             this.formInfo=this.staff;
 
+        },
+        components:{
+
         }
+
 
     }
 </script>
