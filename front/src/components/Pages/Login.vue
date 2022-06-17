@@ -60,7 +60,7 @@ export default {
   },
   methods: {
     login() {
-      后端调试时解除此段注释
+      // 后端调试时解除此段注释
       axios
         .post("api/users/login", {
           email: this.logInfo.userName,
