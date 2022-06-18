@@ -29,7 +29,7 @@
 <!--        主体表格-->
         <el-table :data="formInfo" style="width: 100%" height="440">
             <el-table-column type="selection" width="55" />
-            <el-table-column prop="uid" label="编号" width="180" align="center" />
+            <el-table-column prop="id" label="编号" width="180" align="center" />
             <el-table-column
                     prop="name"
                     label="姓名"
@@ -37,20 +37,20 @@
                     align="center"
             />
             <el-table-column
-                    prop="pos"
-                    label="角色"
+                    prop="role"
+                    label="职位"
                     width="180"
                     align="center"
             />
             <el-table-column
-                    prop="depart"
+                    prop="department"
                     label="所在部门"
                     width="180"
                     align="center"
             />
 
             <el-table-column
-                    prop="right"
+                    prop="level"
                     label="权限"
                     width="180"
                     align="center"
@@ -214,7 +214,7 @@
         name:'DetailPM',
         data(){
             return{
-                id:99,
+                did:99,
                 value:ref(''),
                 posvalue:ref(''),
                 formInfo:null,
@@ -222,174 +222,172 @@
                 showEdit:false,
                 showInsertStaff:false,
                 selectedStaff:[],
-                staff:[
-                    {
-                        "id":1,
-                        "uid":"419210??",
-                        "pos":"林志康的爹",
-                        "name":"杜沛霖",
-                        "telephone":110,
-                        "depart":"2",
-                        "right":9
-                    },
-                    {
-                        "id":2,
-                        "uid":41921011,
-                        "pos":"林志康的爹",
-                        "name":"杜沛霖",
-                        "telephone":1881007821,
-                        "depart":"1",
-                        "right":1
-                    },
-                    {
-                        "id":3,
-                        "uid":419212011,
-                        "pos":"杜沛霖的儿",
-                        "name":"林志康",
-                        "telephone":1881007821,
-                        "depart":"2",
-                        "right":1
-                    },
-                    {
-                        "id":4,
-                        "uid":4192111,
-                        "pos":"林志康的爹",
-                        "name":"陶沙",
-                        "telephone":1881007821,
-                        "depart":"1",
-                        "right":1
-                    },
-                    {
-                        "id":5,
-                        "uid":4192101,
-                        "pos":"林志康的爹",
-                        "name":"庞小博",
-                        "telephone":1881007821,
-                        "depart":"1",
-                        "right":1
-                    },
-                    {
-                        "id":6,
-                        "uid":419121011,
-                        "pos":"林志康的爹",
-                        "name":"ABC",
-                        "telephone":1881007821,
-                        "depart":"2",
-                        "right":1
-                    },
-                    {
-                        "id":6,
-                        "uid":419121011,
-                        "pos":"林志康的爹",
-                        "name":"ABC",
-                        "telephone":1881007821,
-                        "depart":"2",
-                        "right":1
-                    },
-                    {
-                        "id":6,
-                        "uid":419121011,
-                        "pos":"林志康的爹",
-                        "name":"ABC",
-                        "telephone":1881007821,
-                        "depart":"2",
-                        "right":1
-                    },
-                    {
-                        "id":6,
-                        "uid":419121011,
-                        "pos":"林志康的爹",
-                        "name":"ABC",
-                        "telephone":1881007821,
-                        "depart":"2",
-                        "right":1
-                    },{
-                        "id":6,
-                        "uid":419121011,
-                        "pos":"林志康的爹",
-                        "name":"ABC",
-                        "telephone":1881007821,
-                        "depart":"2",
-                        "right":1
-                    },
-                    {
-                        "id":6,
-                        "uid":419121011,
-                        "pos":"林志康的爹",
-                        "name":"ABC",
-                        "telephone":1881007821,
-                        "depart":"2",
-                        "right":1
-                    },{
-                        "id":6,
-                        "uid":419121011,
-                        "pos":"林志康的爹",
-                        "name":"ABC",
-                        "telephone":1881007821,
-                        "depart":"2",
-                        "right":1
-                    },{
-                        "id":6,
-                        "uid":419121011,
-                        "pos":"林志康的爹",
-                        "name":"ABC",
-                        "telephone":1881007821,
-                        "depart":"2",
-                        "right":1
-                    },{
-                        "id":6,
-                        "uid":419121011,
-                        "pos":"林志康的爹",
-                        "name":"ABC",
-                        "telephone":1881007821,
-                        "depart":"2",
-                        "right":1
-                    },{
-                        "id":6,
-                        "uid":419121011,
-                        "pos":"林志康的爹",
-                        "name":"ABC",
-                        "telephone":1881007821,
-                        "depart":"2",
-                        "right":1
-                    },{
-                        "id":6,
-                        "uid":419121011,
-                        "pos":"林志康的爹",
-                        "name":"ABC",
-                        "telephone":1881007821,
-                        "depart":"2",
-                        "right":1
-                    },{
-                        "id":6,
-                        "uid":419121011,
-                        "pos":"林志康的爹",
-                        "name":"ABC",
-                        "telephone":1881007821,
-                        "depart":"2",
-                        "right":1
-                    },{
-                        "id":6,
-                        "uid":419121011,
-                        "pos":"林志康的爹",
-                        "name":"ABC",
-                        "telephone":1881007821,
-                        "depart":"2",
-                        "right":1
-                    },{
-                        "id":6,
-                        "uid":419121011,
-                        "pos":"林志康的爹",
-                        "name":"ABC",
-                        "telephone":1881007821,
-                        "depart":"2",
-                        "right":1
-                    },
-
-
-
-                ],
-                // select:[],
+                // staff:[
+                //     {
+                //         "id":1,
+                //         "uid":"419210??",
+                //         "pos":"林志康的爹",
+                //         "name":"杜沛霖",
+                //         "telephone":110,
+                //         "depart":"2",
+                //         "right":9
+                //     },
+                //     {
+                //         "id":2,
+                //         "uid":41921011,
+                //         "pos":"林志康的爹",
+                //         "name":"杜沛霖",
+                //         "telephone":1881007821,
+                //         "depart":"1",
+                //         "right":1
+                //     },
+                //     {
+                //         "id":3,
+                //         "uid":419212011,
+                //         "pos":"杜沛霖的儿",
+                //         "name":"林志康",
+                //         "telephone":1881007821,
+                //         "depart":"2",
+                //         "right":1
+                //     },
+                //     {
+                //         "id":4,
+                //         "uid":4192111,
+                //         "pos":"林志康的爹",
+                //         "name":"陶沙",
+                //         "telephone":1881007821,
+                //         "depart":"1",
+                //         "right":1
+                //     },
+                //     {
+                //         "id":5,
+                //         "uid":4192101,
+                //         "pos":"林志康的爹",
+                //         "name":"庞小博",
+                //         "telephone":1881007821,
+                //         "depart":"1",
+                //         "right":1
+                //     },
+                //     {
+                //         "id":6,
+                //         "uid":419121011,
+                //         "pos":"林志康的爹",
+                //         "name":"ABC",
+                //         "telephone":1881007821,
+                //         "depart":"2",
+                //         "right":1
+                //     },
+                //     {
+                //         "id":6,
+                //         "uid":419121011,
+                //         "pos":"林志康的爹",
+                //         "name":"ABC",
+                //         "telephone":1881007821,
+                //         "depart":"2",
+                //         "right":1
+                //     },
+                //     {
+                //         "id":6,
+                //         "uid":419121011,
+                //         "pos":"林志康的爹",
+                //         "name":"ABC",
+                //         "telephone":1881007821,
+                //         "depart":"2",
+                //         "right":1
+                //     },
+                //     {
+                //         "id":6,
+                //         "uid":419121011,
+                //         "pos":"林志康的爹",
+                //         "name":"ABC",
+                //         "telephone":1881007821,
+                //         "depart":"2",
+                //         "right":1
+                //     },{
+                //         "id":6,
+                //         "uid":419121011,
+                //         "pos":"林志康的爹",
+                //         "name":"ABC",
+                //         "telephone":1881007821,
+                //         "depart":"2",
+                //         "right":1
+                //     },
+                //     {
+                //         "id":6,
+                //         "uid":419121011,
+                //         "pos":"林志康的爹",
+                //         "name":"ABC",
+                //         "telephone":1881007821,
+                //         "depart":"2",
+                //         "right":1
+                //     },{
+                //         "id":6,
+                //         "uid":419121011,
+                //         "pos":"林志康的爹",
+                //         "name":"ABC",
+                //         "telephone":1881007821,
+                //         "depart":"2",
+                //         "right":1
+                //     },{
+                //         "id":6,
+                //         "uid":419121011,
+                //         "pos":"林志康的爹",
+                //         "name":"ABC",
+                //         "telephone":1881007821,
+                //         "depart":"2",
+                //         "right":1
+                //     },{
+                //         "id":6,
+                //         "uid":419121011,
+                //         "pos":"林志康的爹",
+                //         "name":"ABC",
+                //         "telephone":1881007821,
+                //         "depart":"2",
+                //         "right":1
+                //     },{
+                //         "id":6,
+                //         "uid":419121011,
+                //         "pos":"林志康的爹",
+                //         "name":"ABC",
+                //         "telephone":1881007821,
+                //         "depart":"2",
+                //         "right":1
+                //     },{
+                //         "id":6,
+                //         "uid":419121011,
+                //         "pos":"林志康的爹",
+                //         "name":"ABC",
+                //         "telephone":1881007821,
+                //         "depart":"2",
+                //         "right":1
+                //     },{
+                //         "id":6,
+                //         "uid":419121011,
+                //         "pos":"林志康的爹",
+                //         "name":"ABC",
+                //         "telephone":1881007821,
+                //         "depart":"2",
+                //         "right":1
+                //     },{
+                //         "id":6,
+                //         "uid":419121011,
+                //         "pos":"林志康的爹",
+                //         "name":"ABC",
+                //         "telephone":1881007821,
+                //         "depart":"2",
+                //         "right":1
+                //     },{
+                //         "id":6,
+                //         "uid":419121011,
+                //         "pos":"林志康的爹",
+                //         "name":"ABC",
+                //         "telephone":1881007821,
+                //         "depart":"2",
+                //         "right":1
+                //     },
+                // ],
+                staff:[],
+                select:[],
                 options:[
                     {
                         value:"1",
@@ -475,7 +473,14 @@
             },
           getId(){
               let routeid=this.$route.params.id;
-              this.id=routeid;
+              axios.get('',{
+                  did:routeid
+              }).then(res=>{
+                  this.staff=res.data;
+              }).catch(()=>{
+                  alert("获取部门人员失败")
+              })
+              this.did=routeid;
               console.log(this.id);
           },
           // getStaffbyId(id){
@@ -509,13 +514,22 @@
                 }
             },
             finishManageRight(index,id,value){
-                this.showManageDepart[index].display="none";
                 this.manageButton[index]="管理权限";
                 console.log(index);
                 // console.log(this.showManageDepart[0][index]);
                 // console.log(this.showManageDepart);
                 // console.log(index,id,value);
                 this.staff[index].right=value;
+                axios.post("",{
+                    level:value,
+                    uid:id,
+                }).then(res=>{
+                    alert("编辑成功");
+                }).catch(()=>{
+                    alert("改变失败");
+                })
+
+                this.showManageDepart[index].display="none";
                 // this.getStaffbyId();
             },
             startManagePosition(index,id){
@@ -539,18 +553,25 @@
                 }
             },
             finishManagePosition(index,id,value){
-                this.showManagePosition[index].display="none";
                 this.positionButton[index]="管理角色";
                 console.log(index);
                 // console.log(this.showManageDepart[0][index]);
                 // console.log(this.showManageDepart);
                 // console.log(index,id,value);
-                this.staff[index].pos=value;
+                // this.staff[index].pos=value;
+                axios.post('',{
+                    role:value,
+                    uid:id
+                }).then(res=>{
+                    alert("编辑职位成功");
+                }).catch(()=>{
+                    alert("编译失败");
+                })
+                this.showManagePosition[index].display="none";
             },
             changePosition(index,id,value){
 
             },
-
             clearSelectStyle(index){
                 this.showManageDepart[index].display="none";
                 this.showManagePosition[index].display='none';

@@ -106,29 +106,45 @@
                 editDepartVisible:false,
                 AddDepartVisible:false,
                 reserveAdd:false,
-                departs:`[
-                    {
-                        "id":1,
-                        "name":"财务部",
-                        "num":10
-
-                    },
-                    {
-                        "id":2,
-                        "name":"人力资源部",
-                        "num":11
-
-                    }
-
-                ]`,
+                // departs:`[
+                //     {
+                //         "id":1,
+                //         "name":"财务部",
+                //         "num":10
+                //
+                //     },
+                //     {
+                //         "id":2,
+                //         "name":"人力资源部",
+                //         "num":11
+                //
+                //     }
+                //
+                // ]`,
+                departs:[],
 
             };
         },
-
         mounted(){
-            this.formInfo=JSON.parse(this.departs);
+            // this.formInfo=JSON.parse(this.departs);
+            this.getDeparts();
         },
         methods:{
+            getDeparts(){
+                axios.get('',{
+                    cid:1
+                }).then(res=>{
+                    conosle.log(res.data);
+                    let resjson;
+                    resjson=JSON.stringify(res.data);
+                    this.departs=resjson;
+                    console.log(this.departs);
+                }).catch(()=>{
+                    alert("获取失败");
+                    })
+
+            },
+
             ToDeleteTemplate(index, id) {
                 ElMessageBox.confirm("你确定要删除此部门吗", "注意！", {
                     confirmButtonText: "确定",
