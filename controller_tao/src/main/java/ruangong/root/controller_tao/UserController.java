@@ -144,6 +144,11 @@ public class UserController {
         return result;
     }
 
+    @PostMapping("/sdept")
+    public Result setdeptbyuser(Integer uid,Integer did){
+        return userService.SetDept(uid,did);
+    }
+
     @PutMapping("/cdept")
     public Result createdept(HttpServletRequest request, String department,Integer fid) {
         HttpSession session = request.getSession();
@@ -167,4 +172,6 @@ public class UserController {
         result = userService.UpdateLevel(uid, level);
         return result;
     }
+
+
 }

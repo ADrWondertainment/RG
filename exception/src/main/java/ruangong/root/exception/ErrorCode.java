@@ -28,6 +28,7 @@ public class ErrorCode {
     public static final Integer REMOVE_COMPANY_USER = 10112;
     public static final Integer USER_UNJOIN = 10120;
     public static final Integer USER_UPDATE_ROLE = 10130;
+    public static final Integer USER_SET_DEPARTMENT =10143;
     public static final Integer USER_UPDATE_DEPARTMENT = 10140;
     public static final Integer USER_CREATE_DEPARTMENT = 10141;
     public static final Integer USER_DELETE_DEPARTMENT = 10142;

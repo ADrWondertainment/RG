@@ -430,6 +430,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
+    public Result SetDept(Integer uid, Integer did) {
+        UpdateWrapper<Cuser> wrap = new UpdateWrapper<>();
+        wrap.set("did",did).eq("uid", uid);
+        cuserMapper.update(null,wrap);
+        ResultUtil.quickSet(
+                result,
+                ErrorCode.USER_SET_DEPARTMENT,
+                "部门调整成功",
+                1
+        );
+        return result;
+    }
+
+    @Override
     public Result CreateDept(Integer cid, String department,Integer fid) {
         dept_user.setCid(cid);
         dept_user.setName(department);
