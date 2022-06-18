@@ -122,15 +122,15 @@ public class UserController {
         return userService.RemoveCompanyUser(id);
     }
 
-    @GetMapping
-    public Map<Dept,Integer> showdept(HttpServletRequest request, Integer did){
+    @PostMapping("/showdept")
+    public Map<Dept,Integer> showdept(HttpServletRequest request, @RequestBody Integer did){
         HttpSession session = request.getSession();
         Integer cid =(Integer) session.getAttribute("cid");
         return userService.GetCompanyUserList(cid,did);
     }
 
-    @GetMapping("/showuserbydept")
-    public List<CompanyUser> showuserbydept(HttpServletRequest request, Integer did){
+    @PostMapping("/showuserbydept")
+    public List<CompanyUser> showuserbydept(HttpServletRequest request,@RequestBody Integer did){
         HttpSession session = request.getSession();
         Integer cid =(Integer) session.getAttribute("cid");
         return userService.GetComanyUserByDepartment(cid,did);
