@@ -569,9 +569,6 @@
                 })
                 this.showManagePosition[index].display="none";
             },
-            changePosition(index,id,value){
-
-            },
             clearSelectStyle(index){
                 this.showManageDepart[index].display="none";
                 this.showManagePosition[index].display='none';

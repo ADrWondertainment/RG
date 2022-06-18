@@ -60,7 +60,7 @@
         </el-table>
         <el-divider style="margin-top: 0"></el-divider>
         <edit-depart @childFn="finishEdit" v-if="editDepartVisible" ref="dialog"></edit-depart>
-        <add-depart  v-model="AddDepartVisible" ref="add" :before-close="closeAdd">
+        <add-depart  v-model="AddDepartVisible" ref="add" :before-close="closeAdd" @closed="getDeparts">
 <!--            <el-dialog v-model="quitAddVisible"-->
 <!--                       title="Tips" width="30%" draggable>-->
 <!--                <span>确定要退出吗？</span>-->
@@ -131,16 +131,19 @@
         },
         methods:{
             getDeparts(){
-                axios.get('',{
-                    cid:1
-                }).then(res=>{
-                    conosle.log(res.data);
-                    let resjson;
-                    resjson=JSON.stringify(res.data);
-                    this.departs=resjson;
+                axios.get('api/users/',{
+                    fid:0
+                }).then((dept,num)=>{
+                    console.log(dept,num);
+                    let resj;
+                    resj=JSON.stringify(dept);
+                    for(var i=0;i<resj.length;i++){
+                        this.$set(resj[i],'num',num[i]);
+                    }
+                    this.departs=resj;
                     console.log(this.departs);
                 }).catch(()=>{
-                    alert("获取失败");
+                    alert("获取部门失败");
                     })
 
             },
@@ -153,16 +156,15 @@
                 })
                     .then(() => {
                         axios
-                            .delete("/api/templates/" + id, {})
-                            .then((res) => {
-                                if (res.data.errorCode === 66666) {
-                                    ElMessage({
-                                        type: "info",
-                                        message: "删除成功",
-                                    });
-                                    this.getTemplates();
-                                }
-                            });
+                            .post("/api/users/ddept", {
+                                did:id,
+                                fid:0
+                            })
+                            .then(() => {
+                                alert("删除成功");
+                            }).catch(_=>{
+                                alert("删除失败");
+                        });
                     })
                     .catch(() => {
                         ElMessage({
@@ -194,6 +196,7 @@
             },
             addDepart(){
                 this.AddDepartVisible=true;
+                this.$refs.app.isshow=true;
             },
             closeAdd(done){
                 ElMessageBox.confirm("你确定要退出吗？", "注意！", {
