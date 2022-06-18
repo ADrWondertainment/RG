@@ -6,11 +6,15 @@
         <span class="custom-tree-node">
           <el-tag type="info" effect="plain">{{ node.label }}</el-tag>
           <span>
+            <el-tag type="warning" v-if="data.principal">
+              {{ "负责人：" + data.principal }}
+            </el-tag>
             <el-button
               round
               size="small"
               type="success"
               @click="append(data)"
+              style="margin-left: 30px"
               plain
             >
               添加下设组织
@@ -20,7 +24,7 @@
               size="small"
               type="primary"
               style="margin-left: 30px"
-              @click="setPrincipalLog = true"
+              @click="setPrincipal(data)"
               plain
             >
               设置负责人
@@ -41,39 +45,53 @@
     </el-tree>
   </el-card>
 
-  <el-dialog
-    v-model="addLowerGroupLog"
-    title="添加组织结构"
-    width="50%"
-  >
+  <el-dialog v-model="addLowerGroupLog" title="添加组织结构" width="50%">
     <el-row :gutter="20">
       <el-col :span="6">请输入下设组织名称</el-col>
       <el-col :span="18"><el-input v-model="lowerGroupName" /></el-col>
     </el-row>
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="addLowerGroupLog = false">Cancel</el-button>
-        <el-button type="primary" @click="addLowerGroupLog = false"
-          >Confirm</el-button
+        <el-button
+          type="warning"
+          @click="
+            addLowerGroupLog = false;
+            tempVar = null;
+          "
+          plain
+          >取消</el-button
+        >
+        <el-button type="success" @click="confirmAppend(tempVar)" plain
+          >确认</el-button
         >
       </span>
     </template>
   </el-dialog>
 
-  <el-dialog
-    v-model="setPrincipalLog"
-    title="选择组织负责人"
-    width="50%"
-  >
+  <el-dialog v-model="setPrincipalLog" title="选择组织负责人" width="50%">
     <el-row :gutter="20">
       <el-col :span="6">请输入负责人名称</el-col>
       <el-col :span="18"><el-input v-model="principalName" /></el-col>
     </el-row>
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="setPrincipalLog = false">Cancel</el-button>
-        <el-button type="primary" @click="setPrincipalLog = false"
-          >Confirm</el-button
+        <el-button
+          type="warning"
+          @click="
+            setPrincipalLog = false;
+            tempVar = null;
+          "
+          plain
+          >取消</el-button
+        >
+        <el-button
+          type="success"
+          @click="
+            setPrincipalLog = false;
+            confirmSetPrincipal(tempVar);
+          "
+          plain
+          >确认</el-button
         >
       </span>
     </template>
@@ -96,58 +114,25 @@ export default {
         children: "children",
         label: "label",
       },
+
+      tempVar: null,
+
       data: [
         {
-          label: "Level one 1",
+          label: "业务部",
+          id: 1,
+          principal: "张三",
           children: [
             {
-              label: "Level two 1-1",
+              label: "市场分析",
+              id: 2,
+              principal: null,
               children: [
                 {
-                  label: "Level three 1-1-1",
+                  label: "信息搜集",
+                  id: 3,
+                  principal: null,
                   children: [],
-                },
-              ],
-            },
-          ],
-        },
-        {
-          label: "Level one 2",
-          children: [
-            {
-              label: "Level two 2-1",
-              children: [
-                {
-                  label: "Level three 2-1-1",
-                },
-              ],
-            },
-            {
-              label: "Level two 2-2",
-              children: [
-                {
-                  label: "Level three 2-2-1",
-                },
-              ],
-            },
-          ],
-        },
-        {
-          label: "Level one 3",
-          children: [
-            {
-              label: "Level two 3-1",
-              children: [
-                {
-                  label: "Level three 3-1-1",
-                },
-              ],
-            },
-            {
-              label: "Level two 3-2",
-              children: [
-                {
-                  label: "Level three 3-2-1",
                 },
               ],
             },
@@ -172,13 +157,31 @@ export default {
       // data.value = [...data.value]
       console.log(this.data);
     },
+
     append(data) {
+      this.tempVar = data;
       this.addLowerGroupLog = true;
-      // const childNode = { label: "test", children: [] };
-      // if (!data.children) {
-      //   data.children = [];
-      // }
-      // data.children.push(childNode);
+    },
+    confirmAppend(data) {
+      const childNode = { label: this.lowerGroupName, children: [] };
+      if (!data.children) {
+        data.children = [];
+      }
+      data.children.push(childNode);
+      this.addLowerGroupLog = false;
+      this.lowerGroupName = "";
+      this.tempVar = null;
+      console.log(this.data);
+    },
+
+    setPrincipal(data) {
+      this.tempVar = data;
+      this.setPrincipalLog = true;
+    },
+    confirmSetPrincipal(data) {
+      data.principal = this.principalName;
+      // console.log(data);
+      this.principalName = "";
     },
   },
 };

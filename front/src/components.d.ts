@@ -19,6 +19,7 @@ declare module '@vue/runtime-core' {
     DetailPM: typeof import('./components/Pages/DetailPM.vue')['default']
     EditDepart: typeof import('./components/Pages/EditDepart.vue')['default']
     ElAffix: typeof import('element-plus/es')['ElAffix']
+    ElAlert: typeof import('element-plus/es')['ElAlert']
     ElAside: typeof import('element-plus/es')['ElAside']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCard: typeof import('element-plus/es')['ElCard']
@@ -50,6 +51,8 @@ declare module '@vue/runtime-core' {
     ElTable: typeof import('element-plus/es')['ElTable']
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
     ElTag: typeof import('element-plus/es')['ElTag']
+    ElTimeline: typeof import('element-plus/es')['ElTimeline']
+    ElTimelineItem: typeof import('element-plus/es')['ElTimelineItem']
     ElTree: typeof import('element-plus/es')['ElTree']
     FillForm: typeof import('./components/Pages/FillForm.vue')['default']
     FillForm_bk: typeof import('./components/Pages/FillForm_bk.vue')['default']
@@ -71,6 +74,7 @@ declare module '@vue/runtime-core' {
     SigleCheck: typeof import('./components/FormComponents/SigleCheck.vue')['default']
     SignIn: typeof import('./components/SignIn.vue')['default']
     SignInC: typeof import('./components/Pages/SignInC.vue')['default']
+    'SignInC copy': typeof import('./components/Pages/SignInC copy.vue')['default']
     UserPage: typeof import('./components/Pages/UserPage.vue')['default']
   }
 }

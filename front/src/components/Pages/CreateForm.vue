@@ -1,4 +1,34 @@
 <template>
+  <el-dialog v-model="addFlowNodeDialog" width="30%">
+    <el-tree
+      :data="flowData"
+      default-expand-all
+      :expand-on-click-node="false"
+      @node-click="handleNodeClick"
+    >
+      <template #default="{ data }">
+        <span class="custom-tree-node">
+          <el-tag type="info" effect="plain">{{ data.label }}</el-tag>
+        </span>
+        <span>
+            <el-tag type="warning" v-if="data.principal">
+              {{ "负责人：" + data.principal }}
+            </el-tag>
+        </span>
+      </template>
+    </el-tree>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button type="warning" @click="addFlowNodeDialog = false" plain
+          >取消</el-button
+        >
+        <el-button type="success" @click="confirmAddFlowNode" plain
+          >确认</el-button
+        >
+      </span>
+    </template>
+  </el-dialog>
+
   <fieldset style="width: 90%">
     <legend>表单信息</legend>
     <el-form label-width="200px">
@@ -21,7 +51,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row justify="space-around">
+      <!-- <el-row justify="space-around">
         <el-col :span="12">
           <el-form-item label="请选择模板起始时间：">
             <el-date-picker
@@ -40,7 +70,7 @@
             />
           </el-form-item>
         </el-col>
-      </el-row>
+      </el-row> -->
       <el-row>
         <el-col :span="24">
           <el-form-item label="请输入模板描述">
@@ -49,11 +79,36 @@
               placeholder="请输入模板描述"
               type="textarea"
               :rows="2"
+              style="margin-right: 20%"
             ></el-input>
           </el-form-item>
         </el-col>
       </el-row>
     </el-form>
+  </fieldset>
+
+  <!-- 定义审批结构 -->
+  <fieldset style="width: 90%" v-show="form.formType === '1'">
+    <legend>定义审批流程</legend>
+    <el-row :gutter="20">
+      <el-button style="margin-left: 60%" @click="addFlowNode"
+        >添加流程节点</el-button
+      >
+      <el-button style="margin-left: 5%" @click="deleteFlowNode"
+        >删除流程节点</el-button
+      >
+    </el-row>
+    <el-row>
+      <el-timeline style="margin-left:30%;">
+        <el-timeline-item
+          v-for="(item, index) in flowNodesList"
+          :key="index"
+          :timestamp="checkPrincipal(item.principal)"
+        >
+          {{ (index+1) + "  " + item.label }}
+        </el-timeline-item>
+      </el-timeline>
+    </el-row>
   </fieldset>
 
   <!-- 定义表单内容 -->
@@ -342,19 +397,18 @@
 
         <el-divider />
       </template>
-      <!-- <el-form-item lable="请选择表单结束时间1：">
+      <!-- <el-form-item label="请选择表单结束时间1：">
         <el-input v-model="form.formName" placeholder="为什么这里没有label0"></el-input>
       </el-form-item>
       <el-form-item label="请选择表单结束时间2：">
         <el-input v-model="form.formName" placeholder="输入框描述"></el-input>
       </el-form-item>
-      <el-form-item lable="请输入表单名称：">
+      <el-form-item label="请输入表单名称：">
         <el-input v-model="form.formName" placeholder="为什么这里没有label2"></el-input>
       </el-form-item> -->
     </el-form>
   </fieldset>
 
-  
   <el-affix position="bottom" :offset="10">
     <el-button @click="CreateInput" style="padding: 10px" plain type="primary"
       >创建输入框</el-button
@@ -403,7 +457,7 @@
     <el-button @click="uploadForm" style="padding: 10px" plain type="primary"
       >上传</el-button
     >
-<!--    这里呢函数括号不能删，可能是放了数组里必须加括号，嫩爷试来-->
+    <!--    这里呢函数括号不能删，可能是放了数组里必须加括号，嫩爷试来-->
   </el-affix>
 </template>
 
@@ -426,6 +480,35 @@ export default {
         formDescription: "",
         formContent: [],
       },
+      // approveNodeNums:0,
+      flowNodesList: [],
+      flowNodesIdList: [],
+      addFlowNodeDialog: false,
+
+      tempVar: null,
+
+      flowData: [
+        {
+          label: "业务部",
+          id: 1,
+          principal: "张三",
+          children: [
+            {
+              label: "市场分析",
+              id: 2,
+              principal: "李四",
+              children: [
+                {
+                  label: "信息搜集",
+                  id: 3,
+                  principal: "罗老师",
+                  children: [],
+                },
+              ],
+            },
+          ],
+        },
+      ],
     };
   },
   mounted() {
@@ -435,7 +518,7 @@ export default {
       const formObj = JSON.parse(this.$route.params.json);
       console.log(formObj);
       // this.form.formContent = JSON.parse(formObj.data.originContent);  // 与后端交互使用此语句，因为后端提供的是json字符串
-      this.form.formContent = formObj.data.originContent;       // 前端测试使用此语句
+      this.form.formContent = formObj.data.originContent; // 前端测试使用此语句
       this.form.formName = formObj.data.name;
       this.form.formType = formObj.data.type;
       this.form.formDescription = formObj.description;
@@ -445,6 +528,49 @@ export default {
     }
   },
   methods: {
+    // 定义流程时使用的函数
+    addFlowNode() {
+      this.addFlowNodeDialog = true;
+    },
+    deleteFlowNode() {
+      if (this.flowNodesList.length > 0) {
+        this.flowNodesList.splice(-1, 1);
+      }
+    },
+    handleNodeClick(data) {
+      this.tempVar = data;
+    },
+    confirmAddFlowNode() {
+      let item;
+      if(!this.tempVar.principal){
+        this.addFlowNodeDialog = false
+          ElMessage.warning("不能选择没有负责人的组织")
+          return
+      }
+      for (item in this.flowNodesIdList) {
+        if(this.flowNodesIdList[item]===this.tempVar.id){
+          this.addFlowNodeDialog = false
+          ElMessage.warning("不能在一个流程中加入重复节点")
+          return
+        }
+      }
+      this.flowNodesList.push({
+        label: this.tempVar.label,
+        principal: this.tempVar.principal,
+      });
+      this.flowNodesIdList.push(this.tempVar.id);
+      this.addFlowNodeDialog = false
+      console.log(this.flowNodesIdList);
+      console.log(this.flowNodesList);
+    },
+    checkPrincipal(principal){
+      if(principal){
+        return '责任人：' + principal
+      }else{
+        return null
+      }
+    },
+
     test() {
       if (this.form.formContent.length > 0) {
         var item;
@@ -559,27 +685,27 @@ export default {
       });
     },
     uploadForm() {
-      this.check()
+      this.check();
       axios
         .post("api/templates/create", {
           json: this.finalForm,
         })
-        .then(res => {
-          console.log(res.data)
+        .then((res) => {
+          console.log(res.data);
           if (res.data.errorCode == 20011) {
             ElMessage.success("上传成功");
-            this.$router.push({name:"ManageFormTemplates"})
+            this.$router.push({ name: "ManageFormTemplates" });
           }
         });
     },
-    check(){
+    check() {
       console.log("有");
       // if(this.form.startTime!=''&&this.form.formEndTime!='') {
       if (this.form.formStartTime > this.form.formEndTime) {
         alert("起始时间不能晚于结束时间");
         // }
       }
-    }
+    },
   },
 };
 </script>
