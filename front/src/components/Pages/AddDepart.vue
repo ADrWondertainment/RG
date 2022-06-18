@@ -1,5 +1,5 @@
 <template>
-    <el-dialog title="新建部门" model-value="1">
+    <el-dialog title="新建部门" model-value="1" v-model="">
         <el-form :model="depart" label-width="120px">
             <el-form-item label="部门名称">
                 <el-input v-model="depart.name" />
@@ -34,10 +34,9 @@
         name: "AddDepart",
         data(){
             return{
+                isshow:false,
                 depart:{
                     name:"",
-                    menmber:[],
-                    num:0
                 },
                 ifAddstaff:false,
                 staff:[
@@ -103,8 +102,6 @@
                 if(bool){
                     this.depart={
                         name:"",
-                        member:[],
-                        num:0
                     };
                     this.ifAddstaff=false;
                 }
@@ -112,7 +109,15 @@
                     return
             },
             createDepart(){
-
+                axios.put("api/users/cdept",{
+                    name:this.depart.name,
+                    fid:0
+                }).then(_=>{
+                    alert("新建成功");
+                }).catch(_=>{
+                    alert("创建失败");
+                });
+                this.isshow=false;
             }
         }
     }
