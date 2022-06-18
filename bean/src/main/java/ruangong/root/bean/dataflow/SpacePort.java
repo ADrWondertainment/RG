@@ -1,34 +1,74 @@
 package ruangong.root.bean.dataflow;
 
 import lombok.Data;
+import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.Queue;
+import javax.annotation.PostConstruct;
+import java.util.*;
 
 @Data
-public abstract class SpacePort {
-    protected static List<Integer> registeredSpaceStations;
-    protected static List<Integer> registeredAstronauts;
+@Component
+public abstract class SpacePort<MEMBER extends Astronaut<LOW>, LOW> {
+    protected Map<Integer, Integer> registeredSpaceStations;
+    protected Map<Integer, Integer> registeredAstronauts;
 
-    protected static List<SpaceStation> stations;
+    protected List<SpaceStation<MEMBER, LOW>> stations;
+    protected List<Astronaut<LOW>> astronauts;
 
-    protected static Queue<AIMDiffusionField> finished;
-    protected static Queue<AIMDiffusionField> powerless;
-    protected static Queue<AIMDiffusionField> disoriented;
-    protected static Queue<AIMDiffusionField> damaged;
-    protected static Queue<AIMDiffusionField> deprecated;
+    protected Queue<AIMDiffusionField<MEMBER, LOW>> finished;
+    protected Queue<AIMDiffusionField<MEMBER, LOW>> powerless;
+    protected Queue<AIMDiffusionField<MEMBER, LOW>> disoriented;
+    protected Queue<AIMDiffusionField<MEMBER, LOW>> damaged;
+    protected Queue<AIMDiffusionField<MEMBER, LOW>> deprecated;
 
-    protected static void registerStation(SpaceStation spaceStation) {
+    public void init() {
+        registeredAstronauts = new HashMap<>();
+        registeredSpaceStations = new HashMap<>();
+        stations = new ArrayList<>();
+        astronauts = new ArrayList<>();
+        finished = new LinkedList<>();
+        powerless = new LinkedList<>();
+        disoriented = new LinkedList<>();
+        damaged = new LinkedList<>();
+        deprecated = new LinkedList<>();
+    }
+
+    protected void load(List<? extends AIMDiffusionField<MEMBER, LOW>> fields) {
+        powerless.addAll(fields);
+    }
+
+    protected void assign() {
+        for (AIMDiffusionField field : powerless) {
+            field.shoot();
+        }
+    }
+
+    protected void registerStation(SpaceStation<MEMBER, LOW> spaceStation, int id) {
         stations.add(spaceStation);
-        registeredSpaceStations.add(stations.indexOf(spaceStation));
+        registeredSpaceStations.put(id, stations.indexOf(spaceStation));
+        spaceStation.setRegisterId(id);
+        spaceStation.setCentralPort(this);
     }
 
-    protected static boolean checkSpaceStation(Integer id) {
-        return registeredSpaceStations.contains(id);
+    protected void registerAstronaut(Astronaut<LOW> astronaut, int id) {
+        astronauts.add(astronaut);
+        registeredAstronauts.put(id, astronauts.indexOf(astronaut));
+        astronaut.setRegisterId(id);
+        astronaut.setCentralPort(this);
     }
 
-    protected static boolean checkAstronauts(Integer id) {
-        return registeredAstronauts.contains(id);
+    public boolean checkSpaceStation(Integer id) {
+        return registeredSpaceStations.containsKey(id);
+    }
+
+    public boolean checkAstronauts(Integer id) {
+        return registeredAstronauts.containsKey(id);
+    }
+
+    public void show() {
+        System.out.println(registeredSpaceStations);
+        System.out.println(registeredAstronauts);
+        System.out.println(powerless);
     }
 
 }

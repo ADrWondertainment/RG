@@ -1,4 +1,4 @@
-package ruangong.root.bean;
+package ruangong.root.check;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -8,23 +8,21 @@ import lombok.EqualsAndHashCode;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import ruangong.root.bean.dataflow.AIMDiffusionField;
-import ruangong.root.bean.dataflow.Astronaut;
+import ruangong.root.bean.dataflow.SpacePort;
 
-/**
- * @author pangx
- */
+import java.util.*;
+
 @Data
-@TableName("cusers")
 @Component
 @Scope("prototype")
-public class Cuser {
-    @TableId(value = "id", type = IdType.AUTO)
+@TableName("answers")
+public class Approve{
+    @TableId(type = IdType.AUTO)
     private Integer id;
+    private Integer sid;
     private Integer uid;
-    private Integer cid;
-    private Integer rid;
-    private Integer did;
-    private Integer level;
-    private Integer group;
-
+    private String data;
+    private Integer done;
+    private Integer pass;
+    private String flow;
 }

@@ -3,8 +3,6 @@ package ruangong.root.bean.dataflow;
 /**
  * @author pangx
  */
-public interface Prayer<LOW> {
-    AIMDiffusionField<LOW> pray(AIMDiffusionField<LOW> received);
-
-
+public interface Prayer<MEMBER extends Astronaut<LOW>, LOW> {
+    AIMDiffusionField<MEMBER, LOW> pray(SpaceStation<MEMBER, LOW>.CombinedField received);
 }

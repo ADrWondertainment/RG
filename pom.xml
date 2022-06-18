@@ -30,6 +30,7 @@
         <module>utils</module>
         <module>config</module>
         <module>interceptor</module>
+        <module>check</module>
     </modules>
 
 

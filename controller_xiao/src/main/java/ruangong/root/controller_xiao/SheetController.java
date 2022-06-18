@@ -6,6 +6,10 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import org.springframework.web.bind.annotation.*;
 import ruangong.root.bean.*;
+import ruangong.root.bean.dataflow.Astronaut;
+import ruangong.root.check.Approve;
+import ruangong.root.check.CuserAstronaut;
+import ruangong.root.check.SpaceFederation;
 import ruangong.root.dao.AnswerMapper;
 import ruangong.root.exception.BackException;
 import ruangong.root.exception.ErrorCode;
@@ -19,6 +23,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author pangx
@@ -34,6 +39,11 @@ public class SheetController {
     @Resource
     private AnswerService answerService;
 
+    @Resource
+    private SpaceFederation spaceFederation;
+
+    @Resource
+    private Result result;
 
     /**
      * {
@@ -71,6 +81,7 @@ public class SheetController {
         Integer sizePerPage = pageInfo.get("sizePerPage");
         return sheetService.getSheetsInPages(uid, pageIndex, sizePerPage);
     }
+
     @PostMapping("/query")
     public Result getQueriesInPages(@RequestBody String jsonObject, HttpServletRequest httpServletRequest) {
         HashMap<String, Integer> pageInfo = PageUtil.getPageInfo(JSONUtil.parseObj(jsonObject), httpServletRequest, userService);
@@ -98,43 +109,51 @@ public class SheetController {
         return answerService.getAnswerInPagesByUserId(uid, pageIndex, sizePerPage);
     }
 
+    private CuserAstronaut registeredAstronaut;
+
     /**
      * {
-     * "id":1,
+     * "index":1,
      * "pass":0
      * }
      */
     @PostMapping("/pass/check")
     public Result passSheetAnswers(@RequestBody String data) {
 
-        JSONObject entries = JSONUtil.parseObj(data);
-        Integer id = entries.get("id", Integer.class);
-        Integer pass = entries.get("pass", Integer.class);
+        if (registeredAstronaut == null) {
+            return null;
+        }
+        registeredAstronaut.approve(data);
 
-        return sheetService.checkSheetAnswer(id, pass);
+        ResultUtil.quickSet(
+                result,
+                ErrorCode.ALL_SET,
+                "审批完成",
+                null
+        );
+
+        return result;
     }
 
 
-    /**
-     * {
-     * "sheetId":1,
-     * "pageIndex":1,
-     * "size":4,
-     * "mode":0,               //1:unchecked, 2:通过, 3:不通过
-     * }
-     */
     @PostMapping("/pass/show")
-    public Result showCheckedOrUncheckedAnswers(@RequestBody String data) {
-        JSONObject entries = JSONUtil.parseObj(data);
-        Integer sheetId = (Integer) entries.get("sheetId");
-        Integer mode = (Integer) entries.get("mode");
+    public Result showApproves(HttpServletRequest httpServletRequest) {
 
-        Integer pageIndex = (Integer) entries.get("pageIndex");
-        Integer size = (Integer) entries.get("size");
-        Integer[] ids = {sheetId, mode, 1};
-        String[] columns = {"sid", "pass", "done"};
+        int uid = Integer.parseInt((String) httpServletRequest.getSession().getAttribute("id"));
+        if (!spaceFederation.checkAstronauts(uid)) {
+            return null;
+        }
+        registeredAstronaut = (CuserAstronaut) spaceFederation.getRegisteredAstronaut(uid);
+        registeredAstronaut.getWork();
+        List<Approve> workList = registeredAstronaut.getWorkList();
 
-        return answerService.getCheckingAnswers(ids, pageIndex, size, columns);
+        ResultUtil.quickSet(
+                result,
+                ErrorCode.ALL_SET,
+                "找到所有待审表单",
+                workList
+        );
+        return result;
 
     }
 
