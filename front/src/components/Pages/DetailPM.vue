@@ -1,5 +1,6 @@
 <template>
     <el-card>
+<!--        表头-->
         <el-row>
             <el-col :span="4"></el-col>
             <el-col :span="16">
@@ -11,7 +12,7 @@
                         style="padding: 20px"
                         title="添加人员"
                         type="primary"
-                        @click="ToCreateForm"
+                        @click="insertStaff"
                         plain
                 >添加人员</el-button
                 >
@@ -26,7 +27,7 @@
             </el-col>
         </el-row>
 <!--        主体表格-->
-        <el-table :data="formInfo" style="width: 100%">
+        <el-table :data="formInfo" style="width: 100%" height="440">
             <el-table-column type="selection" width="55" />
             <el-table-column prop="uid" label="编号" width="180" align="center" />
             <el-table-column
@@ -167,6 +168,39 @@
               </span>
             </template>
         </el-dialog>
+<!--        添加人员弹框-->
+        <el-dialog v-model="showInsertStaff" title="添加人员">
+            <el-table
+                    ref="InsertStaff"
+                    height="400px"
+                    :data="staff"
+                    style="width: 100% "
+                    @selection-change="InsertStaffSelectionChangeHandle"
+
+            >
+                <el-table-column type="selection" width="55" />
+                <el-table-column
+                        prop="uid"
+                        label="编号"
+                        width="180"
+                        align="center"
+                >
+                </el-table-column>
+                <el-table-column
+                        prop="name"
+                        label="姓名"
+                        width="180"
+                        align="center"
+                />
+            </el-table>
+            <template #footer>
+              <span class="dialog-footer">
+                <el-button @click="cancelEditPos">取消</el-button>
+                <el-button type="primary" @click="confirmInsertStaff">确认</el-button>
+              </span>
+            </template>
+
+        </el-dialog>
         <el-divider style="margin-top: 0" ></el-divider>
     </el-card>
 </template>
@@ -186,6 +220,8 @@
                 formInfo:null,
                 staffnum:0,
                 showEdit:false,
+                showInsertStaff:false,
+                selectedStaff:[],
                 staff:[
                     {
                         "id":1,
@@ -241,6 +277,117 @@
                         "depart":"2",
                         "right":1
                     },
+                    {
+                        "id":6,
+                        "uid":419121011,
+                        "pos":"林志康的爹",
+                        "name":"ABC",
+                        "telephone":1881007821,
+                        "depart":"2",
+                        "right":1
+                    },
+                    {
+                        "id":6,
+                        "uid":419121011,
+                        "pos":"林志康的爹",
+                        "name":"ABC",
+                        "telephone":1881007821,
+                        "depart":"2",
+                        "right":1
+                    },
+                    {
+                        "id":6,
+                        "uid":419121011,
+                        "pos":"林志康的爹",
+                        "name":"ABC",
+                        "telephone":1881007821,
+                        "depart":"2",
+                        "right":1
+                    },{
+                        "id":6,
+                        "uid":419121011,
+                        "pos":"林志康的爹",
+                        "name":"ABC",
+                        "telephone":1881007821,
+                        "depart":"2",
+                        "right":1
+                    },
+                    {
+                        "id":6,
+                        "uid":419121011,
+                        "pos":"林志康的爹",
+                        "name":"ABC",
+                        "telephone":1881007821,
+                        "depart":"2",
+                        "right":1
+                    },{
+                        "id":6,
+                        "uid":419121011,
+                        "pos":"林志康的爹",
+                        "name":"ABC",
+                        "telephone":1881007821,
+                        "depart":"2",
+                        "right":1
+                    },{
+                        "id":6,
+                        "uid":419121011,
+                        "pos":"林志康的爹",
+                        "name":"ABC",
+                        "telephone":1881007821,
+                        "depart":"2",
+                        "right":1
+                    },{
+                        "id":6,
+                        "uid":419121011,
+                        "pos":"林志康的爹",
+                        "name":"ABC",
+                        "telephone":1881007821,
+                        "depart":"2",
+                        "right":1
+                    },{
+                        "id":6,
+                        "uid":419121011,
+                        "pos":"林志康的爹",
+                        "name":"ABC",
+                        "telephone":1881007821,
+                        "depart":"2",
+                        "right":1
+                    },{
+                        "id":6,
+                        "uid":419121011,
+                        "pos":"林志康的爹",
+                        "name":"ABC",
+                        "telephone":1881007821,
+                        "depart":"2",
+                        "right":1
+                    },{
+                        "id":6,
+                        "uid":419121011,
+                        "pos":"林志康的爹",
+                        "name":"ABC",
+                        "telephone":1881007821,
+                        "depart":"2",
+                        "right":1
+                    },{
+                        "id":6,
+                        "uid":419121011,
+                        "pos":"林志康的爹",
+                        "name":"ABC",
+                        "telephone":1881007821,
+                        "depart":"2",
+                        "right":1
+                    },{
+                        "id":6,
+                        "uid":419121011,
+                        "pos":"林志康的爹",
+                        "name":"ABC",
+                        "telephone":1881007821,
+                        "depart":"2",
+                        "right":1
+                    },
+
+
+
                 ],
                 // select:[],
                 options:[
@@ -444,7 +591,39 @@
             },
             cancelEditPos(){
                 this.showEdit=false;
+            },
+            insertStaff(){
+                this.showInsertStaff=true;
+            },
+            cancelInsertStaff(){
+                this.showInsertStaff=false;
+            },
+            InsertStaffSelectionChangeHandle(val){
+                this.selectedStaff=val;
+            },
+            confirmInsertStaff(){
+                this.$nextTick(()=>{
+                    let deltaStaff;
+                    deltaStaff=[];
+                    deltaStaff=this.selectedStaff;
+                    for(var i=0;i<this.selectedStaff.length;i++){
+                        this.staff.push(this.selectedStaff[i]);
+                    }
+                    // console.log(deltaStaff);
+                    // console.log(this.$refs.InsertStaff.selection);
+                    // console.log(this.selectedStaff);
+                    this.selectedStaff=[];
+                    this.getId();
+                    this.formInfo=this.staff;
+                    this.beforeenter();
+                })
+
+                this.showInsertStaff=false;
+
+
+
             }
+
         },
         created(){
             this.getId();
