@@ -38,7 +38,7 @@
                     >
                     <el-button
                             size="small"
-                            @click="EditDepart(scope.$index)"
+                            @click="EditDepart(scope.$index,scope.row.did)"
                             title="编辑部门"
                             type="success"
                             plain
@@ -147,7 +147,6 @@
                     })
 
             },
-
             ToDeleteTemplate(index, id) {
                 ElMessageBox.confirm("你确定要删除此部门吗", "注意！", {
                     confirmButtonText: "确定",
@@ -177,21 +176,25 @@
             EnterDepartment(index,id){
                 this.$router.push({name:"DetailPM",params:{id:id}});
             },
-            EditDepart(index){
+            EditDepart(index,did){
                 this.editDepartVisible=true;
                 this.$nextTick(()=>{
                     //这里的dialog与上面dialog-component组件里面的ref属性值是一致的
                     //init调用的是dialog-component组件里面的init方法
                     //data是传递给弹窗页面的值
                     // console.log(this.formInfo[index].name);
-                    this.$refs.dialog.init(this.formInfo[index].name,index);
+                    this.$refs.dialog.init(this.formInfo[index].name,index,did);
 
                 })
             },
-            finishEdit(index,name){
+            finishEdit(index,name,did){
                 this.editDepartVisible=false;
                 // console.log("成了");
                 console.log(index,name);
+                axios.post('api/users/udept',{
+                    did:did,
+                    department:name
+                })
                 this.formInfo[index].name=name;
             },
             addDepart(){

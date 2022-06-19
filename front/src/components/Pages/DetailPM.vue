@@ -124,7 +124,6 @@
                                 :value="item.value"
                         />
                     </el-select>
-
                 </template>
             </el-table-column>
         </el-table>
@@ -452,15 +451,14 @@
                 })
                     .then(() => {
                         axios
-                            .delete("/api/templates/" + id, {})
-                            .then((res) => {
-                                if (res.data.errorCode === 66666) {
-                                    ElMessage({
-                                        type: "info",
-                                        message: "删除成功",
-                                    });
-                                    this.getTemplates();
-                                }
+                            .put("/api/users", {
+                                id:id
+                            })
+                            .then(() => {
+                                alert("删除成功");
+                                this.getId();
+                                this.formInfo=JSON.parse(this.staff);
+                                this.beforeenter();
                             });
                     })
                     .catch(() => {
@@ -473,7 +471,7 @@
             },
           getId(){
               let routeid=this.$route.params.id;
-              axios.get('',{
+              axios.get('/api/users/',{
                   did:routeid
               }).then(res=>{
                   this.staff=res.data;
@@ -520,7 +518,7 @@
                 // console.log(this.showManageDepart);
                 // console.log(index,id,value);
                 this.staff[index].right=value;
-                axios.post("",{
+                axios.post("api/users/",{
                     level:value,
                     uid:id,
                 }).then(res=>{
@@ -559,7 +557,7 @@
                 // console.log(this.showManageDepart);
                 // console.log(index,id,value);
                 // this.staff[index].pos=value;
-                axios.post('',{
+                axios.post('api/users/role',{
                     role:value,
                     uid:id
                 }).then(res=>{
