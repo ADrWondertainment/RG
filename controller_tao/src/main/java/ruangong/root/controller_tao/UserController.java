@@ -14,6 +14,7 @@ import ruangong.root.utils.ResultUtil;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -60,15 +61,18 @@ public class UserController {
      * role: 职位名称
      */
     @PostMapping("/login")
-    public Result login(HttpServletRequest request, @RequestBody User user) {
-        result = userService.login(user);
+    public Result login(HttpServletRequest request, @RequestBody String user) {
+        User user1 = JSONUtil.toBean(user, User.class);
+        result = userService.login(user1);
         HttpSession session = null;
         UserData userData = null;
         if (result.getErrorCode().equals(ErrorCode.USER_LOGIN_SUCCESS)) {
             session = request.getSession();
-            userData = userService.GetAllData(user.getEmail());
+            userData = userService.GetAllData(user1.getEmail());
+            System.out.println(userData);
             HttpSessionUtil.quickSetAttribute(session, userData);
         }
+        System.out.println(userData);
         result.setData(JSONUtil.toJsonPrettyStr(userData));
         return result;
     }
@@ -118,26 +122,27 @@ public class UserController {
     }
 
     @PutMapping("/rcuser")
-    public Result removecuser(Integer id){
+    public Result removecuser(Integer id) {
         return userService.RemoveCompanyUser(id);
     }
 
     @PostMapping("/showdept")
-    public Map<Dept,Integer> showdept(HttpServletRequest request, @RequestBody Integer did){
+    public Result showdept(HttpServletRequest request, @RequestBody String did) {
+        String fid = JSONUtil.parseObj(did).get("fid", String.class);
         HttpSession session = request.getSession();
-        Integer cid =(Integer) session.getAttribute("cid");
-        return userService.GetCompanyUserList(cid,did);
+        Integer cid = (Integer) session.getAttribute("cid");
+        return userService.GetCompanyUserList(cid, Integer.parseInt(fid));
     }
 
     @PostMapping("/showuserbydept")
-    public List<CompanyUser> showuserbydept(HttpServletRequest request,@RequestBody Integer did){
+    public Result showuserbydept(HttpServletRequest request, @RequestBody Integer did) {
         HttpSession session = request.getSession();
-        Integer cid =(Integer) session.getAttribute("cid");
-        return userService.GetComanyUserByDepartment(cid,did);
+        Integer cid = (Integer) session.getAttribute("cid");
+        return userService.GetComanyUserByDepartment(cid, did);
     }
 
     @PutMapping("/role")
-    public Result updaterole(HttpServletRequest request, String role,Integer uid) {
+    public Result updaterole(HttpServletRequest request, String role, Integer uid) {
         HttpSession session = request.getSession();
         Integer cid = (Integer) session.getAttribute("cid");
         result = userService.UpdateRole(uid, cid, role);
@@ -145,30 +150,33 @@ public class UserController {
     }
 
     @PostMapping("/sdept")
-    public Result setdeptbyuser(Integer uid,Integer did){
-        return userService.SetDept(uid,did);
+    public Result setdeptbyuser(Integer uid, Integer did) {
+        return userService.SetDept(uid, did);
     }
 
     @PutMapping("/cdept")
-    public Result createdept(HttpServletRequest request, String department,Integer fid) {
+    public Result createdept(HttpServletRequest request, @RequestBody String data) {
+        JSONObject entries = JSONUtil.parseObj(data);
+        String name = entries.get("name", String.class);
+        Integer fid = entries.get("fid", Integer.TYPE);
         HttpSession session = request.getSession();
         Integer cid = (Integer) session.getAttribute("cid");
-        result = userService.CreateDept(cid, department,fid);
+        result = userService.CreateDept(cid, name, fid);
         return result;
     }
 
     @PostMapping("/udept")
-    public Result updatedept(Integer did,String department){
-        return userService.UpdateDept(did,department);
+    public Result updatedept(Integer did, String department) {
+        return userService.UpdateDept(did, department);
     }
 
     @PostMapping("/ddept")
-    public Result deletedept(Integer did,Integer fid){
-        return userService.RemoveDept(did,fid);
+    public Result deletedept(Integer did, Integer fid) {
+        return userService.RemoveDept(did, fid);
     }
 
     @PutMapping
-    public Result updatelevel(Integer level,Integer uid) {
+    public Result updatelevel(Integer level, Integer uid) {
         result = userService.UpdateLevel(uid, level);
         return result;
     }

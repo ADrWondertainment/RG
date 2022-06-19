@@ -56,9 +56,9 @@ public interface UserService extends IService<User> {
 
     public Result UpdateLevel(Integer uid,Integer level);
 
-    public Map<Dept,Integer> GetCompanyUserList(Integer cid,Integer did);
+    public Result GetCompanyUserList(Integer cid,Integer did);
 
-    public List<CompanyUser> GetComanyUserByDepartment(Integer cid,Integer did);
+    public Result GetComanyUserByDepartment(Integer cid,Integer did);
 
     public List<Dept> GetAllDept(Integer cid,Integer did);
 

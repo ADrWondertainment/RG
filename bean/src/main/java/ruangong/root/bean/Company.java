@@ -22,5 +22,5 @@ public class Company {
     private Integer id;
     private String name;
     private String invite;
-    private String groups;
+    private String cgroups;
 }

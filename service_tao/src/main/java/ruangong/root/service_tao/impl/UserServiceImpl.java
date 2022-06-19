@@ -1,6 +1,8 @@
 package ruangong.root.service_tao.impl;
 
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -330,12 +332,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         userData.setId(id);
         userData.setEmail(user.getEmail());
 
-        Integer company_id = user.getType();
-        if (company_id == null) {
+        Integer typeId = user.getType();
+        if (typeId == null) {
             return userData;
         }
-        userData.setCid(company_id);
-        Company company = companyMapper.selectById(company_id);
+        userData.setTypeId(typeId);
+        Integer cid = cuserMapper.selectById(typeId).getCid();
+        userData.setCid(cid);
+        Company company = companyMapper.selectById(cid);
         userData.setCompany(company.getName());
 
         Cuser cuser_result = (Cuser) SelectByUid(id).getData();
@@ -344,9 +348,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         userData.setRid(rid);
         userData.setDid(did);
         userData.setLevel(cuser_result.getLevel());
-        userData.setDepartment(deptMapper.selectById(did).getName());
-        userData.setRole(roleMapper.selectById(rid).getName());
-
+        if (did != 0) {
+            userData.setDepartment(deptMapper.selectById(did).getName());
+        }
+        if (rid != 0) {
+            userData.setRole(roleMapper.selectById(rid).getName());
+        }
         return userData;
     }
 
@@ -373,9 +380,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         userData.setRid(rid);
         userData.setDid(did);
         userData.setLevel(cuser_result.getLevel());
-        userData.setDepartment(deptMapper.selectById(did).getName());
-        userData.setRole(roleMapper.selectById(rid).getName());
-
+        if (did != 0) {
+            userData.setDepartment(deptMapper.selectById(did).getName());
+        }
+        if (rid != 0) {
+            userData.setRole(roleMapper.selectById(rid).getName());
+        }
         return userData;
 
     }
@@ -432,8 +442,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public Result SetDept(Integer uid, Integer did) {
         UpdateWrapper<Cuser> wrap = new UpdateWrapper<>();
-        wrap.set("did",did).eq("uid", uid);
-        cuserMapper.update(null,wrap);
+        wrap.set("did", did).eq("uid", uid);
+        cuserMapper.update(null, wrap);
         ResultUtil.quickSet(
                 result,
                 ErrorCode.USER_SET_DEPARTMENT,
@@ -444,7 +454,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public Result CreateDept(Integer cid, String department,Integer fid) {
+    public Result CreateDept(Integer cid, String department, Integer fid) {
         dept_user.setCid(cid);
         dept_user.setName(department);
         dept_user.setFid(fid);
@@ -462,7 +472,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public Result UpdateDept(Integer did, String department) {
         UpdateWrapper<Dept> wrap = new UpdateWrapper<>();
         wrap.set("name", department).eq("id", did);
-        deptMapper.update(null,wrap);
+        deptMapper.update(null, wrap);
         ResultUtil.quickSet(
                 result,
                 ErrorCode.USER_UPDATE_DEPARTMENT,
@@ -479,7 +489,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         cuserMapper.update(null, wrap);
         UpdateWrapper<Dept> dwrap = new UpdateWrapper<>();
         wrap.set("fid", fid).eq("fid", did);
-        deptMapper.update(null,dwrap);
+        deptMapper.update(null, dwrap);
         deptMapper.deleteById(did);
         ResultUtil.quickSet(
                 result,
@@ -505,36 +515,76 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public Map<Dept,Integer> GetCompanyUserList(Integer cid,Integer did) {
-        Map<Dept,Integer> cuserbydept = new HashMap<>();
-        List<Dept> all_dept =GetAllDept(cid,did);
-        if (!all_dept.isEmpty()){
-            for (Dept tmp_dept:
+    public Result GetCompanyUserList(Integer cid, Integer did) {
+        Map<Dept, Integer> cuserbydept = new HashMap<>();
+        List<Dept> all_dept = GetAllDept(cid, did);
+        JSONObject obj = JSONUtil.createObj();
+        if (!all_dept.isEmpty()) {
+            for (Dept tmp_dept :
                     all_dept) {
-                List<CompanyUser> tmp_companyUsers = GetComanyUserByDepartment(cid,tmp_dept.getId());
-                cuserbydept.put(tmp_dept,tmp_companyUsers.size());
+                List<CompanyUser> tmp_companyUsers = (List<CompanyUser>) GetComanyUserByDepartment(cid, tmp_dept.getId()).getData();
+                cuserbydept.put(tmp_dept, tmp_companyUsers.size());
             }
+            for (Integer i = 0; i < all_dept.size(); i++) {
+                Dept tmp_dept = all_dept.get(i);
+                List<CompanyUser> tmp_companyUsers = (List<CompanyUser>) GetComanyUserByDepartment(cid, tmp_dept.getId()).getData();
+
+                obj.putOnce(i.toString(), JSONUtil.parseObj(tmp_dept).putOnce("num", tmp_companyUsers.size()));
+            }
+
         }
-        return cuserbydept;
+//        else {
+//            Dept dept = new Dept();
+//            cuserbydept.put(dept, 0);
+//        }
+        /*
+               {
+                    1:{
+                            "id":9,
+                            "cid":2,
+                            .....
+                            "num":0
+                        },
+                    2:{
+                        .....
+                    }
+
+               }
+         */
+
+
+        ResultUtil.quickSet(
+                result,
+                ErrorCode.SUCCESS,
+                "查询部门成功",
+                obj
+        );
+        return result;
     }
 
     @Override
-    public List<CompanyUser> GetComanyUserByDepartment(Integer cid,Integer did) {
+    public Result GetComanyUserByDepartment(Integer cid, Integer did) {
         companyUsers.clear();
         QueryWrapper<Cuser> wrapper = new QueryWrapper<>();
-        wrapper.eq("did", did).eq("cid",cid);
+        wrapper.eq("did", did).eq("cid", cid);
         List<Cuser> cuserList = cuserMapper.selectList(wrapper);
         for (Cuser tmp_user :
                 cuserList) {
             companyUsers.add(GetAllData(tmp_user.getUid()));
         }
-        return companyUsers;
+        ResultUtil.quickSet(
+                result,
+                ErrorCode.SUCCESS,
+                "查询部门成功",
+                companyUsers
+        );
+        return result;
     }
 
     @Override
-    public List<Dept> GetAllDept(Integer cid,Integer did) {
+    public List<Dept> GetAllDept(Integer cid, Integer did) {
         QueryWrapper<Dept> wrapper = new QueryWrapper<>();
-        wrapper.eq("cid", cid).eq("fid",did);
+        wrapper.eq("cid", cid).eq("fid", did);
         return deptMapper.selectList(wrapper);
     }
 }

@@ -25,6 +25,6 @@ public class Cuser {
     private Integer rid;
     private Integer did;
     private Integer level;
-    private Integer group;
+    private Integer cgroup;
 
 }
