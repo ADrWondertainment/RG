@@ -18,9 +18,8 @@ import ruangong.root.exception.FrontException;
 import ruangong.root.service_tao.UserService;
 import ruangong.root.utils.ResultUtil;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @Transactional
@@ -63,8 +62,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Autowired
     private Dept dept_user;
 
-    @Autowired
-    private List<CompanyUser> companyUsers;
 
     @Override
     public Result register(User user) {
@@ -328,33 +325,34 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public UserData GetAllData(Integer id) {
+        UserData userData1 = new UserData();
         User user = userMapper.selectById(id);
-        userData.setId(id);
-        userData.setEmail(user.getEmail());
+        userData1.setId(id);
+        userData1.setEmail(user.getEmail());
 
         Integer typeId = user.getType();
         if (typeId == null) {
-            return userData;
+            return userData1;
         }
-        userData.setTypeId(typeId);
+        userData1.setTypeId(typeId);
         Integer cid = cuserMapper.selectById(typeId).getCid();
-        userData.setCid(cid);
+        userData1.setCid(cid);
         Company company = companyMapper.selectById(cid);
-        userData.setCompany(company.getName());
+        userData1.setCompany(company.getName());
 
         Cuser cuser_result = (Cuser) SelectByUid(id).getData();
         Integer rid = cuser_result.getRid();
         Integer did = cuser_result.getDid();
-        userData.setRid(rid);
-        userData.setDid(did);
-        userData.setLevel(cuser_result.getLevel());
+        userData1.setRid(rid);
+        userData1.setDid(did);
+        userData1.setLevel(cuser_result.getLevel());
         if (did != 0) {
-            userData.setDepartment(deptMapper.selectById(did).getName());
+            userData1.setDepartment(deptMapper.selectById(did).getName());
         }
         if (rid != 0) {
-            userData.setRole(roleMapper.selectById(rid).getName());
+            userData1.setRole(roleMapper.selectById(rid).getName());
         }
-        return userData;
+        return userData1;
     }
 
     @Override
@@ -537,7 +535,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public List<CompanyUser> GetComanyUserByDepartment(Integer cid, Integer did) {
-        companyUsers.clear();
+        List<CompanyUser> companyUsers = new ArrayList<>();
         QueryWrapper<Cuser> wrapper = new QueryWrapper<>();
         wrapper.eq("did", did).eq("cid", cid);
         List<Cuser> cuserList = cuserMapper.selectList(wrapper);
@@ -552,9 +550,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public Result ShowCuser(Integer cid, Integer did) {
         List<CompanyUser> tmp_cusers = GetComanyUserByDepartment(cid, did);
         JSONObject obj = JSONUtil.createObj();
-        for(Integer i=0;i<tmp_cusers.size();i++){
+        for (Integer i = 0; i < tmp_cusers.size(); i++) {
             CompanyUser tmp_cuser = tmp_cusers.get(i);
-            obj.putOnce(i.toString(),JSONUtil.parseObj(tmp_cuser));
+            obj.putOnce(i.toString(), JSONUtil.parseObj(tmp_cuser));
         }
         ResultUtil.quickSet(
                 result,

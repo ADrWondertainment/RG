@@ -102,9 +102,9 @@ public class ApproveController {
 
     @PostMapping("/cusers")
     public Result getAllCompanyUsers(HttpServletRequest httpServletRequest) {
-//        int cid = Integer.parseInt((String) (httpServletRequest.getSession().getAttribute("cid")));
+        int cid = Integer.parseInt((String) (httpServletRequest.getSession().getAttribute("cid")));
 
-        List<CuserView> cuserViews = cuserViewMapper.selectList(new QueryWrapper<CuserView>().eq("cid", 2));
+        List<CuserView> cuserViews = cuserViewMapper.selectList(new QueryWrapper<CuserView>().eq("cid", cid));
 
         ResultUtil.quickSet(
                 result,

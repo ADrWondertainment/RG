@@ -121,9 +121,10 @@ public class UserController {
         return result;
     }
 
-    @PutMapping("/rcuser")
-    public Result removecuser(Integer id) {
-        return userService.RemoveCompanyUser(id);
+    @PostMapping("/rcuser")
+    public Result removecuser(@RequestBody String id) {
+        String uid = JSONUtil.parseObj(id).get("id", String.class);
+        return userService.RemoveCompanyUser(Integer.parseInt(uid));
     }
 
     @PostMapping("/showdept")

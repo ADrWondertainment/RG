@@ -67,4 +67,6 @@ public interface SheetService extends IService<Sheet> {
      * @return data:1 代表成功审批
      */
     Result checkSheetAnswer(Integer id, Integer pass);
+
+    Result getApproveSheetsInPages(Integer cid, Integer pageIndex, Integer sizePerPage);
 }
