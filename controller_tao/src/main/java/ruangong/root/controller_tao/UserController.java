@@ -113,7 +113,8 @@ public class UserController {
     public Result joincompany(HttpServletRequest request, @RequestBody String invite) {
         HttpSession session = request.getSession();
         Integer id = (Integer) session.getAttribute("id");
-        result = userService.JoinCompany(invite, id);
+        String inviteid = JSONUtil.parseObj(invite).get("invite", String.class);
+        result = userService.JoinCompany(inviteid, id);
         if (result.getErrorCode().equals(ErrorCode.JOIN_COMPANY_SUCCESS)) {
             UserData userData = userService.GetAllData(id);
             HttpSessionUtil.quickUpdateAttribute(session, userData);
@@ -137,24 +138,30 @@ public class UserController {
 
     @PostMapping("/showuserbydept")
     public Result showuserbydept(HttpServletRequest request, @RequestBody String did) {
-        System.out.println(did);
         String fid = JSONUtil.parseObj(did).get("did", String.class);
         HttpSession session = request.getSession();
         Integer cid = (Integer) session.getAttribute("cid");
         return userService.ShowCuser(cid,Integer.parseInt(fid));
     }
 
-    @PutMapping("/role")
-    public Result updaterole(HttpServletRequest request, String role, Integer uid) {
+    @PostMapping("/role")
+    public Result updaterole(HttpServletRequest request, @RequestBody String data) {
         HttpSession session = request.getSession();
         Integer cid = (Integer) session.getAttribute("cid");
+        Integer uid = JSONUtil.parseObj(data).get("uid",Integer.TYPE);
+        String role = JSONUtil.parseObj(data).get("role",String.class);
         result = userService.UpdateRole(uid, cid, role);
         return result;
     }
 
     @PostMapping("/sdept")
-    public Result setdeptbyuser(Integer uid, Integer did) {
-        return userService.SetDept(uid, did);
+    public Result setdeptbyuser( HttpServletRequest request,@RequestBody String data) {
+        HttpSession session = request.getSession();
+        Integer cid = (Integer) session.getAttribute("cid");
+        JSONObject entries = JSONUtil.parseObj(data);
+        String name = entries.get("name", String.class);
+        Integer uid = entries.get("uid", Integer.TYPE);
+        return userService.SetDept(uid, name,cid);
     }
 
     @PutMapping("/cdept")
@@ -169,17 +176,22 @@ public class UserController {
     }
 
     @PostMapping("/udept")
-    public Result updatedept(Integer did, String department) {
+    public Result updatedept(Integer did, @RequestBody String data) {
+        String department = JSONUtil.parseObj(data).get("dept", String.class);
         return userService.UpdateDept(did, department);
     }
 
     @PostMapping("/ddept")
-    public Result deletedept(Integer did, Integer fid) {
+    public Result deletedept(Integer did, @RequestBody String data) {
+        Integer fid = JSONUtil.parseObj(data).get("fid", Integer.TYPE);
         return userService.RemoveDept(did, fid);
     }
 
-    @PutMapping
-    public Result updatelevel(Integer level, Integer uid) {
+    @PostMapping("/ulevel")
+    public Result updatelevel(@RequestBody String data) {
+        JSONObject entries = JSONUtil.parseObj(data);
+        Integer level = entries.get("level", Integer.TYPE);
+        Integer uid = entries.get("uid", Integer.TYPE);
         result = userService.UpdateLevel(uid, level);
         return result;
     }

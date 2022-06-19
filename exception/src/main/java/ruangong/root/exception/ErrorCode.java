@@ -32,8 +32,8 @@ public class ErrorCode {
     public static final Integer USER_UPDATE_DEPARTMENT = 10140;
     public static final Integer USER_CREATE_DEPARTMENT = 10141;
     public static final Integer USER_DELETE_DEPARTMENT = 10142;
+    public static final Integer UNFINDED_DEPARTMENT = 10144;
     public static final Integer USER_UPDATE_LEVEL = 10150;
-    public static final Integer SELECT_USERS_BYDEPT =10160;
     public static final Integer SUCCESS = 1;
     /*----------------------------------------------------------------------------*/
     public static final Integer ALL_SET = 66666;

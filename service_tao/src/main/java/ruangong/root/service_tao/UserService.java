@@ -46,7 +46,7 @@ public interface UserService extends IService<User> {
 
     public Result UpdateRole(Integer uid,Integer cid,String role);
 
-    public Result SetDept(Integer uid,Integer did);
+    public Result SetDept(Integer uid,String name,Integer cid);
 
     public Result CreateDept(Integer cid,String department,Integer fid);
 

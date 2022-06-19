@@ -311,6 +311,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public Result RemoveCompanyUser(Integer id) {
+        UpdateWrapper<User> wp = new UpdateWrapper<>();
+        wp.set("type",null).eq("id",id);
+        userMapper.update(null,wp);
         UpdateWrapper<Cuser> wrap = new UpdateWrapper<>();
         wrap.eq("uid", id);
         cuserMapper.delete(wrap);
@@ -357,34 +360,35 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public UserData GetAllData(String email) {
+        UserData userData1 = new UserData();
         User user = getUserByEmail(email);
         Integer id = user.getId();
-        userData.setId(user.getId());
-        userData.setEmail(user.getEmail());
+        userData1.setId(user.getId());
+        userData1.setEmail(user.getEmail());
 
         Integer typeId = user.getType();
         if (typeId == null) {
-            return userData;
+            return userData1;
         }
-        userData.setTypeId(typeId);
+        userData1.setTypeId(typeId);
         Integer cid = cuserMapper.selectById(typeId).getCid();
-        userData.setCid(cid);
+        userData1.setCid(cid);
         Company company = companyMapper.selectById(cid);
-        userData.setCompany(company.getName());
+        userData1.setCompany(company.getName());
 
         Cuser cuser_result = (Cuser) SelectByUid(id).getData();
         Integer rid = cuser_result.getRid();
         Integer did = cuser_result.getDid();
-        userData.setRid(rid);
-        userData.setDid(did);
-        userData.setLevel(cuser_result.getLevel());
+        userData1.setRid(rid);
+        userData1.setDid(did);
+        userData1.setLevel(cuser_result.getLevel());
         if (did != 0) {
-            userData.setDepartment(deptMapper.selectById(did).getName());
+            userData1.setDepartment(deptMapper.selectById(did).getName());
         }
         if (rid != 0) {
-            userData.setRole(roleMapper.selectById(rid).getName());
+            userData1.setRole(roleMapper.selectById(rid).getName());
         }
-        return userData;
+        return userData1;
 
     }
 
@@ -438,7 +442,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public Result SetDept(Integer uid, Integer did) {
+    public Result SetDept(Integer uid, String name,Integer cid) {
+        QueryWrapper<Dept> wrapper = new QueryWrapper<>();
+        wrapper.eq("name", name).eq("cid",cid);
+        Dept company_result = deptMapper.selectOne(wrapper);
+        if(company_result ==null){
+            ResultUtil.quickSet(
+                    result,
+                    ErrorCode.UNFINDED_DEPARTMENT,
+                    "不存在该部门",
+                    0
+            );
+            return result;
+        }
+        Integer did = company_result.getId();
         UpdateWrapper<Cuser> wrap = new UpdateWrapper<>();
         wrap.set("did", did).eq("uid", uid);
         cuserMapper.update(null, wrap);
