@@ -41,8 +41,8 @@
         </el-row>
         <el-row>
           <el-alert
-            title="您企业的初始密码默认为您设定的企业邀请码"
-            description="请稍后到账户管理中手动修改"
+            title="您企业的初始密码默认为您设定的企业邀请码，"
+            description="请稍后到账户管理中手动修改，企业的初始登录名为企业名-root"
             type="warning"
             center
             :closable="false"

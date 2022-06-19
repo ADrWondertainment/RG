@@ -1,5 +1,5 @@
 <template>
-  <h1>我发布的表单</h1>
+  <h1>我的表单</h1>
   {{ formKind }}
   <div>
     <el-radio-group v-model="formKind" @change="selectChange">
@@ -16,6 +16,19 @@
         label="表单类型"
         :formatter="judgeFormKind"
       />
+      <el-table-column label="是否正在发布">
+        <template #default="scope">
+          <el-switch
+            v-model="scope.row.isPublic"
+            inline-prompt
+            active-text="是"
+            inactive-text="否"
+            style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
+            :loading="formStatus[scope.$index]"
+            @change="beforeSwitch(scope.$index, scope.row)"
+          />
+        </template>
+      </el-table-column>
       <el-table-column label="操作">
         <template #default="scope">
           <el-button
@@ -54,6 +67,7 @@ export default {
     return {
       formKind: "all",
       returnList: null,
+      formStatus:[],
       testData: `{
     "errorCode": 66666,
     "message": "查询成功",
@@ -70,7 +84,8 @@ export default {
         "url": "http://localhost:9090/#/justFillForm/19",
         "location": "0aa040be4bd24ac8a73598c6d87102bd",
         "type": 0,
-        "length": 6
+        "length": 6,
+        "isPublic":true
     },
     {
         "id": 20,
@@ -84,7 +99,8 @@ export default {
         "url": "http://localhost:9090/#/justFillForm/20",
         "location": "7bce362e45ba456782ecc6d59ac26bb3",
         "type": 0,
-        "length": 6
+        "length": 6,
+        "isPublic":true
     },
     {
         "id": 21,
@@ -98,7 +114,8 @@ export default {
         "url": "http://localhost:9090/#/justFillForm/21",
         "location": "4cc0eb5e66ba496aa4371845dfec2905",
         "type": 1,
-        "length": 3
+        "length": 3,
+        "isPublic":true
     },
     {
         "id": 22,
@@ -112,7 +129,8 @@ export default {
         "url": "http://localhost:9090/#/justFillForm/22",
         "location": "e73919a023d64f0287476ec67ca000e8",
         "type": 1,
-        "length": 3
+        "length": 3,
+        "isPublic":true
     }
 ]
 }`,
@@ -121,25 +139,41 @@ export default {
   created() {
     console.log(1111111);
     var returnData;
-    axios
-      .post("/api/sheets/all", {
-        pageNum: 1,
-        size: 10,
-      })
-      .then((res) => {
-        returnData = JSON.parse(res.data);
-        if (returnData.errorCode === 66666) {
-          console.log(returnData);
-          this.returnList = JSON.parse(returnData.data);
-          console.log(this.returnList);
-        }
-      });
+    // axios
+    //   .post("/api/sheets/all", {
+    //     pageNum: 1,
+    //     size: 10,
+    //   })
+    //   .then((res) => {
+    //     returnData = JSON.parse(res.data);
+    //     if (returnData.errorCode === 66666) {
+    //       console.log(returnData);
+    //       this.returnList = JSON.parse(returnData.data);
+    //       console.log(this.returnList);
+    //     }
+    //   });
 
-    // returnData = JSON.parse(this.testData);
-    // this.returnList = returnData.data;
+    returnData = JSON.parse(this.testData);
+    this.returnList = returnData.data;
+    for(let item in this.returnList){
+      this.formStatus.push(false)
+    }
     // console.log(this.returnList);
   },
   methods: {
+    beforeSwitch(index, row){
+      // 实际上这个是处理switch（change）事件，没有before
+      console.log(row)
+      this.formStatus[index] = true
+      // axios.post('url',{
+
+      // }).then(res => {
+      //   this.formStatus[index] = false
+      // })
+      setTimeout(_ => {
+        this.formStatus[index] = false
+      },1000)
+    },
     selectChange(value) {
       console.log(value);
       var returnData;
@@ -151,7 +185,7 @@ export default {
         .then((res) => {
           returnData = JSON.parse(res.data);
           if (returnData.errorCode === 66666) {
-            console.log(returnData)
+            console.log(returnData);
             this.returnList = JSON.parse(returnData.data);
           }
         });

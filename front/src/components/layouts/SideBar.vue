@@ -6,11 +6,11 @@
     </el-menu-item>
     <el-menu-item index="/manageFormTemplates">
       <el-icon><files /></el-icon>
-      <template #title>问卷模板管理</template>
+      <template #title>我的模板</template>
     </el-menu-item>
     <el-menu-item index="/allPublicForms">
       <el-icon><edit /></el-icon>
-      <template #title>已发布模板</template>
+      <template #title>我的表单</template>
     </el-menu-item>
     <el-menu-item index="/allFormsIFilledOut">
       <el-icon><edit /></el-icon>

@@ -53,7 +53,7 @@
       <el-col :span="8">请输入企业邀请码</el-col>
       <el-col :span="16"><el-input v-model="companyId" /></el-col>
     </el-row>
-    <el-row style="margin-top:5px;"
+    <el-row style="margin-top: 5px"
       ><el-col :span="8" :offset="16"
         ><el-button @click="submitCompanyId">提交</el-button></el-col
       ></el-row
@@ -64,6 +64,7 @@
 
 <script>
 import axios from "axios";
+import { ElMessage } from 'element-plus';
 export default {
   data() {
     return {
@@ -73,12 +74,12 @@ export default {
       userDepartment: "",
       companyId: "",
       joinCompanyDialog: false,
-      changePasswordDialog:false,
-      password:{
-        now:'',
-        new:'',
-        validNew:'',
-      }
+      changePasswordDialog: false,
+      password: {
+        now: "",
+        new: "",
+        validNew: "",
+      },
     };
   },
 
@@ -102,13 +103,22 @@ export default {
         id: "",
       });
     },
-    changePasswordSubmit(){
-      axios.post('url',{
-        oldPass:'',
-        newPass:'',
-      })
+    changePasswordSubmit() {
+      if (this.password.new === this.password.validNew) {
+        axios
+          .post("url", {
+            oldPass: "",
+            newPass: "",
+          })
+          .then((res) => {
+            this.changePasswordDialog = false
+          });
+      }else{
+        this.password.new = ''
+        this.password.validNew = ''
+        ElMessage.error('两次输入的密码应该相同')
+      }
     },
-
   },
 };
 </script>
@@ -123,5 +133,4 @@ export default {
 .el-col {
   border-radius: 4px;
 }
-
 </style>
