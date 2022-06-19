@@ -34,7 +34,7 @@
             <el-table-column type="selection" width="55" />
             <el-table-column prop="id" label="编号" width="180" align="center" />
             <el-table-column
-                    prop="name"
+                    prop="email"
                     label="姓名"
                     width="180"
                     align="center"
@@ -102,7 +102,7 @@
                                v-model="value"
                                @change="finishManageRight(scope.$index,scope.row.id,value)"
                                :placeholder=scope.row.right
-                               clearable="false"
+                               :clearable="false"
                     >
 <!--                        <el-button @click="finishManageRight(scope.$index,scope.row.id,scope.$index.label)">确认</el-button>-->
                         <el-option
@@ -118,7 +118,7 @@
                                v-model="posvalue"
                                @change="finishManagePosition(scope.$index,scope.row.id,posvalue)"
                                :placeholder=scope.row.pos
-                               clearable="false"
+                               :clearable="false"
                     >
                         <el-option
                                 v-for="item in PosOptions"
@@ -181,18 +181,18 @@
             >
                 <el-table-column type="selection" width="55" />
                 <el-table-column
-                        prop="uid"
-                        label="编号"
+                        prop="email"
+                        label="姓名"
                         width="180"
                         align="center"
                 >
                 </el-table-column>
-                <el-table-column
-                        prop="name"
-                        label="姓名"
-                        width="180"
-                        align="center"
-                />
+<!--                <el-table-column-->
+<!--                        prop="name"-->
+<!--                        label="姓名"-->
+<!--                        width="180"-->
+<!--                        align="center"-->
+<!--                />-->
             </el-table>
             <template #footer>
               <span class="dialog-footer">
@@ -217,7 +217,7 @@
                 did:99,
                 value:ref(''),
                 posvalue:ref(''),
-                formInfo:null,
+                formInfo:[],
                 staffnum:0,
                 showEdit:false,
                 showInsertStaff:false,
@@ -452,14 +452,14 @@
                 })
                     .then(() => {
                         axios
-                            .put("/api/users", {
+                            .post("/api/users/rcuser", {
                                 id:id
                             })
                             .then(() => {
                                 alert("删除成功");
                                 this.getId();
-                                this.formInfo=JSON.parse(this.staff);
-                                this.beforeenter();
+                                // this.formInfo=JSON.parse(this.staff);
+                                // this.beforeenter();
                             });
                     })
                     .catch(() => {
@@ -471,14 +471,24 @@
                 console.log(index, id);
             },
             getId(){
+              this.formInfo=null;
+              this.formInfo=[];
               let routeid=this.$route.params.id;
-              axios.get('/api/users/',{
+              axios.post('api/users/showuserbydept',{
                   did:routeid
               }).then(res=>{
-                  this.staff=res.data;
-              }).catch(()=>{
-                  alert("获取部门人员失败")
+                console.log(res.data);
+                console.log(Object.keys(res.data.data).length);
+                for(var i=0;i<Object.keys(res.data.data).length;i++){
+                  this.formInfo.push(res.data.data[i]);
+                }
+                console.log(this.formInfo);
+                this.beforeenter();
+                  // this.formInfo=res.data.data;
               })
+              //     .catch(()=>{
+              //     alert("获取部门人员失败")
+              // })
               this.did=routeid;
               console.log(this.id);
           },
@@ -589,7 +599,7 @@
                     // })
                 }
                 // this.showManageDepart=stylelist;
-                // console.log(this.showManageDepart);
+                console.log(this.showManageDepart);
                 // console.log(this.showManageDepart[0]);
                 // this.showManageDepart=this.showManageDepartMid;
             },
@@ -642,9 +652,11 @@
             }
         },
         created(){
-            this.getId();
-            this.formInfo=this.staff;
-            this.beforeenter();
+            // this.getId();
+          // this.$nextTick(_=>{
+          //   this.beforeenter();
+
+          // })
         },
         mounted(){
             // axios
@@ -652,8 +664,13 @@
             //     .then(response=>{console.log(response.id);})
             //     .catch(err=>{console.log(err);});
             console.log(this.$route.params.id);
+            this.getId();
+            // this.$nextTick(_=>{
+            //   this.beforeenter();
+
+            // })
             // this.formInfo=JSON.parse(this.staff);
-            this.formInfo=this.staff;
+            // this.formInfo=this.staff;
 
         },
     }
