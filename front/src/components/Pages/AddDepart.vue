@@ -1,5 +1,5 @@
 <template>
-    <el-dialog title="新建部门" model-value="1" v-model="">
+    <el-dialog title="新建部门" model-value="1" v-model="isshow">
         <el-form :model="depart" label-width="120px">
             <el-form-item label="部门名称">
                 <el-input v-model="depart.name" />

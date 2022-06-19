@@ -1,6 +1,6 @@
 <template>
   <h1 title="123">组织结构管理</h1>
-  <el-card style="width: 70%; margin-left: 15%">
+  <el-card style="width: 70%; margin-left: 15%;margin-bottom:70%">
     <el-tree :data="data" default-expand-all :expand-on-click-node="false">
       <template #default="{ node, data }">
         <span class="custom-tree-node">
