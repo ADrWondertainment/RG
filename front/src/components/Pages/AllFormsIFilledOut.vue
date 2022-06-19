@@ -68,7 +68,7 @@ export default {
   methods: {
     formStatus(row, column, cellValue, index) {
       if (row.done === 0) {
-        return "未完成表单";
+        return row.status;
       } else {
         if (row.type === 0) {
           return "已完成";

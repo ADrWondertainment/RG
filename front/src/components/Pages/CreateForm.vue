@@ -1,29 +1,21 @@
 <template>
   <el-dialog v-model="addFlowNodeDialog" width="30%">
-    <el-tree
+    <el-table
       :data="flowData"
-      default-expand-all
-      :expand-on-click-node="false"
-      @node-click="handleNodeClick"
+      highlight-current-row
+      @current-change="handleCurrentChange"
     >
-      <template #default="{ data }">
-        <span class="custom-tree-node">
-          <el-tag type="info" effect="plain">{{ data.label }}</el-tag>
-        </span>
-        <span>
-            <el-tag type="warning" v-if="data.principal">
-              {{ "负责人：" + data.principal }}
-            </el-tag>
-        </span>
-      </template>
-    </el-tree>
+      <el-table-column prop="id" label="编号" />
+      <el-table-column prop="label" label="名称" />
+      <el-table-column prop="members" label="成员概览" :formatter="checkPrincipal"/>
+    </el-table>
     <template #footer>
       <span class="dialog-footer">
-        <el-button type="warning" @click="addFlowNodeDialog = false" plain
-          >取消</el-button
-        >
         <el-button type="success" @click="confirmAddFlowNode" plain
           >确认</el-button
+        >
+        <el-button type="warning" @click="addFlowNodeDialog = false" plain
+          >取消</el-button
         >
       </span>
     </template>
@@ -99,13 +91,13 @@
       >
     </el-row>
     <el-row>
-      <el-timeline style="margin-left:30%;">
+      <el-timeline style="margin-left: 30%">
         <el-timeline-item
           v-for="(item, index) in flowNodesList"
           :key="index"
-          :timestamp="checkPrincipal(item.principal)"
+          :timestamp="'责任人：' + item.principal + '等'"
         >
-          {{ (index+1) + "  " + item.label }}
+          {{ index + 1 + "  " + item.label }}
         </el-timeline-item>
       </el-timeline>
     </el-row>
@@ -481,7 +473,7 @@ export default {
         formContent: [],
       },
       // approveNodeNums:0,
-      flowNodesList: [],
+      flowNodesList: [], // 展示流程给时使用
       flowNodesIdList: [],
       addFlowNodeDialog: false,
 
@@ -491,22 +483,17 @@ export default {
         {
           label: "业务部",
           id: 1,
-          principal: "张三",
-          children: [
-            {
-              label: "市场分析",
-              id: 2,
-              principal: "李四",
-              children: [
-                {
-                  label: "信息搜集",
-                  id: 3,
-                  principal: "罗老师",
-                  children: [],
-                },
-              ],
-            },
-          ],
+          members: [{ id: 1, email: "张三" }],
+        },
+        {
+          label: "市场分析",
+          id: 2,
+          members: [{ id: 4, email: "罗翔" }],
+        },
+        {
+          label: "信息搜集",
+          id: 3,
+          members: [{ id: 5, email: "张三三" }],
         },
       ],
     };
@@ -529,45 +516,50 @@ export default {
   },
   methods: {
     // 定义流程时使用的函数
+    handleCurrentChange(rowObj){
+      this.tempVar = rowObj
+    },
     addFlowNode() {
       this.addFlowNodeDialog = true;
     },
     deleteFlowNode() {
       if (this.flowNodesList.length > 0) {
         this.flowNodesList.splice(-1, 1);
+        this.flowNodesIdList.splice(-1, 1);
       }
     },
     handleNodeClick(data) {
       this.tempVar = data;
     },
     confirmAddFlowNode() {
+      // 此处tempVar是flowData中的Obj
       let item;
-      if(!this.tempVar.principal){
-        this.addFlowNodeDialog = false
-          ElMessage.warning("不能选择没有负责人的组织")
-          return
+      if (this.tempVar.members.length===0) {
+        this.addFlowNodeDialog = false;
+        ElMessage.warning("不能选择没有负责人的组");
+        return;
       }
       for (item in this.flowNodesIdList) {
-        if(this.flowNodesIdList[item]===this.tempVar.id){
-          this.addFlowNodeDialog = false
-          ElMessage.warning("不能在一个流程中加入重复节点")
-          return
+        if (this.flowNodesIdList[item] === this.tempVar.id) {
+          this.addFlowNodeDialog = false;
+          ElMessage.warning("不能在一个流程中加入重复节点");
+          return;
         }
       }
       this.flowNodesList.push({
         label: this.tempVar.label,
-        principal: this.tempVar.principal,
+        principal: this.tempVar.members[0].email,
       });
       this.flowNodesIdList.push(this.tempVar.id);
-      this.addFlowNodeDialog = false
+      this.addFlowNodeDialog = false;
       console.log(this.flowNodesIdList);
       console.log(this.flowNodesList);
     },
-    checkPrincipal(principal){
-      if(principal){
-        return '责任人：' + principal
-      }else{
-        return null
+    checkPrincipal(row,column) {
+      if (row.members.length>0) {
+        return "责任人：" + row.members[0].email + "等";
+      } else {
+        return '暂无成员';
       }
     },
 

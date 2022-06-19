@@ -52,7 +52,9 @@
           >
           <el-button
             size="small"
-            @click="ToPublishTemplate(scope.$index, scope.row.id)"
+            @click="
+              ToPublishTemplate(scope.$index, scope.row.id, scope.row.data.type)
+            "
             title="根据模板创建并发布一个表单"
             type="primary"
             plain
@@ -74,11 +76,12 @@
     <el-divider style="margin-top: 0"></el-divider>
   </el-card>
 
-  <el-dialog v-model="dialog" title="请输入表单的信息">
+  <el-dialog v-model="dialog" title="请输入表单的信息" top="70px" draggable>
     <!-- <template #title>
       <h4>请输入表单的信息</h4>
     </template>
     <template #default> -->
+
     <el-form>
       <el-row>
         <el-col :span="24">
@@ -106,7 +109,7 @@
       </el-row>
 
       <el-row>
-        <el-col :span="24">
+        <el-col :span="12">
           <el-form-item label="表单起始时间">
             <el-date-picker
               v-model="sheetDescription.start"
@@ -115,10 +118,7 @@
             />
           </el-form-item>
         </el-col>
-      </el-row>
-
-      <el-row>
-        <el-col :span="24">
+        <el-col :span="12">
           <el-form-item label="表单截止时间">
             <el-date-picker
               v-model="sheetDescription.end"
@@ -130,7 +130,7 @@
       </el-row>
 
       <el-row>
-        <el-col :span="24">
+        <el-col :span="12">
           <el-form-item label="是否发布企业表单">
             <el-switch
               v-model="ifCompany"
@@ -141,10 +141,7 @@
             />
           </el-form-item>
         </el-col>
-      </el-row>
-
-      <el-row v-if="ifCompany">
-        <el-col :span="24">
+        <el-col :span="12" v-if="ifCompany">
           <el-form-item label="请选择填写表单的部门">
             <el-select>
               <el-option v-for="item in departments" :key="item"></el-option>
@@ -152,14 +149,75 @@
           </el-form-item>
         </el-col>
       </el-row>
-      
     </el-form>
+
+    <el-row>
+      <fieldset style="width: 90%" v-if="rowType === 1">
+        <legend>定义审批流程</legend>
+        <el-row :gutter="20">
+          <el-button
+            style="margin-left: 10%; width: 35%"
+            @click="addFlowNode"
+            type="primary"
+            plain
+            >添加流程节点</el-button
+          >
+          <el-button
+            style="margin-left: 10%; width: 35%"
+            @click="deleteFlowNode"
+            type="danger"
+            plain
+            >删除流程节点</el-button
+          >
+        </el-row>
+        <el-row>
+          <el-timeline style="margin-left: 30%">
+            <el-timeline-item
+              v-for="(item, index) in flowNodesList"
+              :key="index"
+              :timestamp="'责任人：' + item.principal + '  等'"
+              type="primary"
+              hollow
+            >
+              {{ index + 1 + "  " + item.label }}
+            </el-timeline-item>
+          </el-timeline>
+        </el-row>
+      </fieldset>
+    </el-row>
+
     <!-- </template> -->
     <template #footer>
       <div style="flex: auto">
-        <el-button type="info" @click="cancelClick">取消</el-button>
         <el-button type="primary" @click="confirmClick">确认</el-button>
+        <el-button type="info" @click="cancelClick">取消</el-button>
       </div>
+    </template>
+  </el-dialog>
+
+  <el-dialog v-model="addFlowNodeDialog" title="所有审批组" width="30%" draggable>
+    <el-table
+      :data="flowData"
+      highlight-current-row
+      @current-change="handleCurrentChange"
+    >
+      <el-table-column prop="id" label="编号" />
+      <el-table-column prop="label" label="名称" />
+      <el-table-column
+        prop="members"
+        label="成员概览"
+        :formatter="checkPrincipal"
+      />
+    </el-table>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button type="success" @click="confirmAddFlowNode" plain
+          >确认</el-button
+        >
+        <el-button type="warning" @click="addFlowNodeDialog = false" plain
+          >取消</el-button
+        >
+      </span>
     </template>
   </el-dialog>
 </template>
@@ -173,6 +231,31 @@ export default {
   data() {
     return {
       dialog: false,
+      ifCompany: false,
+      addFlowNodeDialog: false,
+      rowType: 1,
+
+      flowData: [
+        {
+          label: "业务部",
+          id: 1,
+          members: [{ id: 1, email: "张三" }],
+        },
+        {
+          label: "市场分析",
+          id: 2,
+          members: [{ id: 4, email: "罗翔" }],
+        },
+        {
+          label: "信息搜集",
+          id: 3,
+          members: [{ id: 5, email: "张三三" }],
+        },
+      ],
+      flowNodesList: [], // 展示流程给时使用
+      flowNodesIdList: [],
+      tempVar: null,
+
       sheetDescription: {
         tid: 0,
         did: 0,
@@ -287,21 +370,22 @@ export default {
   },
 
   mounted() {
-        axios.post("api/templates/get", {
-          pageNum:1,
-          size:10
-        })
-        .then(res => {
-          console.log(res)
-          if (res.data.errorCode == 66666) {
-            console.log(res.data)
-            this.testStr = res.data.data
-            console.log(this.testStr)
-            this.formInfo = JSON.parse(this.testStr);
-          }
-        });
+    // axios
+    //   .post("api/templates/get", {
+    //     pageNum: 1,
+    //     size: 10,
+    //   })
+    //   .then((res) => {
+    //     console.log(res);
+    //     if (res.data.errorCode == 66666) {
+    //       console.log(res.data);
+    //       this.testStr = res.data.data;
+    //       console.log(this.testStr);
+    //       this.formInfo = JSON.parse(this.testStr);
+    //     }
+    //   });
 
-    // this.formInfo = JSON.parse(this.testStr);
+    this.formInfo = JSON.parse(this.testStr);
     // console.log(this.testStr)
     // console.log(JSON.parse(this.test2))
     // console.log(JSON.parse(this.testStr))
@@ -309,20 +393,66 @@ export default {
   },
 
   methods: {
-    getTemplates(){
-      axios.post("api/templates/get", {
-        pageNum:1,
-        size:10
-      })
-          .then(res => {
-            console.log(res)
-            if (res.data.errorCode == 66666) {
-              console.log(res.data)
-              this.testStr = res.data.data
-              console.log(this.testStr)
-              this.formInfo = JSON.parse(this.testStr);
-            }
-          });
+    addFlowNode() {
+      this.addFlowNodeDialog = true;
+    },
+    handleCurrentChange(rowObj) {
+      this.tempVar = rowObj;
+    },
+    deleteFlowNode() {
+      if (this.flowNodesList.length > 0) {
+        this.flowNodesList.splice(-1, 1);
+        this.flowNodesIdList.splice(-1, 1);
+      }
+    },
+    confirmAddFlowNode() {
+      // 此处tempVar是flowData中的Obj
+      let item;
+      console.log(this.tempVar);
+      if (this.tempVar.members.length === 0) {
+        this.addFlowNodeDialog = false;
+        ElMessage.warning("不能选择没有负责人的组");
+        return;
+      }
+      for (item in this.flowNodesIdList) {
+        if (this.flowNodesIdList[item] === this.tempVar.id) {
+          this.addFlowNodeDialog = false;
+          ElMessage.warning("不能在一个流程中加入重复节点");
+          return;
+        }
+      }
+      this.flowNodesList.push({
+        label: this.tempVar.label,
+        principal: this.tempVar.members[0].email,
+      });
+      this.flowNodesIdList.push(this.tempVar.id);
+      this.addFlowNodeDialog = false;
+      console.log(this.flowNodesIdList);
+      console.log(this.flowNodesList);
+    },
+    checkPrincipal(row, column) {
+      if (row.members.length > 0) {
+        return "责任人：" + row.members[0].email + "  等";
+      } else {
+        return "暂无成员";
+      }
+    },
+
+    getTemplates() {
+      axios
+        .post("api/templates/get", {
+          pageNum: 1,
+          size: 10,
+        })
+        .then((res) => {
+          console.log(res);
+          if (res.data.errorCode == 66666) {
+            console.log(res.data);
+            this.testStr = res.data.data;
+            console.log(this.testStr);
+            this.formInfo = JSON.parse(this.testStr);
+          }
+        });
     },
     ToCreateForm() {
       this.$router.push("/createForm");
@@ -346,10 +476,12 @@ export default {
         },
       });
     },
-    ToPublishTemplate(index, id) {
+    ToPublishTemplate(index, id, formType) {
+      console.log(formType);
       console.log(index, id);
       this.sheetDescription.tid = id;
       this.dialog = true;
+      this.rowType = formType;
     },
     ToDeleteTemplate(index, id) {
       ElMessageBox.confirm("你确定要删除此模板吗", "注意！", {
@@ -358,17 +490,15 @@ export default {
         type: "warning",
       })
         .then(() => {
-          axios
-            .delete("/api/templates/" + id, {})
-            .then((res) => {
-              if (res.data.errorCode === 66666) {
-                ElMessage({
-                  type: "info",
-                  message: "删除成功",
-                });
-                this.getTemplates();
-              }
-            });
+          axios.delete("/api/templates/" + id, {}).then((res) => {
+            if (res.data.errorCode === 66666) {
+              ElMessage({
+                type: "info",
+                message: "删除成功",
+              });
+              this.getTemplates();
+            }
+          });
         })
         .catch(() => {
           ElMessage({
@@ -394,21 +524,27 @@ export default {
           end: this.sheetDescription.end,
         })
         .then((res) => {
-          console.log(res)
+          console.log(res);
           if (res.data.errorCode == 66666) {
-            console.log(res.data)
-            resObj = JSON.parse(res.data.data)
+            console.log(res.data);
+            resObj = JSON.parse(res.data.data);
             // ElMessageBox.alert("填写表单的url是:" + "http://localhost:9090/#/justFillForm/" + res.data.data, "Title", {
-              ElMessageBox.alert("填写表单的url是:" + "http://localhost:9090/#/justFillForm/" + resObj.insertId, "确认", {
-              confirmButtonText: "OK",
-              callback: () => {
-                ElMessage({
-                  type: "success",
-                  message: `发布成功`,
-                });
-              },
-            });
-          };
+            ElMessageBox.alert(
+              "填写表单的url是:" +
+                "http://localhost:9090/#/justFillForm/" +
+                resObj.insertId,
+              "确认",
+              {
+                confirmButtonText: "OK",
+                callback: () => {
+                  ElMessage({
+                    type: "success",
+                    message: `发布成功`,
+                  });
+                },
+              }
+            );
+          }
           // axios.post("/api/url",{
           //   url:"http://localhost:9090/#/justFillForm/" + resObj.insertId,
           //   id:res.data.data.insertId
@@ -422,3 +558,13 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+fieldset {
+  /* 表单页面居中，宽度50% ,legend颜色设置，legend圆角*/
+  border: 2px solid #dcdfe6;
+  text-align: left;
+  border-radius: 8px;
+  margin: 0 auto;
+}
+</style>
