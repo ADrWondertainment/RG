@@ -31,6 +31,7 @@ public class CuserAstronaut extends Astronaut<Approve> {
 
     private Integer id;
     private Integer uid;
+    private Integer cid;
     private Integer groupId;
     private String email;
     private String role;
@@ -174,5 +175,13 @@ public class CuserAstronaut extends Astronaut<Approve> {
 
     public void setDept(String dept) {
         this.dept = dept;
+    }
+
+    public Integer getCid() {
+        return cid;
+    }
+
+    public void setCid(Integer cid) {
+        this.cid = cid;
     }
 }

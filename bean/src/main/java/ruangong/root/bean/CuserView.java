@@ -19,6 +19,8 @@ public class CuserView {
 
     private Integer id;
     private Integer uid;
+    private Integer cid;
+    private Integer level;
     private Integer groupId;
     private String email;
     private String role;
