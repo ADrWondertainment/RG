@@ -96,7 +96,6 @@
     import axios from "axios";
     import EditDepart from "./EditDepart.vue";
     import AddDepart from "./AddDepart.vue";
-
     export default {
         name: "PersonnelManagement",
         components: {EditDepart,AddDepart},
@@ -122,7 +121,6 @@
                 //
                 // ]`,
                 departs:[],
-
             };
         },
         mounted(){
@@ -130,11 +128,10 @@
           this.getDeparts();
         },
         methods:{
-          closeAddDepart(){
+            closeAddDepart(){
             this.AddDepartVisible=false;
           },
             getDeparts(){
-
                 axios.post('api/users/showdept',{
                     fid:0
                 }).then((res)=>{
@@ -163,7 +160,6 @@
                     // .catch(()=>{
                     // alert("获取部门失败");
                     // })
-
             },
             ToDeleteTemplate(index, id) {
                 ElMessageBox.confirm("你确定要删除此部门吗", "注意！", {
@@ -202,7 +198,6 @@
                     //data是传递给弹窗页面的值
                     // console.log(this.formInfo[index].name);
                     this.$refs.dialog.init(this.formInfo[index].name,index,did);
-
                 })
             },
             finishEdit(index,name,did){
@@ -212,8 +207,14 @@
                 axios.post('api/users/udept',{
                     did:did,
                     department:name
+                }).then(()=>{
+                    alert("编辑成功");
                 })
-                this.formInfo[index].name=name;
+                .catch(_=>{
+                    alert("编辑失败");
+                })
+                // this.formInfo[index].name=name
+                this.getDeparts();
             },
             addDepart(){
                 this.AddDepartVisible=true;
@@ -247,7 +248,6 @@
 
           // this.getDeparts();
         }
-
     }
 </script>
 

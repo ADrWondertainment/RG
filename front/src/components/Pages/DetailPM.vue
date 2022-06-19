@@ -1,3 +1,6 @@
+
+<!--最后把职位选择改成文本框，也可以：保留选择框，也可以在table的column上改成输入框，高级用户有权限修改职位命名，所有该职位同步修改-->
+
 <template>
     <el-card>
 <!--        表头-->
@@ -137,7 +140,7 @@
                         width="180"
                         align="center"
                 >
-<!--                    输入框-->
+                    <!--输入框-->
                     <template #default="scope">
                     <el-input  v-model="midPosition[scope.$index].value"
                                :placeholder="midPosition[scope.$index].value"
@@ -175,7 +178,6 @@
                     :data="staff"
                     style="width: 100% "
                     @selection-change="InsertStaffSelectionChangeHandle"
-
             >
                 <el-table-column type="selection" width="55" />
                 <el-table-column
@@ -198,7 +200,6 @@
                 <el-button type="primary" @click="confirmInsertStaff">确认</el-button>
               </span>
             </template>
-
         </el-dialog>
         <el-divider style="margin-top: 0" ></el-divider>
     </el-card>
@@ -469,7 +470,7 @@
                     });
                 console.log(index, id);
             },
-          getId(){
+            getId(){
               let routeid=this.$route.params.id;
               axios.get('/api/users/',{
                   did:routeid
@@ -639,7 +640,6 @@
 
 
             }
-
         },
         created(){
             this.getId();
@@ -656,10 +656,5 @@
             this.formInfo=this.staff;
 
         },
-        components:{
-
-        }
-
-
     }
 </script>
