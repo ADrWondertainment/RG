@@ -8,7 +8,7 @@
         <div>请输入新的部门名:
         </div>
         <el-input v-model="departName" placeholder="请输入新部门名" />
-        <el-button @click="finishedit(this.departName,this.index)" type="success">确认</el-button>
+        <el-button @click="finishedit(this.departName,this.index,this.did)" type="success">确认</el-button>
     </el-dialog>
 </template>
 
@@ -20,22 +20,24 @@
                 detailVisible:false,
                 departName:"",
                 oldname:"",
-                index:0
+                index:0,
+                did:0
             }
         },
         methods:{
             //3.定义一个init函数，通过设置detailVisible值为true来让弹窗弹出，这个函数会在父组件的方法中被调用
-            init(name,index){
+            init(name,index,did){
                 this.detailVisible=true;
                 //data是父组件弹窗传递过来的值，我们可以打印看看
                 this.departName=name;
                 this.oldname=name;
                 this.index=index;
+                this.did=did;
             },
-            finishedit(newname,index){
+            finishedit(newname,index,did){
                 // axios
                 this.detailVisible=false;
-                this.$emit("childFn",this.index,this.departName);
+                this.$emit("childFn",index,newname,did);
             }
         }
     }
