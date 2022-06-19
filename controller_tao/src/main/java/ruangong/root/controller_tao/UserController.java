@@ -136,9 +136,11 @@ public class UserController {
 
     @PostMapping("/showuserbydept")
     public Result showuserbydept(HttpServletRequest request, @RequestBody Integer did) {
+        System.out.println(did);
+        String fid = JSONUtil.parseObj(did).get("did", String.class);
         HttpSession session = request.getSession();
         Integer cid = (Integer) session.getAttribute("cid");
-        return userService.GetComanyUserByDepartment(cid, did);
+        return userService.ShowCuser(cid,Integer.parseInt(fid));
     }
 
     @PutMapping("/role")

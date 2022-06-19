@@ -293,7 +293,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         int update = userMapper.update(null, wrap);
         //增加cuser表
         cuser.setCid(cid);
-        cuser.setLevel(1);
+        cuser.setLevel(2);
         cuser.setUid(id);
         cuser.setDid(0);
         int insert = cuserMapper.insert(cuser);
@@ -516,43 +516,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public Result GetCompanyUserList(Integer cid, Integer did) {
-        Map<Dept, Integer> cuserbydept = new HashMap<>();
         List<Dept> all_dept = GetAllDept(cid, did);
         JSONObject obj = JSONUtil.createObj();
         if (!all_dept.isEmpty()) {
-            for (Dept tmp_dept :
-                    all_dept) {
-                List<CompanyUser> tmp_companyUsers = (List<CompanyUser>) GetComanyUserByDepartment(cid, tmp_dept.getId()).getData();
-                cuserbydept.put(tmp_dept, tmp_companyUsers.size());
-            }
             for (Integer i = 0; i < all_dept.size(); i++) {
                 Dept tmp_dept = all_dept.get(i);
-                List<CompanyUser> tmp_companyUsers = (List<CompanyUser>) GetComanyUserByDepartment(cid, tmp_dept.getId()).getData();
-
+                List<CompanyUser> tmp_companyUsers = GetComanyUserByDepartment(cid, tmp_dept.getId());
                 obj.putOnce(i.toString(), JSONUtil.parseObj(tmp_dept).putOnce("num", tmp_companyUsers.size()));
             }
 
         }
-//        else {
-//            Dept dept = new Dept();
-//            cuserbydept.put(dept, 0);
-//        }
-        /*
-               {
-                    1:{
-                            "id":9,
-                            "cid":2,
-                            .....
-                            "num":0
-                        },
-                    2:{
-                        .....
-                    }
-
-               }
-         */
-
-
         ResultUtil.quickSet(
                 result,
                 ErrorCode.SUCCESS,
@@ -563,7 +536,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public Result GetComanyUserByDepartment(Integer cid, Integer did) {
+    public List<CompanyUser> GetComanyUserByDepartment(Integer cid, Integer did) {
         companyUsers.clear();
         QueryWrapper<Cuser> wrapper = new QueryWrapper<>();
         wrapper.eq("did", did).eq("cid", cid);
@@ -572,11 +545,22 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 cuserList) {
             companyUsers.add(GetAllData(tmp_user.getUid()));
         }
+        return companyUsers;
+    }
+
+    @Override
+    public Result ShowCuser(Integer cid, Integer did) {
+        List<CompanyUser> tmp_cusers = GetComanyUserByDepartment(cid, did);
+        JSONObject obj = JSONUtil.createObj();
+        for(Integer i=0;i<tmp_cusers.size();i++){
+            CompanyUser tmp_cuser = tmp_cusers.get(i);
+            obj.putOnce(i.toString(),JSONUtil.parseObj(tmp_cuser));
+        }
         ResultUtil.quickSet(
                 result,
                 ErrorCode.SUCCESS,
-                "查询部门成功",
-                companyUsers
+                "查询成员成功",
+                obj
         );
         return result;
     }
