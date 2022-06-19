@@ -60,7 +60,7 @@
         </el-table>
         <el-divider style="margin-top: 0"></el-divider>
         <edit-depart @childFn="finishEdit" v-if="editDepartVisible" ref="dialog"></edit-depart>
-        <add-depart  v-model="AddDepartVisible" ref="add" :before-close="closeAdd" @closed="getDeparts">
+        <add-depart  @unshow="closeAddDepart" v-model="AddDepartVisible" ref="add" :before-close="closeAdd" @closed="getDeparts">
 <!--            <el-dialog v-model="quitAddVisible"-->
 <!--                       title="Tips" width="30%" draggable>-->
 <!--                <span>确定要退出吗？</span>-->
@@ -102,7 +102,7 @@
         components: {EditDepart,AddDepart},
         data(){
             return{
-                formInfo:null,
+                formInfo:[],
                 editDepartVisible:false,
                 AddDepartVisible:false,
                 reserveAdd:false,
@@ -127,24 +127,42 @@
         },
         mounted(){
             // this.formInfo=JSON.parse(this.departs);
-            this.getDeparts();
+          this.getDeparts();
         },
         methods:{
+          closeAddDepart(){
+            this.AddDepartVisible=false;
+          },
             getDeparts(){
-                axios.get('api/users/',{
+
+                axios.post('api/users/showdept',{
                     fid:0
-                }).then((dept,num)=>{
-                    console.log(dept,num);
-                    let resj;
-                    resj=JSON.stringify(dept);
-                    for(var i=0;i<resj.length;i++){
-                        this.$set(resj[i],'num',num[i]);
-                    }
-                    this.departs=resj;
-                    console.log(this.departs);
-                }).catch(()=>{
-                    alert("获取部门失败");
-                    })
+                }).then((res)=>{
+                    // console.log(res.data);
+                    console.log(res.data.data);
+                    // let resj;
+                    // resj=Object.keys(res.data.data);
+                    // let numb;
+                    // numb=Object.values(res.data.data);
+                    // console.log(resj.type);
+                    // console.log(resj[0].type);
+                    // // for(var i=0;i<resj.length;i++){
+                    // //     resj[i].num=numb[i];
+                    // // }
+                  // test_company_root
+                    // console.log(resj);
+                    // this.departs=res.data.data;
+                    // console.log(this.departs);
+                  // console.log(Object.keys(res.data.data).length);
+                  for(var i=0;i<Object.keys(res.data.data).length;i++){
+                    this.formInfo.push(res.data.data[i]);
+                  }
+                  console.log(this.formInfo);
+                  // console.log(this.departs);
+                })
+                    // .catch(()=>{
+                    // alert("获取部门失败");
+                    // })
 
             },
             ToDeleteTemplate(index, id) {
@@ -199,7 +217,7 @@
             },
             addDepart(){
                 this.AddDepartVisible=true;
-                this.$refs.app.isshow=true;
+                // this.$refs.add.isshow=true;
             },
             closeAdd(done){
                 ElMessageBox.confirm("你确定要退出吗？", "注意！", {
@@ -224,7 +242,12 @@
                 }).catch(_=>{
                 })
             },
+        },
+        created(){
+
+          // this.getDeparts();
         }
+
     }
 </script>
 

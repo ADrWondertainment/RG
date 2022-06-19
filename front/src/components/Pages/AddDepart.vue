@@ -30,6 +30,7 @@
 </template>
 
 <script>
+import axios from "axios";
     export default {
         name: "AddDepart",
         data(){
@@ -112,12 +113,12 @@
                 axios.put("api/users/cdept",{
                     name:this.depart.name,
                     fid:0
-                }).then(_=>{
+                }).then(()=>{
                     alert("新建成功");
                 }).catch(_=>{
                     alert("创建失败");
                 });
-                this.isshow=false;
+                this.$emit("unshow");
             }
         }
     }
