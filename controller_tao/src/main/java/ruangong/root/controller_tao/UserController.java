@@ -135,7 +135,7 @@ public class UserController {
     }
 
     @PostMapping("/showuserbydept")
-    public Result showuserbydept(HttpServletRequest request, @RequestBody Integer did) {
+    public Result showuserbydept(HttpServletRequest request, @RequestBody String did) {
         System.out.println(did);
         String fid = JSONUtil.parseObj(did).get("did", String.class);
         HttpSession session = request.getSession();
