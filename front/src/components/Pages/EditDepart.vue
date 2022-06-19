@@ -35,7 +35,16 @@
                 this.did=did;
             },
             finishedit(newname,index,did){
-                // axios
+                // axios.post('api/users/udept',{
+                //     did:did,
+                //     department:newname
+                // })
+                // .then(()=>{
+                //     alert("修改成功");
+                // })
+                // // .catch(()=>{
+                //     alert("修改失败");
+                // })
                 this.detailVisible=false;
                 this.$emit("childFn",index,newname,did);
             }
