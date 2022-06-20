@@ -112,17 +112,18 @@ export default {
     console.log(1111111);
     var returnData;
     axios
-      .post("/api/sheets/all", {
+      .post("/api/sheets/show/approves", {
         pageNum: 1,
         size: 10,
       })
       .then((res) => {
-        returnData = JSON.parse(res.data);
-        if (returnData.errorCode === 66666) {
-          console.log(returnData);
-          this.returnList = JSON.parse(returnData.data);
-          console.log(this.returnList);
-        }
+        console.log(re.data)
+        // returnData = JSON.parse(res.data);
+        // if (returnData.errorCode === 66666) {
+        //   console.log(returnData);
+        //   this.returnList = JSON.parse(returnData.data);
+        //   console.log(this.returnList);
+        // }
       });
 
     // returnData = JSON.parse(this.testData);
