@@ -7,7 +7,11 @@
     >
       <el-table-column prop="id" label="编号" />
       <el-table-column prop="label" label="名称" />
-      <el-table-column prop="members" label="成员概览" :formatter="checkPrincipal"/>
+      <el-table-column
+        prop="members"
+        label="成员概览"
+        :formatter="checkPrincipal"
+      />
     </el-table>
     <template #footer>
       <span class="dialog-footer">
@@ -516,8 +520,8 @@ export default {
   },
   methods: {
     // 定义流程时使用的函数
-    handleCurrentChange(rowObj){
-      this.tempVar = rowObj
+    handleCurrentChange(rowObj) {
+      this.tempVar = rowObj;
     },
     addFlowNode() {
       this.addFlowNodeDialog = true;
@@ -534,7 +538,7 @@ export default {
     confirmAddFlowNode() {
       // 此处tempVar是flowData中的Obj
       let item;
-      if (this.tempVar.members.length===0) {
+      if (this.tempVar.members.length === 0) {
         this.addFlowNodeDialog = false;
         ElMessage.warning("不能选择没有负责人的组");
         return;
@@ -555,11 +559,11 @@ export default {
       console.log(this.flowNodesIdList);
       console.log(this.flowNodesList);
     },
-    checkPrincipal(row,column) {
-      if (row.members.length>0) {
+    checkPrincipal(row, column) {
+      if (row.members.length > 0) {
         return "责任人：" + row.members[0].email + "等";
       } else {
-        return '暂无成员';
+        return "暂无成员";
       }
     },
 
@@ -678,17 +682,22 @@ export default {
     },
     uploadForm() {
       this.check();
-      axios
-        .post("api/templates/create", {
-          json: this.finalForm,
-        })
-        .then((res) => {
-          console.log(res.data);
-          if (res.data.errorCode == 20011) {
-            ElMessage.success("上传成功");
-            this.$router.push({ name: "ManageFormTemplates" });
-          }
-        });
+      if (this.form.formContent.length === 0) {
+        ElMessage.error("表单不能为空");
+        return;
+      } else {
+        axios
+          .post("api/templates/create", {
+            json: this.finalForm,
+          })
+          .then((res) => {
+            console.log(res.data);
+            if (res.data.errorCode == 20011) {
+              ElMessage.success("上传成功");
+              this.$router.push({ name: "ManageFormTemplates" });
+            }
+          });
+      }
     },
     check() {
       console.log("有");

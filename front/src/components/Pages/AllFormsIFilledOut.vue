@@ -52,17 +52,17 @@ export default {
     };
   },
   mounted() {
-    // axios.post('/api/sheets/answer',{
-    //     "pageNum": 1,
-    //     "size": 10
-    // }).then(res => {
-    //     if(res.data.errorCode === 66666){
-    //         this.objList = JSON.parse(res.data).data
-    //     }
-    // })
+    axios.post('/api/sheets/answer',{
+        "pageNum": 1,
+        "size": 10
+    }).then(res => {
+        if(res.data.errorCode === 66666){
+            this.objList = JSON.parse(res.data).data
+        }
+    })
 
-    console.log(JSON.parse(this.testStr));
-    this.objList = JSON.parse(this.testStr).data;
+    // console.log(JSON.parse(this.testStr));
+    // this.objList = JSON.parse(this.testStr).data;
     console.log(this.objList);
   },
   methods: {
