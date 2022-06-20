@@ -315,7 +315,7 @@ export default {
         for(let outer in this.allMembers){
           for (let innerinner in this.data[inner].members){
             if(this.data[inner].members[innerinner].id === this.allMembers[outer].id){
-              this.allMembers[outer].splice(outer,1)
+              this.allMembers.splice(outer,1)
             }
           }
         }
