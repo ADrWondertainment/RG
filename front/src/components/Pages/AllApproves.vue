@@ -1,13 +1,5 @@
 <template>
-  <h1>我的表单</h1>
-  {{ formKind }}
-  <div>
-    <el-radio-group v-model="formKind" @change="selectChange">
-      <el-radio-button label="all">全部表单</el-radio-button>
-      <el-radio-button label="query">统计表</el-radio-button>
-      <el-radio-button label="approval">审批表</el-radio-button>
-    </el-radio-group>
-  </div>
+  <h1>审批表单</h1>
   <el-card>
     <el-table :data="returnList">
       <el-table-column prop="id" label="表单id" />
@@ -16,19 +8,6 @@
         label="表单类型"
         :formatter="judgeFormKind"
       />
-      <el-table-column label="是否正在发布">
-        <template #default="scope">
-          <el-switch
-            v-model="scope.row.isPublic"
-            inline-prompt
-            active-text="是"
-            inactive-text="否"
-            style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
-            :loading="formStatus[scope.$index]"
-            @change="beforeSwitch(scope.$index, scope.row)"
-          />
-        </template>
-      </el-table-column>
       <el-table-column label="操作">
         <template #default="scope">
           <el-button
@@ -41,16 +20,9 @@
           <el-button
             size="small"
             plain
-            type="success"
-            @click="viewFormResult(scope.row.id)"
-            >查看填写结果</el-button
-          >
-          <el-button
-            size="small"
-            plain
             type="info"
-            @click="viewFormTemplate(scope.row.tid)"
-            >查看表单模板</el-button
+            @click="fillApprove(scope.row.id)"
+            >填写审批表</el-button
           >
         </template>
       </el-table-column>
@@ -215,7 +187,9 @@ export default {
         });
       });
     },
-    viewFormTemplate(tid) {},
+    fillApprove(id) {
+      this.router.push('/justFillForm/'+id)
+    },
     viewFormResult(id) {
       this.$router.push({
         name: "ResultOfOneForm",

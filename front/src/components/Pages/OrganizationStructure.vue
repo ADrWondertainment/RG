@@ -2,10 +2,10 @@
   <h1 title="123">审批结构管理</h1>
   <el-card style="width: 70%; margin-left: 15%; margin-bottom: 70%">
     <el-table :data="data" default-expand-all>
-      <el-table-column label="审批组名称">
+      <el-table-column label="审批组编号">
         <template #default="scope">
           <div style="display: flex; align-items: center">
-            <span style="margin-left: 10px">{{ scope.row.label }}</span>
+            <span style="margin-left: 10px">{{ scope.row.id }}</span>
           </div>
         </template>
       </el-table-column>
