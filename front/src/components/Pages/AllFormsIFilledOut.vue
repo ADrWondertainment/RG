@@ -90,6 +90,7 @@ export default {
     },
     toOneForm(row) {
       console.log(row);
+      this.$router.push('/justFillForm/'+ row.id +'/split/yes')
     },
   },
 };

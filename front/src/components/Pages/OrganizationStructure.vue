@@ -315,6 +315,7 @@ export default {
       for(let inner in this.data){
         for(let outer in this.allMembers){
           for (let innerinner in this.data[inner].members){
+            console.log(this.data[inner].members[innerinner].id,this.allMembers[outer].id)
             if(this.data[inner].members[innerinner].id === this.allMembers[outer].id){
               this.allMembers.splice(outer,1)
             }

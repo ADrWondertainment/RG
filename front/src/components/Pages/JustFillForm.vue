@@ -189,6 +189,15 @@ export default {
   },
   mounted() {
     // console.log(this.$route.params.FormId);
+    if(this.$router.params.FormResule){
+      axios
+      .post("/api/answers/pre", {
+        sheetId: this.$route.params.FormId,
+        answers: null,
+      })
+      .then
+      console.log()
+    }
     axios
       .post("/api/answers/pre", {
         sheetId: this.$route.params.FormId,
