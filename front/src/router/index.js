@@ -137,7 +137,7 @@ const routes = [
         component: JustFillForm
     },
     {
-        path: '/justFillForm/:showResult/:FormId',
+        path: '/justFillForm/:FormId/split/:ShowResult',
         component: JustFillForm
     },
 
