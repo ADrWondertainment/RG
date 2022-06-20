@@ -326,6 +326,7 @@ export default {
   mounted() {
     this.getOrg();
     this.getMembers();
+    this.deleteRedundent();
   },
 };
 </script>
