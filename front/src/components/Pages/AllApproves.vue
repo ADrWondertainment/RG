@@ -117,7 +117,7 @@ export default {
         size: 10,
       })
       .then((res) => {
-        console.log(re.data)
+        console.log(res.data)
         // returnData = JSON.parse(res.data);
         // if (returnData.errorCode === 66666) {
         //   console.log(returnData);
