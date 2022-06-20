@@ -69,6 +69,6 @@ public interface UserService extends IService<User> {
 
     public User getUserByEmail(String email);
 
-
+    public Result GetCuserByLevel(Integer cid);
 
 }

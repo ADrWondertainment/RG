@@ -144,6 +144,14 @@ public class UserController {
         return userService.ShowCuser(cid, Integer.parseInt(fid));
     }
 
+    @PostMapping("/showbylevel")
+    public Result showbylevel(HttpServletRequest request){
+        HttpSession session = request.getSession();
+        Integer cid = (Integer) session.getAttribute("cid");
+        return userService.GetCuserByLevel(cid);
+    }
+
+
     @PostMapping("/role")
     public Result updaterole(HttpServletRequest request, @RequestBody String data) {
         HttpSession session = request.getSession();

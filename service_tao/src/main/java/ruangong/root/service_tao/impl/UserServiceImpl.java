@@ -413,6 +413,39 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
+    public Result GetCuserByLevel(Integer cid) {
+        List<CompanyUser> companyUsers = new ArrayList<>();
+        QueryWrapper<Cuser> wrapper = new QueryWrapper<>();
+        wrapper.eq("cid", cid).eq("level", 1);
+        List<Cuser> cuserList = cuserMapper.selectList(wrapper);
+        if(cuserList ==null){
+            ResultUtil.quickSet(
+                    result,
+                    ErrorCode.FAIL,
+                    "无权限为1的人员",
+                    null
+            );
+            return result;
+        }
+        for (Cuser tmp_user :
+                cuserList) {
+            companyUsers.add(GetAllData(tmp_user.getUid()));
+        }
+        JSONObject obj = JSONUtil.createObj();
+        for (Integer i = 0; i < companyUsers.size(); i++) {
+            CompanyUser tmp_cuser = companyUsers.get(i);
+            obj.putOnce(i.toString(), JSONUtil.parseObj(tmp_cuser));
+        }
+        ResultUtil.quickSet(
+                result,
+                ErrorCode.SUCCESS,
+                "查询成员成功",
+                obj
+        );
+        return result;
+    }
+
+    @Override
     public Result SelectByUid(Integer uid) {
         QueryWrapper<Cuser> wrapper = new QueryWrapper<>();
         wrapper.eq("uid", uid);
