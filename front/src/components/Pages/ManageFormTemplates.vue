@@ -204,7 +204,7 @@
       <el-table-column prop="id" label="编号" />
       <el-table-column prop="label" label="名称" />
       <el-table-column
-        prop="members"
+        prop="member"
         label="成员概览"
         :formatter="checkPrincipal"
       />
@@ -239,17 +239,17 @@ export default {
         {
           label: "业务部",
           id: 1,
-          members: [{ id: 1, email: "张三" }],
+          member: [{ id: 1, email: "张三" }],
         },
         {
           label: "市场分析",
           id: 2,
-          members: [{ id: 4, email: "罗翔" }],
+          member: [{ id: 4, email: "罗翔" }],
         },
         {
           label: "信息搜集",
           id: 3,
-          members: [{ id: 5, email: "张三三" }],
+          member: [{ id: 5, email: "张三三" }],
         },
       ],
       flowNodesList: [], // 展示流程给时使用
@@ -409,7 +409,7 @@ export default {
       // 此处tempVar是flowData中的Obj
       let item;
       console.log(this.tempVar);
-      if (this.tempVar.members.length === 0) {
+      if (this.tempVar.member.length === 0) {
         this.addFlowNodeDialog = false;
         ElMessage.warning("不能选择没有负责人的组");
         return;
@@ -431,8 +431,8 @@ export default {
       console.log(this.flowNodesList);
     },
     checkPrincipal(row, column) {
-      if (row.members.length > 0) {
-        return "责任人：" + row.members[0].email + "  等";
+      if (row.member.length > 0) {
+        return "责任人：" + row.member[0].email + "  等";
       } else {
         return "暂无成员";
       }
