@@ -307,6 +307,7 @@ export default {
 
   mounted() {
     this.getOrg()
+    this.getMembers()
   },
 };
 </script>
