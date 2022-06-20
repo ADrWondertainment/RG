@@ -370,22 +370,22 @@ export default {
   },
 
   mounted() {
-    // axios
-    //   .post("api/templates/get", {
-    //     pageNum: 1,
-    //     size: 10,
-    //   })
-    //   .then((res) => {
-    //     console.log(res);
-    //     if (res.data.errorCode == 66666) {
-    //       console.log(res.data);
-    //       this.testStr = res.data.data;
-    //       console.log(this.testStr);
-    //       this.formInfo = JSON.parse(this.testStr);
-    //     }
-    //   });
+    axios
+      .post("api/templates/get", {
+        pageNum: 1,
+        size: 10,
+      })
+      .then((res) => {
+        console.log(res);
+        if (res.data.errorCode == 66666) {
+          console.log(res.data);
+          this.testStr = res.data.data;
+          console.log(this.testStr);
+          this.formInfo = JSON.parse(this.testStr);
+        }
+      });
 
-    this.formInfo = JSON.parse(this.testStr);
+    // this.formInfo = JSON.parse(this.testStr);
     // console.log(this.testStr)
     // console.log(JSON.parse(this.test2))
     // console.log(JSON.parse(this.testStr))

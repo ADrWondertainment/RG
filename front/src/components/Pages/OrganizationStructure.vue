@@ -64,9 +64,9 @@
       position="bottom"
       :offset="20"
       style="margin-left: 65%; padding-top: 20px"
-      ><el-button  type="primary" plain @click="addNewGroupLog=true"
+      ><el-button type="primary" plain @click="addNewGroupLog = true"
         >添加审批组</el-button
-      ><el-button  type="success" plain @click="submit"
+      ><el-button type="success" plain @click="submit"
         >提交</el-button
       ></el-affix
     >
@@ -134,7 +134,7 @@
 
 <script >
 import { ElMessageBox } from "element-plus";
-import axios from 'axios';
+import axios from "axios";
 
 export default {
   name: "App",
@@ -248,14 +248,14 @@ export default {
     //   this.tempVar = null;
     //   console.log(this.data);
     // },
-    addApproveGroup(){
+    addApproveGroup() {
       this.data.push({
-        label:this.newGroupName,
-        id:null,
-        members:[]
-      })
-      this.newGroupName = ''
-      this.addNewGroupLog = false
+        label: this.newGroupName,
+        id: null,
+        members: [],
+      });
+      this.newGroupName = "";
+      this.addNewGroupLog = false;
     },
     addPrincipal(data) {
       console.log(data);
@@ -280,13 +280,30 @@ export default {
       array.splice(index, 1);
     },
 
-    submit(){
-      axios.post('url', {
-        
-      }).then(res => {
+    // 页面提交
+    submit() {
+      axios.post("url", {
 
-      })
-    }
+      }).then((res) => {
+
+      });
+    },
+    getOrg() {
+      this.data = [];
+      axios.post("", {}).then((res) => {
+        console.log(res.data);
+      });
+    },
+    getMembers() {
+      this.members = [];
+      axios.post("", {}).then((res) => {
+        console.log(res.data);
+      });
+    },
+  },
+
+  mounted() {
+    this.getOrg()
   },
 };
 </script>
