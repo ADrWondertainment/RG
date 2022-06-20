@@ -191,7 +191,7 @@ export default {
       });
     },
     fillApprove(id) {
-      this.router.push('/justFillForm/'+id)
+      this.$router.push('/justFillForm/'+id)
     },
     viewFormResult(id) {
       this.$router.push({
