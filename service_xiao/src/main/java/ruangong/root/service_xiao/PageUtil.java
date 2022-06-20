@@ -31,8 +31,7 @@ public class PageUtil {
      */
     public static HashMap<String, Integer> getPageInfo(JSONObject jsonObject, HttpServletRequest httpServletRequest, UserService userService) {
 
-//        Integer uid = (Integer) httpServletRequest.getSession().getAttribute("id");
-        Integer uid = 10;
+        Integer uid = (Integer) httpServletRequest.getSession().getAttribute("id");
         if (uid == null || uid == 0) {
             throw new BackException(ErrorCode.USER_ILLEGAL_ACCESS, "用户未登录");
         }
@@ -62,7 +61,7 @@ public class PageUtil {
 
     }
 
-    public static <T, S> JSONArray getPageRecordsById(Integer[] ids, Integer pageIndex, Integer sizePerPage, String[] columnNames, Class<T> tClass, BaseMapper<T> baseMapper) {
+    public static <T> JSONArray getPageRecordsById(Integer[] ids, Integer pageIndex, Integer sizePerPage, String[] columnNames, Class<T> tClass, BaseMapper<T> baseMapper) {
 
         if (ids.length != columnNames.length) {
             throw new BackException(ErrorCode.UTIL_ERROR, "分页工具类错误，ids与columns数量不匹配");

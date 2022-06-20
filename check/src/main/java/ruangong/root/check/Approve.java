@@ -4,19 +4,16 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import ruangong.root.bean.dataflow.AIMDiffusionField;
-import ruangong.root.bean.dataflow.SpacePort;
+import ruangong.root.bean.Answer;
 
-import java.util.*;
 
 @Data
 @Component
 @Scope("prototype")
 @TableName("answers")
-public class Approve{
+public class Approve {
     @TableId(type = IdType.AUTO)
     private Integer id;
     private Integer sid;
@@ -25,4 +22,16 @@ public class Approve{
     private Integer done;
     private Integer pass;
     private String flow;
+
+    public static Approve transferAnswer(Answer answer) {
+        Approve approve = new Approve();
+        approve.setId(answer.getId());
+        approve.setSid(answer.getSid());
+        approve.setUid(answer.getUid());
+        approve.setData(answer.getData());
+        approve.setDone(answer.getDone());
+        approve.setPass(answer.getPass());
+        approve.setFlow(answer.getFlow());
+        return approve;
+    }
 }

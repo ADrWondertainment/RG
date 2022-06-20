@@ -102,8 +102,9 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
                 result,
                 ErrorCode.ALL_SET,
                 "答案提交成功",
-                1
+                answer1
         );
+
 
         return result;
     }

@@ -38,10 +38,8 @@ public class SheetController {
     private UserService userService;
     @Resource
     private AnswerService answerService;
-
     @Resource
     private SpaceFederation spaceFederation;
-
     @Resource
     private Result result;
 
@@ -53,6 +51,7 @@ public class SheetController {
      * "description":"sample sheet",
      * "start":"2022-05-15",
      * "end":"2022-05-18",
+     * "order":
      * }
      */
     @PostMapping
@@ -155,6 +154,28 @@ public class SheetController {
         );
         return result;
 
+    }
+
+    /**
+     * {
+     * "pageNum":1
+     * "size":3
+     * }
+     */
+    @PostMapping("/show/approves")
+    public Result getAvailableApprovalSheets(HttpServletRequest httpServletRequest, @RequestBody String data) {
+        JSONObject entries = JSONUtil.parseObj(data);
+        Integer pageIndex = entries.get("pageNum", Integer.class);
+        Integer sizePerPage = entries.get("size", Integer.class);
+        Integer cid = (Integer) httpServletRequest.getSession().getAttribute("cid");
+        JSONArray pages = sheetService.getApproveSheetsInPages(cid, pageIndex, sizePerPage);
+        ResultUtil.quickSet(
+                result,
+                ErrorCode.ALL_SET,
+                "查询成功",
+                pages
+        );
+        return result;
     }
 
 

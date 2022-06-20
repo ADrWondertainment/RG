@@ -5,6 +5,9 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import org.springframework.web.bind.annotation.*;
 import ruangong.root.bean.*;
+import ruangong.root.check.Approve;
+import ruangong.root.check.ApproveField;
+import ruangong.root.check.SpaceFederation;
 import ruangong.root.exception.BackException;
 import ruangong.root.exception.ErrorCode;
 import ruangong.root.exception.FrontException;
@@ -16,6 +19,7 @@ import ruangong.root.utils.ResultUtil;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +57,9 @@ public class AnswerController {
 
     @Resource
     private Result result;
+
+    @Resource
+    private SpaceFederation spaceFederation;
 
     /**
      * 接收json字符串格式如下
@@ -137,8 +144,15 @@ public class AnswerController {
         User userByEmail = userService.getUserByEmail((String) session.getAttribute("email"));
         strToAnswer.setUid(uid);
         result = answerService.insertAnswer(strToAnswer, userByEmail);
-        return result;
 
+        Answer answer = (Answer) result.getData();
+        Approve approve = Approve.transferAnswer(answer);
+        ArrayList<Approve> approves = new ArrayList<>();
+        approves.add(approve);
+        List<ApproveField> init = ApproveField.init(spaceFederation, approves);
+        spaceFederation.loadAndAssign(init);
+
+        return result;
     }
 
     @PostMapping("/save")
