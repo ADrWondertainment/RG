@@ -32,6 +32,7 @@
                 >新建部门</el-button
                 >
             </el-col>
+        </el-row>
 <!--        部门表单-->
         <el-table :data="departFormInfo" style="width: 100%">
             <el-table-column prop="name" label="部门名称" width="180" align="center" />
@@ -805,6 +806,7 @@
                             })
                             .then(() => {
                                 alert("删除成功");
+                                this.getDeparts();
                             }).catch(_ => {
                             alert("删除失败");
                         });
