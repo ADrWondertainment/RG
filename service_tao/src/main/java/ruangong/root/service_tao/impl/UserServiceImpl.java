@@ -265,13 +265,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         root_cuser.setLevel(0);
         cuserMapper.insert(root_cuser);
         UpdateWrapper<User> wp = new UpdateWrapper<>();
-        wp.set("type",root_cuser.getId()).eq("id",root_user.getId());
-        userMapper.update(null,wp);
+        wp.set("type", root_cuser.getId()).eq("id", root_user.getId());
+        userMapper.update(null, wp);
         ResultUtil.quickSet(
                 result,
                 ErrorCode.COMPANY_REGISTER_SUCCESS,
                 "注册成功，用户输入邀请码即可加入企业",
-                1
+                company.getInvite()
         );
         return result;
 
@@ -286,18 +286,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         Company company = (Company) invite_result.getData();
         Integer cid = company.getId();
-
+        //修改user表
+        UpdateWrapper<User> wrap = new UpdateWrapper<>();
+        wrap.eq("id", id).set("type", cid);
+        int update = userMapper.update(null, wrap);
         //增加cuser表
         cuser.setCid(cid);
         cuser.setLevel(2);
         cuser.setUid(id);
         cuser.setDid(0);
         int insert = cuserMapper.insert(cuser);
-
-        //修改user表
-        UpdateWrapper<User> wrap = new UpdateWrapper<>();
-        wrap.eq("id", id).set("type", cuser.getId());
-        int update = userMapper.update(null, wrap);
 
         if (update == 0 || insert == 0) {
 
@@ -316,8 +314,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public Result RemoveCompanyUser(Integer id) {
         UpdateWrapper<User> wp = new UpdateWrapper<>();
-        wp.set("type",null).eq("id",id);
-        userMapper.update(null,wp);
+        wp.set("type", null).eq("id", id);
+        userMapper.update(null, wp);
         UpdateWrapper<Cuser> wrap = new UpdateWrapper<>();
         wrap.eq("uid", id);
         cuserMapper.delete(wrap);
@@ -386,11 +384,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         userData1.setRid(rid);
         userData1.setDid(did);
         userData1.setLevel(cuser_result.getLevel());
-        if (did != 0) {
-            userData1.setDepartment(deptMapper.selectById(did).getName());
+        int didValue, ridValue;
+
+        didValue = did == null ? 0 : did;
+        ridValue = rid == null ? 0 : rid;
+
+        if (didValue != 0) {
+            userData1.setDepartment(deptMapper.selectById(didValue).getName());
         }
-        if (rid != 0) {
-            userData1.setRole(roleMapper.selectById(rid).getName());
+        if (ridValue != 0) {
+            userData1.setRole(roleMapper.selectById(ridValue).getName());
         }
         return userData1;
 
@@ -446,11 +449,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public Result SetDept(Integer uid, String name,Integer cid) {
+    public Result SetDept(Integer uid, String name, Integer cid) {
         QueryWrapper<Dept> wrapper = new QueryWrapper<>();
-        wrapper.eq("name", name).eq("cid",cid);
+        wrapper.eq("name", name).eq("cid", cid);
         Dept company_result = deptMapper.selectOne(wrapper);
-        if(company_result ==null){
+        if (company_result == null) {
             ResultUtil.quickSet(
                     result,
                     ErrorCode.UNFINDED_DEPARTMENT,
