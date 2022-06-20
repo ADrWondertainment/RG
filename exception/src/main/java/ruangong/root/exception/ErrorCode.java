@@ -35,6 +35,7 @@ public class ErrorCode {
     public static final Integer UNFINDED_DEPARTMENT = 10144;
     public static final Integer USER_UPDATE_LEVEL = 10150;
     public static final Integer SUCCESS = 1;
+    public static final Integer FAIL = 0;
     /*----------------------------------------------------------------------------*/
     public static final Integer ALL_SET = 66666;
     public static final Integer TEMPLATE_INSERT_SUCCESS = 20011;
