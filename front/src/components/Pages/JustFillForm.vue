@@ -189,7 +189,7 @@ export default {
   },
   mounted() {
     // console.log(this.$route.params.FormId);
-    if (this.$router.params.FormResult) {
+    if (this.$route.params.FormResult) {
       axios
         .post("/api/answers/pre", {
           sheetId: this.$route.params.FormId,
@@ -198,42 +198,42 @@ export default {
         .then((res) => {
           console.log(res.data);
         });
-    }else{
-    axios
-      .post("/api/answers/pre", {
-        sheetId: this.$route.params.FormId,
-        answers: null,
-      })
-      .then((res) => {
-        console.log(res.data.data);
-        if (res.data.errorCode == 66666) {
-          ElMessage.success("获取成功");
-          this.gettenData = JSON.parse(res.data.data);
-          this.formDescriptionObj = JSON.parse(this.gettenData.template);
-          console.log(this.gettenData);
-          this.formObj = JSON.parse(this.formDescriptionObj.originContent);
-          console.log(this.formObj);
-          var formItem;
-          // console.log(JSON.parse(this.gettenData.unfinished))
-          console.log(this.gettenData.unfinished);
-          if ("unfinished" in this.gettenData) {
-            this.formResult.content = JSON.parse(this.gettenData.unfinished);
-          } else {
-            for (formItem in this.formObj) {
-              // console.log(formItem);
-              // console.log(123456);
-              this.formResult.content.push({
-                id: formItem,
-                value: [],
-              });
+    } else {
+      axios
+        .post("/api/answers/pre", {
+          sheetId: this.$route.params.FormId,
+          answers: null,
+        })
+        .then((res) => {
+          console.log(res.data.data);
+          if (res.data.errorCode == 66666) {
+            ElMessage.success("获取成功");
+            this.gettenData = JSON.parse(res.data.data);
+            this.formDescriptionObj = JSON.parse(this.gettenData.template);
+            console.log(this.gettenData);
+            this.formObj = JSON.parse(this.formDescriptionObj.originContent);
+            console.log(this.formObj);
+            var formItem;
+            // console.log(JSON.parse(this.gettenData.unfinished))
+            console.log(this.gettenData.unfinished);
+            if ("unfinished" in this.gettenData) {
+              this.formResult.content = JSON.parse(this.gettenData.unfinished);
+            } else {
+              for (formItem in this.formObj) {
+                // console.log(formItem);
+                // console.log(123456);
+                this.formResult.content.push({
+                  id: formItem,
+                  value: [],
+                });
+              }
             }
+          } else if (res.data.errorCode === 20220) {
+            ElMessage.info("您已完成过此表单的填写，请勿重复填写");
+          } else {
+            ElMessage.error("访问出错");
           }
-        } else if (res.data.errorCode === 20220) {
-          ElMessage.info("您已完成过此表单的填写，请勿重复填写");
-        } else {
-          ElMessage.error("访问出错");
-        }
-      });
+        });
     }
 
     // if (isString(formObj.content[formItem].value)) {
