@@ -508,8 +508,8 @@ export default {
       console.log("yes");
       const formObj = JSON.parse(this.$route.params.json);
       console.log(formObj);
-      // this.form.formContent = JSON.parse(formObj.data.originContent);  // 与后端交互使用此语句，因为后端提供的是json字符串
-      this.form.formContent = formObj.data.originContent; // 前端测试使用此语句
+      this.form.formContent = JSON.parse(formObj.data.originContent);  // 与后端交互使用此语句，因为后端提供的是json字符串
+      // this.form.formContent = formObj.data.originContent; // 前端测试使用此语句
       this.form.formName = formObj.data.name;
       this.form.formType = formObj.data.type;
       this.form.formDescription = formObj.description;

@@ -315,19 +315,19 @@ export default {
       this.drawer = false;
     },
     confirmClick() {
-      // axios.post("url",{
-      //   tid:this.sheetDescription.tid,
-      //   did:this.sheetDescription.tid,
-      //   name:this.sheetDescription.name,
-      //   description:this.sheetDescription.description,
-      //   start:this.sheetDescription.start,
-      //   end:this.sheetDescription.end,
-      // }).then(res => {
-      //   if(res.data.errorCode == 66666){
-      //     ElMessage.success("发布成功")
-      //   }
-      // });
-      // console.log(this.sheetDescription);
+      axios.post("url",{
+        tid:this.sheetDescription.tid,
+        did:this.sheetDescription.tid,
+        name:this.sheetDescription.name,
+        description:this.sheetDescription.description,
+        start:this.sheetDescription.start,
+        end:this.sheetDescription.end,
+      }).then(res => {
+        if(res.data.errorCode == 66666){
+          ElMessage.success("发布成功")
+        }
+      });
+      console.log(this.sheetDescription);
       this.drawer = false;
     },
   },
