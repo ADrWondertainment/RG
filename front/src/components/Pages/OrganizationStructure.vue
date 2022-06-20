@@ -301,6 +301,7 @@ export default {
       axios.post("/api/users/showbylevel", {}).then((res) => {
         this.allMembers = res.data.data
         console.log(res.data);
+        console.log(this.allMembers);
       });
     },
   },
