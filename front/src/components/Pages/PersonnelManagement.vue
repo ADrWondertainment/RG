@@ -31,7 +31,7 @@
                 <template #default="scope">
                     <el-button
                             size="small"
-                            @click="EnterDepartment(scope.$index, scope.row.id)"
+                            @click="EnterDepartment(scope.$index, scope.row.id,scope.row.name)"
                             title="进入部门"
                             type="success"
                             plain
@@ -80,7 +80,7 @@
                 <template #default="scope">
                     <el-button
                             size="small"
-                            @click="ToChangeForm(scope.$index, scope.row.id)"
+                            @click="startMoveStaff(scope.row.email,scope.row.id)"
                             title="移动人员"
                             type="success"
                             plain
@@ -104,6 +104,14 @@
         <edit-depart @childFn="finishEdit" v-if="editDepartVisible" ref="dialog"></edit-depart>
 <!--        添加部门-->
         <add-depart  @unshow="closeAddDepart" v-model="AddDepartVisible" ref="add" :before-close="closeAdd" @closed="getDeparts"/>
+<!--        移动人员-->
+        <el-dialog v-model="showMoveStaff" title="移动人员" width="35%">
+                <div>当前所在部门：{{oldDepart}}</div>
+                <div>请输入待加入的部门名称:
+                </div>
+                <el-input v-model="newDepart" placeholder="请输入待加入的部门名称" />
+                <el-button @click="finishMoveStaff(this.newDepart.id,this.newDepart.newname)" type="success">确认</el-button>
+        </el-dialog>
     </el-card>
 
 
@@ -143,8 +151,14 @@
                 //     }
                 //
                 // ]`,
+                oldDepart:"",
+                newDepart:{
+                    id:0,
+                    newname:''
+                },
                 departs: [],
                 showManageDepart: [],
+                showMoveStaff:false,
                 manageButton: [],
                 showManagePosition: [],
                 positionButton: [],
@@ -203,6 +217,7 @@
                             })
                             .then(() => {
                                 alert("删除成功");
+                                this.getDeparts();
                             }).catch(_ => {
                             alert("删除失败");
                         });
@@ -215,9 +230,9 @@
                     });
                 console.log(index, id);
             },
-            EnterDepartment(index, id) {
+            EnterDepartment(index, id,name) {
               // console.log(id);
-                this.$router.push({name: "DetailPM", params: {did: id, fid: 0}});
+                this.$router.push({name: "DetailPM", params: {did: id, fid: 0,thisDepart:name}});
             },
             EditDepart(index, did) {
                 this.editDepartVisible = true;
@@ -333,6 +348,24 @@
                     });
                 console.log(index, id);
             },
+            startMoveStaff(id,oldname){
+                this.showMoveStaff=true;
+                this.oldDepart=oldname;
+                this.newDepart.newname=oldname;
+                this.newDepart.id=id;
+            },
+            finishMoveStaff(id,depart){
+                axios.post('api/users/',{
+                    id:id,
+                    dept:depart
+                })
+                .then(_=>{
+                    this.showMoveStaff=false;
+                    alert("移动成功");
+                    this.getId();
+                })
+
+            }
         }
     }
 </script>
