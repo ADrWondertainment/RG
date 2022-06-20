@@ -23,4 +23,5 @@ public class Answer {
     private String data;
     private Integer done;
     private Integer pass;
+    private String flow;
 }

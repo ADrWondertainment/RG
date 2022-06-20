@@ -1,5 +1,6 @@
 package ruangong.root.service_xiao;
 
+import cn.hutool.json.JSONArray;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.stereotype.Service;
 import ruangong.root.bean.Result;
@@ -68,5 +69,5 @@ public interface SheetService extends IService<Sheet> {
      */
     Result checkSheetAnswer(Integer id, Integer pass);
 
-    Result getApproveSheetsInPages(Integer cid, Integer pageIndex, Integer sizePerPage);
+    JSONArray getApproveSheetsInPages(Integer cid, Integer pageIndex, Integer sizePerPage);
 }

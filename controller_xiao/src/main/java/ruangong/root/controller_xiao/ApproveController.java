@@ -85,7 +85,7 @@ public class ApproveController {
             JSONArray objects = new JSONArray();
             for (Integer integer : integers) {
                 CuserView id = cuserViewMapper.selectOne(new QueryWrapper<CuserView>().eq("id", integer));
-                objects.add(JSONUtil.createObj().putOnce(integer.toString(), id.getEmail()));
+                objects.add(JSONUtil.createObj().putOnce("id", integer).putOnce("email", id.getEmail()));
             }
             temp.set("member", objects);
         }

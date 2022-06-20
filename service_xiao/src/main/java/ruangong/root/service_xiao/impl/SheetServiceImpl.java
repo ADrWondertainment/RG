@@ -152,10 +152,8 @@ public class SheetServiceImpl extends ServiceImpl<SheetMapper, Sheet> implements
     }
 
     @Override
-    public Result getApproveSheetsInPages(Integer cid, Integer pageIndex, Integer sizePerPage) {
+    public JSONArray getApproveSheetsInPages(Integer cid, Integer pageIndex, Integer sizePerPage) {
 
-//        PageUtil.getPageRecordsById()
-
-        return result;
+        return PageUtil.getPageRecordsById(cid, pageIndex, sizePerPage, "id", Sheet.class, sheetMapper);
     }
 }

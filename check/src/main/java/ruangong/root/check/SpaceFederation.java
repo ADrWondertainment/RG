@@ -54,6 +54,10 @@ public class SpaceFederation extends SpacePort<CuserAstronaut, Approve> {
         //假想得到的view都是powerless的
         List<Approve> approves = approveMapper.selectList(new QueryWrapper<Approve>().eq("pass", 1).isNotNull("flow"));
         List<ApproveField> init = ApproveField.init(this, approves);
+        loadAndAssign(init);
+    }
+
+    public void loadAndAssign(List<ApproveField> init){
         load(init);
         assign();
     }
