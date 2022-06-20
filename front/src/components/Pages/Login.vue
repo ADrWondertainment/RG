@@ -68,7 +68,7 @@ export default {
         })
         .then((res) => {
           console.log(res.data);
-          if (res.data.errorCode == 1) {
+          if (res.data.errorCode == 1 || res.data.errorCode == 10050) {
             sessionStorage["isLogin"]=true;
             sessionStorage["userName"]=this.logInfo.userName;
             // sessionStorage["userType"]=true;
