@@ -1,5 +1,4 @@
 <template>
-  {{ formResult.content }}
   <h1>表单作答界面</h1>
 
   <fieldset style="width: 60%; margin-bottom: 300px; margin-top: 30px">
@@ -172,7 +171,7 @@
   </fieldset>
 
   <el-affix position="bottom" :offset="20" style="margin-left: 50%">
-    <el-button type="primary" @click="SubmitForm">提交表单</el-button>
+    <el-button type="primary" @click="SubmitForm">返回</el-button>
   </el-affix>
 </template>
 
@@ -246,7 +245,8 @@ export default {
       //       ElMessage.success("上传成功");
       //     }
       //   });
-      ElMessage.success("上传成功");
+      // ElMessage.success("上传成功");
+      this.$route.push('/manageFormTemplates')
     },
     InstantSubmitForm() {
       ElMessage.success("上传成功");
