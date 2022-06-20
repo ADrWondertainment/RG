@@ -263,6 +263,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         root_cuser.setUid(root_user.getId());
         root_cuser.setCid(company.getId());
         root_cuser.setLevel(0);
+        root_cuser.setDid(0);
+        root_cuser.setRid(0);
         cuserMapper.insert(root_cuser);
         UpdateWrapper<User> wp = new UpdateWrapper<>();
         wp.set("type", root_cuser.getId()).eq("id", root_user.getId());
@@ -286,17 +288,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         Company company = (Company) invite_result.getData();
         Integer cid = company.getId();
-
         //增加cuser表
         cuser.setCid(cid);
         cuser.setLevel(2);
         cuser.setUid(id);
         cuser.setDid(0);
+        cuser.setRid(0);
         int insert = cuserMapper.insert(cuser);
-
+        Integer id1 = cuserMapper.selectOne(new QueryWrapper<Cuser>().eq("uid", id)).getId();
         //修改user表
         UpdateWrapper<User> wrap = new UpdateWrapper<>();
-        wrap.eq("id", id).set("type", cuser.getId());
+        wrap.eq("id", id).set("type", id1);
         int update = userMapper.update(null, wrap);
 
         if (update == 0 || insert == 0) {
@@ -541,6 +543,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public Result GetCompanyUserList(Integer cid, Integer did) {
         List<Dept> all_dept = GetAllDept(cid, did);
+        if(all_dept ==null){
+            ResultUtil.quickSet(
+                    result,
+                    ErrorCode.FAIL,
+                    "无部门",
+                    null
+            );
+        }
         JSONObject obj = JSONUtil.createObj();
         if (!all_dept.isEmpty()) {
             for (Integer i = 0; i < all_dept.size(); i++) {
@@ -575,6 +585,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public Result ShowCuser(Integer cid, Integer did) {
         List<CompanyUser> tmp_cusers = GetComanyUserByDepartment(cid, did);
+        if(tmp_cusers ==null){
+            ResultUtil.quickSet(
+                    result,
+                    ErrorCode.FAIL,
+                    "无成员",
+                    null
+            );
+            return result;
+        }
         JSONObject obj = JSONUtil.createObj();
         for (Integer i = 0; i < tmp_cusers.size(); i++) {
             CompanyUser tmp_cuser = tmp_cusers.get(i);

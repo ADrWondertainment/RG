@@ -52,8 +52,13 @@ public class PageUtil {
         IPage<T> page = new Page(pageIndex, sizePerPage);
         QueryWrapper<T> query = Wrappers.query();
         query.eq(columnName, id);
-        IPage<T> sheetIPage = baseMapper.selectPage(page, query);
-        if (sheetIPage == null) {
+        IPage<T> sheetIPage = null;
+        try {
+            sheetIPage = baseMapper.selectPage(page, query);
+        } catch (Exception e) {
+            throw new BackException(ErrorCode.SHEET_SELECT_FAILURE, "分页数据查询失败");
+        }
+        if (sheetIPage.getRecords().size() == 0) {
             throw new BackException(ErrorCode.SHEET_SELECT_FAILURE, "分页数据查询失败");
         }
         return JSONUtil.parseArray(sheetIPage.getRecords());
