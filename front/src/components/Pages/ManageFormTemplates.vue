@@ -423,7 +423,7 @@ export default {
       }
       this.flowNodesList.push({
         label: this.tempVar.label,
-        principal: this.tempVar.members[0].email,
+        principal: this.tempVar.member[0].email,
       });
       this.flowNodesIdList.push(this.tempVar.id);
       this.addFlowNodeDialog = false;
