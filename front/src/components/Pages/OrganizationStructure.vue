@@ -310,6 +310,17 @@ export default {
         console.log(this.allMembers);
       });
     },
+    deleteRedundent(){
+      for(let inner in this.data){
+        for(let outer in this.allMembers){
+          for (let innerinner in this.data[inner].members){
+            if(this.data[inner].members[innerinner].id === this.allMembers[outer].id){
+              this.allMembers[outer].splice(outer,1)
+            }
+          }
+        }
+      }
+    }
   },
 
   mounted() {
