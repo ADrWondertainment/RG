@@ -134,7 +134,7 @@ export default {
     }
 ]
 }`,
-    };
+    }
   },
   created() {
     console.log(1111111);
@@ -145,6 +145,7 @@ export default {
         size: 10,
       })
       .then((res) => {
+        console.log(res.data)
         returnData = JSON.parse(res.data);
         if (returnData.errorCode === 66666) {
           console.log(returnData);
