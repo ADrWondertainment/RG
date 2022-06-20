@@ -151,7 +151,7 @@
       </el-row>
     </el-form>
 
-    <el-row>
+    <el-row v-if="rowType == 1">
       <fieldset style="width: 90%">
         <legend>定义审批流程</legend>
         <el-row :gutter="20">
