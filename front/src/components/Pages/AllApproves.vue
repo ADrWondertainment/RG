@@ -119,7 +119,7 @@ export default {
       })
       .then((res) => {
         console.log(res.data)
-        this.returnList = res.data
+        this.returnList = res.data.data
         // returnData = JSON.parse(res.data);
         // if (returnData.errorCode === 66666) {
         //   console.log(returnData);
