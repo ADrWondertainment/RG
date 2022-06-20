@@ -33,6 +33,7 @@
                 this.oldname=name;
                 this.index=index;
                 this.did=did;
+                console.log("init获取到的did:",this.did);
             },
             finishedit(newname,index,did){
                 // axios.post('api/users/udept',{
@@ -45,6 +46,7 @@
                 // // .catch(()=>{
                 //     alert("修改失败");
                 // })
+              console.log("传给父组件的did",did);
                 this.detailVisible=false;
                 this.$emit("childFn",index,newname,did);
             }
