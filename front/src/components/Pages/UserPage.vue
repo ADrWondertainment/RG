@@ -64,7 +64,7 @@
 
 <script>
 import axios from "axios";
-import { ElMessage } from 'element-plus';
+import { ElMessage } from "element-plus";
 export default {
   data() {
     return {
@@ -99,24 +99,48 @@ export default {
       this.joinCompanyDialog = true;
     },
     submitCompanyId() {
-      axios.post("url", {
-        id: "",
-      });
+      if (this.companyId != "") {
+        axios
+          .post("/api/users/joincompany", {
+            invite: this.companyId,
+          })
+          .then((res) => {
+            console.log(res);
+            if (res.data.errorCode === "") {
+              this.joinCompanyDialog = false;
+            }
+          });
+      } else {
+        ElMessage.error("企业邀请码不可为空");
+      }
     },
     changePasswordSubmit() {
       if (this.password.new === this.password.validNew) {
         axios
-          .post("url", {
-            oldPass: "",
-            newPass: "",
+          .post("/api/users/changepass", {
+            oldpass: this.password.now,
+            newpass: this.password.new,
           })
           .then((res) => {
-            this.changePasswordDialog = false
+            console.log(res.data);
+            if (res.data.errorCode === "") {
+              this.changePasswordDialog = false;
+              ElMessage.success("修改密码成功！");
+            } else if (res.data.errorCode === "") {
+              ElMessage.error("您输入了错误的当前密码");
+              this.password = {
+                now: "",
+                new: "",
+                validNew: "",
+              };
+            } else {
+              ElMessage.warning("修改失败，请联系管理员");
+            }
           });
-      }else{
-        this.password.new = ''
-        this.password.validNew = ''
-        ElMessage.error('两次输入的密码应该相同')
+      } else {
+        this.password.new = "";
+        this.password.validNew = "";
+        ElMessage.error("两次输入的密码应该相同");
       }
     },
   },
