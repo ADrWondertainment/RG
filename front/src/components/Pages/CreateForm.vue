@@ -508,7 +508,7 @@ export default {
       console.log("yes");
       const formObj = JSON.parse(this.$route.params.json);
       console.log(formObj);
-      this.form.formContent = JSON.parse(formObj.data.originContent);  // 与后端交互使用此语句，因为后端提供的是json字符串
+      this.form.formContent = JSON.parse(formObj.data.originContent); // 与后端交互使用此语句，因为后端提供的是json字符串
       // this.form.formContent = formObj.data.originContent; // 前端测试使用此语句
       this.form.formName = formObj.data.name;
       this.form.formType = formObj.data.type;
@@ -686,17 +686,31 @@ export default {
         ElMessage.error("表单不能为空");
         return;
       } else {
-        axios
-          .post("api/templates/create", {
-            json: this.finalForm,
-          })
-          .then((res) => {
-            console.log(res.data);
-            if (res.data.errorCode == 20011) {
-              ElMessage.success("上传成功");
-              this.$router.push({ name: "ManageFormTemplates" });
-            }
-          });
+        if (this.$route.params.json) {
+          axios
+            .post("api/templates/modify", {
+              json: this.finalForm,
+            })
+            .then((res) => {
+              console.log(res.data);
+              if (res.data.errorCode == 20011) {
+                ElMessage.success("上传成功");
+                this.$router.push({ name: "ManageFormTemplates" });
+              }
+            });
+        } else {
+          axios
+            .post("api/templates/create", {
+              json: this.finalForm,
+            })
+            .then((res) => {
+              console.log(res.data);
+              if (res.data.errorCode == 20011) {
+                ElMessage.success("上传成功");
+                this.$router.push({ name: "ManageFormTemplates" });
+              }
+            });
+        }
       }
     },
     check() {
