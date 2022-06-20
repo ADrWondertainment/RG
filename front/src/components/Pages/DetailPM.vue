@@ -7,7 +7,7 @@
         <el-row>
             <el-col :span="4"></el-col>
             <el-col :span="16">
-                <h1 title="">人员管理</h1>
+                <h1 title="">{{thisDepartName[this.thisDepartName.length-1]}}部人员管理</h1>
                 <el-col :span="4" style="text-align: left" >
                     <el-button type="success" @click="back">
                         <el-icon><Back /></el-icon>返回上一级
@@ -25,16 +25,6 @@
                 >
                 <el-button
                         style="padding: 20px"
-                        title="编辑角色"
-                        type="primary"
-                        @click="EditPosition"
-                        plain
-                >编辑角色</el-button
-                >
-            </el-col>
-            <el-col :span="4">
-                <el-button
-                        style="padding: 20px"
                         title="新建部门"
                         type="primary"
                         @click="startCreateDepart"
@@ -42,7 +32,6 @@
                 >新建部门</el-button
                 >
             </el-col>
-        </el-row>
 <!--        部门表单-->
         <el-table :data="departFormInfo" style="width: 100%">
             <el-table-column prop="name" label="部门名称" width="180" align="center" />
@@ -229,9 +218,8 @@
 <!--        添加人员弹框-->
         <el-dialog v-model="showInsertStaff" title="添加人员">
             <el-table
-                    ref="InsertStaff"
                     height="400px"
-                    :data="staff"
+                    :data="fatherStaffInfo"
                     style="width: 100% "
                     @selection-change="InsertStaffSelectionChangeHandle"
             >
@@ -276,6 +264,14 @@
         <el-input v-model="depart.name" placeholder="请输入新部门名" clearable/>
         <el-button @click="finishEditDepart(this.depart.name,this.depart.did)" type="success">确认</el-button>
       </el-dialog>
+        <!--        移动人员-->
+        <el-dialog v-model="showMoveStaff" title="移动人员" width="35%">
+            <div>当前所在部门：{{oldDepart}}</div>
+            <div>请输入待加入的部门名称:
+            </div>
+            <el-input v-model="newDepart" placeholder="请输入待加入的部门名称" />
+            <el-button @click="finishMoveStaff(this.newDepart.id,this.newDepart.newname)" type="success">确认</el-button>
+        </el-dialog>
       <el-divider style="margin-top: 0" ></el-divider>
     </el-card>
 </template>
@@ -291,6 +287,7 @@
             return{
                 fid:[],
                 did:1,
+                thisDepartName:[],
                 value:ref(''),
                 posvalue:ref(''),
                 formInfo:[],
@@ -304,6 +301,12 @@
                 showEditDepart:false,
                 showInsertStaff:false,
                 showInsertDepart:false,
+                showMoveStaff:false,
+                oldDepart:'',
+                newDepart:{
+                    id:0,
+                    newname:''
+                },
                 selectedStaff:[],
                 oldname:'',
                 // staff:[
@@ -470,7 +473,7 @@
                 //         "right":1
                 //     },
                 // ],
-                staff:[],
+                fatherStaffInfo:[],
                 select:[],
                 options:[
                     {
@@ -549,6 +552,7 @@
               if(this.$route.params.did!=null) {
                   this.did = this.$route.params.did;
                   this.fid.push(this.$route.params.fid);
+                  this.thisDepartName.push(this.$route.params.thisDepart);
                   console.log("getId后的fid:",this.fid);
                   this.$route.params.did=null;
                   this.$route.params.fid=null;
@@ -671,6 +675,7 @@
                     this.did = parseInt(this.fid[this.fid.length-1]);
                     console.log("did:",this.did);
                     this.fid.splice(-1,1);
+                    this.thisDepartName.splice(-1,1);
                     this.getId();
                 }
             },
@@ -719,26 +724,47 @@
             },
             confirmInsertStaff(){
                 this.$nextTick(()=>{
-                    let deltaStaff;
-                    deltaStaff=[];
-                    deltaStaff=this.selectedStaff;
-                    for(var i=0;i<deltaStaff.length;i++){
-                        this.staff.push(deltaStaff[i]);
+                    for(var i=0;i<this.selectedStaff.length;i++){
+                        axios.post("api/users/",{
+                            id:this.selectedStaff.id,
+                            name:this.thisDepartName[this.thisDepartName.length-1]
+                        })
+                        .then(_=>{
+                            this.showInsertStaff=false;
+                            alert("添加成功");
+                            this.selectedStaff.splice(0,this.selectedStaff.length-1);
+                            this.getId();
+                        })
                     }
+                    // let deltaStaff;
+                    // deltaStaff=[];
+                    // deltaStaff=this.selectedStaff;
+                    // for(var i=0;i<deltaStaff.length;i++){
+                    //     this.staff.push(deltaStaff[i]);
+                    // }
                     // console.log(deltaStaff);
                     // console.log(this.$refs.InsertStaff.selection);
                     // console.log(this.selectedStaff);
-                    this.selectedStaff=[];
-                    this.getId();
-                    this.formInfo=this.staff;
-                    this.beforeenter();
                 })
-
-                this.showInsertStaff=false;
-
-
-
             },
+            startMoveStaff(id,oldname){
+                this.showMoveStaff=true;
+                this.oldDepart=oldname;
+                this.newDepart.newname=oldname;
+                this.newDepart.id=id;
+            },
+            finishMoveStaff(id,depart){
+                axios.post('api/users/',{
+                    id:id,
+                    dept:depart
+                })
+                    .then(_=>{
+                        this.showMoveStaff=false;
+                        alert("移动成功");
+                        this.getId();
+                    })
+
+            }
             // 部门部分
             EnterDepartment(index, id) {
                 this.fid.push(this.did);
@@ -840,10 +866,6 @@
                 })
             },
         },
-        created(){
-          this.showEditDepart=false;
-        },
-
         mounted(){
             // console.log(this.$route.params.id);
             this.getId();
