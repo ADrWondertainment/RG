@@ -189,15 +189,16 @@ export default {
   },
   mounted() {
     // console.log(this.$route.params.FormId);
-    if(this.$router.params.FormResule){
+    if (this.$router.params.FormResult) {
       axios
-      .post("/api/answers/pre", {
-        sheetId: this.$route.params.FormId,
-        answers: null,
-      })
-      .then
-      console.log()
-    }
+        .post("/api/answers/pre", {
+          sheetId: this.$route.params.FormId,
+          answers: null,
+        })
+        .then((res) => {
+          console.log(res.data);
+        });
+    }else{
     axios
       .post("/api/answers/pre", {
         sheetId: this.$route.params.FormId,
@@ -230,9 +231,10 @@ export default {
         } else if (res.data.errorCode === 20220) {
           ElMessage.info("您已完成过此表单的填写，请勿重复填写");
         } else {
-          ElMessage.error('访问出错')
+          ElMessage.error("访问出错");
         }
       });
+    }
 
     // if (isString(formObj.content[formItem].value)) {
     //   this.formResult.content.push({

@@ -531,7 +531,7 @@ export default {
           description: this.sheetDescription.description,
           start: this.sheetDescription.start,
           end: this.sheetDescription.end,
-          order: this.flowNodesIdList,
+          flow: this.flowNodesIdList,
         })
         .then((res) => {
           console.log(res);
