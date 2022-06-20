@@ -101,6 +101,7 @@
         components: {EditDepart,AddDepart},
         data(){
             return{
+                staffFormInfo:[],
                 formInfo:[],
                 editDepartVisible:false,
                 AddDepartVisible:false,
@@ -128,6 +129,28 @@
           this.getDeparts();
         },
         methods:{
+            // getId(){
+            //     this.staffFormInfo=null;
+            //     this.staffFormInfo=[];
+            //     let routeid=0;
+            //     axios.post('api/users/showuserbydept',{
+            //         did:routeid
+            //     }).then(res=>{
+            //         console.log(res.data);
+            //         console.log(Object.keys(res.data.data).length);
+            //         for(var i=0;i<Object.keys(res.data.data).length;i++){
+            //             this.staffFormInfo.push(res.data.data[i]);
+            //         }
+            //         console.log(this.formInfo);
+            //         this.beforeenter();
+            //         // this.formInfo=res.data.data;
+            //     })
+            //     //     .catch(()=>{
+            //     //     alert("获取部门人员失败")
+            //     // })
+            //     this.did=routeid;
+            //     console.log(this.id);
+            // },
             closeAddDepart(){
             this.AddDepartVisible=false;
           },

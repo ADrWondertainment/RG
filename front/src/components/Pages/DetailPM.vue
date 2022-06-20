@@ -214,7 +214,7 @@
         name:'DetailPM',
         data(){
             return{
-                did:99,
+                did:1,
                 value:ref(''),
                 posvalue:ref(''),
                 formInfo:[],
@@ -396,19 +396,7 @@
                     {
                         value:'2',
                         label:"2"
-                    },
-                    {
-                        value:'3',
-                        label:"3"
-                    },
-                    {
-                        value:'4',
-                        label:"4"
-                    },
-                    {
-                        value:'5',
-                        label:"5"
-                    },
+                    }
                 ],
                 PosOptions:[
                     {
@@ -473,7 +461,9 @@
             getId(){
               this.formInfo=null;
               this.formInfo=[];
-              let routeid=this.$route.params.id;
+              if(this.$router.params.id!=null)
+                  this.did=this.$router.params.id;
+              let routeid=this.did;
               axios.post('api/users/showuserbydept',{
                   did:routeid
               }).then(res=>{
@@ -524,15 +514,15 @@
             },
             finishManageRight(index,id,value){
                 this.manageButton[index]="管理权限";
-                console.log(index);
+                // console.log(index);
                 // console.log(this.showManageDepart[0][index]);
                 // console.log(this.showManageDepart);
                 // console.log(index,id,value);
                 this.staff[index].right=value;
-                axios.post("api/users/",{
+                axios.put("api/users/",{
                     level:value,
                     uid:id,
-                }).then(res=>{
+                }).then(_=>{
                     alert("编辑成功");
                 }).catch(()=>{
                     alert("改变失败");
@@ -583,7 +573,11 @@
                 this.showManagePosition[index].display='none';
             },
             back(){
+                if(this.did==1)
                 this.$router.push('/PersonnelManagement');
+                else
+                    this.did--;
+                    this.getId();
             },
             beforeenter(){
                 this.staffnum=this.formInfo.length;
