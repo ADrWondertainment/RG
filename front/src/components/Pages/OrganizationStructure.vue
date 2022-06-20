@@ -16,7 +16,7 @@
             size="small"
             type="primary"
             style="margin-left: 30px"
-            @click="addPrincipal(scope.row.members)"
+            @click="addPrincipal(scope.$index)"
             plain
           >
             添加组成员
@@ -270,7 +270,8 @@ export default {
       // data.principal = this.principalName;
       console.log(this.tempVar);
       console.log(this.principal);
-      this.tempVar.push({ id: this.principal.id, email: this.principal.email });
+      this.data[this.tempVar].members.push({ id: this.principal.id, email: this.principal.email })
+      // this.tempVar.push({ id: this.principal.id, email: this.principal.email });
       // this.principalName = "";
       // this.tempVar.push
     },
@@ -283,7 +284,7 @@ export default {
     // 页面提交
     submit() {
       axios.post("/api/approves/set", {
-        
+
       }).then((res) => {
         console.log(res.data)
       });

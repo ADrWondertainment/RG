@@ -16,6 +16,10 @@
       <el-icon><edit /></el-icon>
       <template #title>我填过的表单</template>
     </el-menu-item>
+    <el-menu-item index="/allApproves">
+      <el-icon><edit /></el-icon>
+      <template #title>填写审批表</template>
+    </el-menu-item>
     <el-menu-item index="/formApprove">
       <el-icon><edit /></el-icon>
       <template #title>查看待审批表</template>

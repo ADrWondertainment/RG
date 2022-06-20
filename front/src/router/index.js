@@ -22,6 +22,7 @@ import AllPublicForms from '~/components/Pages/AllPublicForms.vue'
 import AllFormsIFilledOut from '~/components/Pages/AllFormsIFilledOut.vue'
 import ResultOfOneForm from '~/components/Pages/ResultOfOneForm.vue'
 import OrganizationStructure from '~/components/Pages/OrganizationStructure.vue'
+import AllApproves from '~/components/Pages/AllApproves.vue'
 
 const routes = [
     {
@@ -39,9 +40,14 @@ const routes = [
                 component: CreateForm,
             },
             {
-                path:'/organizationStructure',
-                name:'OrganizationStructure',
+                path: '/organizationStructure',
+                name: 'OrganizationStructure',
                 component: OrganizationStructure,
+            },
+            {
+                path: '/allApproves',
+                name: 'AllApproves',
+                component: AllApproves
             },
             // {
             //     path: '/createInput',
@@ -69,33 +75,33 @@ const routes = [
                 component: ShowFormApprove,
             },
             {
-                path:'/PersonnelManagement',
-                name:'PersonnelManagement',
+                path: '/PersonnelManagement',
+                name: 'PersonnelManagement',
                 component: PersonnelManagement,
-                children:[
+                children: [
 
                 ]
 
             },
             {
-                path:'/DetailPM',
-                name:'DetailPM',
-                component:DetailPM
+                path: '/DetailPM',
+                name: 'DetailPM',
+                component: DetailPM
             },
             {
-                path:'/allPublicForms',
-                name:'AllPublicForms',
-                component:AllPublicForms
+                path: '/allPublicForms',
+                name: 'AllPublicForms',
+                component: AllPublicForms
             },
             {
-                path:'/resultOfOneForm',
-                name:'ResultOfOneForm',
-                component:ResultOfOneForm
+                path: '/resultOfOneForm',
+                name: 'ResultOfOneForm',
+                component: ResultOfOneForm
             },
             {
-                path:'/allFormsIFilledOut',
-                name:'AllFormsIFilledOut',
-                component:AllFormsIFilledOut
+                path: '/allFormsIFilledOut',
+                name: 'AllFormsIFilledOut',
+                component: AllFormsIFilledOut
             }
         ]
     },
@@ -103,7 +109,7 @@ const routes = [
         path: '/beforeMain',
         name: 'BeforeMain',
         component: BeforeMain,
-        children:[
+        children: [
             {
                 path: '/login',
                 name: 'Login',
@@ -151,6 +157,6 @@ router.beforeEach((to, from) => {
         sessionStorage["targetPage"] = to.path;
         return { name: 'Login' }
     }
-    
+
 })
 export default router
