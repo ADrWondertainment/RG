@@ -136,6 +136,10 @@ const routes = [
         path: '/justFillForm/:FormId',
         component: JustFillForm
     },
+    {
+        path: '/justFillForm/:showResult/:FormId',
+        component: JustFillForm
+    },
 
 ]
 

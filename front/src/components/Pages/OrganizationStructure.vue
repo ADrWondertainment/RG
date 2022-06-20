@@ -311,6 +311,7 @@ export default {
       });
     },
     deleteRedundent(){
+      // 上帝也不愿看懂这行代码
       for(let inner in this.data){
         for(let outer in this.allMembers){
           for (let innerinner in this.data[inner].members){
