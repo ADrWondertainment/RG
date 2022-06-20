@@ -108,7 +108,7 @@ export default {
             console.log(res);
             if (res.data.errorCode === 10010) {
               // 退出登录
-              axios.post("url", {}).then(() => {
+              axios.post("/api/users/logout", {}).then(() => {
                 ElMessage.success("加入企业成功，请您重新登录");
                 this.$router.push("/login");
                 sessionStorage.clear();

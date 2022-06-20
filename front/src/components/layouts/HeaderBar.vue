@@ -60,7 +60,7 @@ export default {
       ElMessageBox("您确定要退出吗", "请确认", {
         confirmButtonText: "确认",
         callback: (_) => {
-          axios.post("url", {}).then(() => {
+          axios.post("/api/users/logout", {}).then(() => {
             ElMessage.warning("已退出登录");
             this.$router.push("/login");
             sessionStorage.clear();

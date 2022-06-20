@@ -298,7 +298,8 @@ export default {
     },
     getMembers() {
       this.members = [];
-      axios.post("", {}).then((res) => {
+      axios.post("/api/users/showbylevel", {}).then((res) => {
+        this.members = res.data.data
         console.log(res.data);
       });
     },
