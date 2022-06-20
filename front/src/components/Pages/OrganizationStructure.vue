@@ -38,7 +38,7 @@
           <!-- {{ props.row.members }} -->
 
           <el-table
-            :data="props.row.members"
+            :data="props.row.member"
             style="width: 90%; margin-left: 10%"
           >
             <el-table-column prop="id" label="成员工号"></el-table-column>
@@ -292,6 +292,7 @@ export default {
     getOrg() {
       this.data = [];
       axios.post("/api/approves/groups", {}).then((res) => {
+        this.data = res.data.data
         console.log(res.data);
       });
     },
