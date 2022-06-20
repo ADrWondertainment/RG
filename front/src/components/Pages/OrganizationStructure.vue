@@ -103,7 +103,10 @@
       <el-table :data="allMembers" @current-change="handleCurrentChange">
         <el-table-column property="id" label="成员工号"></el-table-column>
         <el-table-column property="email" label="成员姓名"></el-table-column>
-        <el-table-column property="department" label="成员部门"></el-table-column>
+        <el-table-column
+          property="department"
+          label="成员部门"
+        ></el-table-column>
         <el-table-column property="role" label="成员职位"></el-table-column>
       </el-table>
     </el-row>
@@ -270,7 +273,10 @@ export default {
       // data.principal = this.principalName;
       console.log(this.tempVar);
       console.log(this.principal);
-      this.data[this.tempVar].members.push({ id: this.principal.id, email: this.principal.email })
+      this.data[this.tempVar].members.push({
+        id: this.principal.id,
+        email: this.principal.email,
+      });
       // this.tempVar.push({ id: this.principal.id, email: this.principal.email });
       // this.principalName = "";
       // this.tempVar.push
@@ -283,23 +289,23 @@ export default {
 
     // 页面提交
     submit() {
-      axios.post("/api/approves/set", {
-
-      }).then((res) => {
-        console.log(res.data)
+      axios.post("/api/approves/set", {}).then((res) => {
+        console.log(res.data);
       });
     },
     getOrg() {
       this.data = [];
       axios.post("/api/approves/groups", {}).then((res) => {
-        this.data = res.data.data
+        this.data = res.data.data;
         console.log(res.data);
       });
     },
     getMembers() {
       this.allMembers = [];
       axios.post("/api/users/showbylevel", {}).then((res) => {
-        this.allMembers = res.data.data
+        for (let item in res.data.data) {
+          this.allMembers.push(res.data.data[item])
+        }
         console.log(res.data);
         console.log(this.allMembers);
       });
@@ -307,8 +313,8 @@ export default {
   },
 
   mounted() {
-    this.getOrg()
-    this.getMembers()
+    this.getOrg();
+    this.getMembers();
   },
 };
 </script>
