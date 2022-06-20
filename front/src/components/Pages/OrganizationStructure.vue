@@ -35,7 +35,7 @@
       </el-table-column>
       <el-table-column type="expand" label="组中成员" width="180">
         <template #default="props">
-          <!-- {{ props.row.members }} -->
+          <!-- {{ props.row.member }} -->
 
           <el-table
             :data="props.row.member"
@@ -48,14 +48,14 @@
                 <el-button
                   size="small"
                   type="danger"
-                  @click="deleteGroupMember(props.row.members, scope.$index)"
+                  @click="deleteGroupMember(props.row.member, scope.$index)"
                   >删除成员</el-button
                 >
               </template>
             </el-table-column>
           </el-table>
 
-          <!-- {{members}} -->
+          <!-- {{member}} -->
         </template>
       </el-table-column>
     </el-table>
@@ -160,17 +160,17 @@ export default {
         {
           label: "业务部",
           id: 1,
-          members: [{ id: 1, email: "张三" }],
+          member: [{ id: 1, email: "张三" },{ id: 2, email: "李四" }],
         },
         {
           label: "市场分析",
           id: 2,
-          members: [],
+          member: [],
         },
         {
           label: "信息搜集",
           id: 3,
-          members: [],
+          member: [],
         },
       ],
 
@@ -255,13 +255,14 @@ export default {
       this.data.push({
         label: this.newGroupName,
         id: null,
-        members: [],
+        member: [],
       });
       this.newGroupName = "";
       this.addNewGroupLog = false;
     },
     addPrincipal(data) {
       console.log(data);
+      this.deleteRedundent();
       this.tempVar = data;
       this.setPrincipalLog = true;
     },
@@ -273,7 +274,7 @@ export default {
       // data.principal = this.principalName;
       console.log(this.tempVar);
       console.log(this.principal);
-      this.data[this.tempVar].members.push({
+      this.data[this.tempVar].member.push({
         id: this.principal.id,
         email: this.principal.email,
       });
@@ -297,8 +298,8 @@ export default {
       this.data = [];
       axios.post("/api/approves/groups", {}).then((res) => {
         this.data = res.data.data;
-        console.log(res.data);
-        this.getMembers();
+        // console.log(res.data);
+        // this.getMembers();
       });
     },
     getMembers() {
@@ -307,9 +308,8 @@ export default {
         for (let item in res.data.data) {
           this.allMembers.push(res.data.data[item]);
         }
-        console.log(res.data);
-        console.log(this.allMembers);
-        this.deleteRedundent();
+        // console.log(res.data);
+        // console.log(this.allMembers);
       });
     },
     deleteRedundent() {
@@ -318,13 +318,13 @@ export default {
       // 上帝也不愿看懂这行代码
       for (let inner in this.data) {
         for (let outer in this.allMembers) {
-          for (let innerinner in this.data[inner].members) {
+          for (let innerinner in this.data[inner].member) {
             console.log(
-              this.data[inner].members[innerinner].id,
+              this.data[inner].member[innerinner].id,
               this.allMembers[outer].id
             );
             if (
-              this.data[inner].members[innerinner].id ===
+              this.data[inner].member[innerinner].id ===
               this.allMembers[outer].id
             ) {
               this.allMembers.splice(outer, 1);
@@ -337,6 +337,8 @@ export default {
 
   mounted() {
     this.getOrg();
+    this.getMembers();
+    // this.deleteRedundent();
   },
 };
 </script>

@@ -183,6 +183,7 @@ export default {
       formResult: {
         content: [],
       },
+      showResult: false,
     };
   },
   mounted() {
@@ -194,6 +195,7 @@ export default {
           answers: null,
         })
         .then((res) => {
+          this.showResult = true
           console.log(res.data);
         });
     } else {
@@ -268,7 +270,7 @@ export default {
             ElMessage.success("上传成功");
           }
         });
-      ElMessage.success("上传成功");
+      // ElMessage.success("上传成功");
     },
     InstantSubmitForm(rule, value, callback) {
       console.log(JSON.stringify(this.formResult.content));
@@ -276,7 +278,7 @@ export default {
         sheetId: this.$route.params.FormId,
         answers: this.formResult.content,
       });
-      ElMessage.success("上传成功");
+      // ElMessage.success("上传成功");
     },
   },
 };

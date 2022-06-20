@@ -60,7 +60,7 @@ export default {
   },
   methods: {
     login() {
-      // 后端调试时解除此段注释(林志康是傻逼)
+      后端调试时解除此段注释(林志康是傻逼)
       axios
         .post("api/users/login", {
           email: this.logInfo.userName,
@@ -90,7 +90,6 @@ export default {
       // 前端调试时解除此段注释
       // sessionStorage["isLogin"] = true;
       // sessionStorage["userName"] = "admin";
-
       // if (sessionStorage.getItem("targetPage") === null) {
       //   // 要用.getItem，否则报错，可能是sessionSrorage直接使用[]索引时没有出错处理
       //   this.$router.push({

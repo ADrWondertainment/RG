@@ -6,6 +6,7 @@ import '@vue/runtime-core'
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     AddDepart: typeof import('./components/Pages/AddDepart.vue')['default']
+    AllApproves: typeof import('./components/Pages/AllApproves.vue')['default']
     AllFormsIFilledOut: typeof import('./components/Pages/AllFormsIFilledOut.vue')['default']
     AllFormsToApprove: typeof import('./components/Pages/AllFormsToApprove.vue')['default']
     AllPublicForms: typeof import('./components/Pages/AllPublicForms.vue')['default']
