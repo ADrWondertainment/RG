@@ -282,15 +282,15 @@ export default {
 
     // 页面提交
     submit() {
-      axios.post("url", {
-
+      axios.post("/api/approves/set", {
+        
       }).then((res) => {
-
+        console.log(res.data)
       });
     },
     getOrg() {
       this.data = [];
-      axios.post("", {}).then((res) => {
+      axios.post("/api/approves/groups", {}).then((res) => {
         console.log(res.data);
       });
     },
