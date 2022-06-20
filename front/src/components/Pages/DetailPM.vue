@@ -65,7 +65,7 @@
                     >
                     <el-button
                             size="small"
-                            @click="EditDepart(scope.$index,scope.row.did)"
+                            @click="startEditDepart(scope.$index,scope.row.id,scope.row.name)"
                             title="编辑部门"
                             type="success"
                             plain
@@ -268,7 +268,15 @@
                 </el-form-item>
             </el-form>
         </el-dialog>
-        <el-divider style="margin-top: 0" ></el-divider>
+<!--      编辑部门弹框  -->
+      <el-dialog v-model="showEditDepart" title="编辑部门"  width="35%" model-value="1">
+        <div>当前部门名：{{oldname}}</div>
+        <div>请输入新的部门名:
+        </div>
+        <el-input v-model="depart.name" placeholder="请输入新部门名" clearable/>
+        <el-button @click="finishEditDepart(this.depart.name,this.depart.did)" type="success">确认</el-button>
+      </el-dialog>
+      <el-divider style="margin-top: 0" ></el-divider>
     </el-card>
 </template>
 
@@ -287,14 +295,17 @@
                 posvalue:ref(''),
                 formInfo:[],
                 depart:{
+                    did:0,
                     name:''
                 },
                 departFormInfo:[],
                 staffnum:0,
                 showEdit:false,
+                showEditDepart:false,
                 showInsertStaff:false,
                 showInsertDepart:false,
                 selectedStaff:[],
+                oldname:'',
                 // staff:[
                 //     {
                 //         "id":1,
@@ -532,18 +543,22 @@
                 console.log(index, id);
             },
             getId(){
-              this.formInfo=null;
-              this.formInfo=[];
-              if(this.$router.params.id!=null) {
-                  this.did = this.$router.params.id;
-                  this.fid.push(this.$router.params.fid);
+              this.formInfo.splice(0,this.formInfo.length);
+              this.departFormInfo.splice(0,this.departFormInfo.length);
+              console.log(this.$route.params.did);
+              if(this.$route.params.did!=null) {
+                  this.did = this.$route.params.did;
+                  this.fid.push(this.$route.params.fid);
+                  console.log("getId后的fid:",this.fid);
+                  this.$route.params.did=null;
+                  this.$route.params.fid=null;
               }
               let routeid=this.did;
               axios.post('api/users/showuserbydept',{
                   did:routeid
               }).then(res=>{
                 console.log(res.data);
-                console.log(Object.keys(res.data.data).length);
+                // console.log(Object.keys(res.data.data).length);
                 for(var i=0;i<Object.keys(res.data.data).length;i++){
                   this.formInfo.push(res.data.data[i]);
                 }
@@ -565,8 +580,7 @@
               //     .catch(()=>{
               //     alert("获取部门人员失败")
               // })
-
-              console.log("did:",this.did,"fid:",this.fid[-1]);
+              // console.log("did:",this.did,"fid:",this.fid[this.fid.length-1]);
           },
             startManageRight(index,id){
                 var i;
@@ -649,10 +663,12 @@
                 this.showManagePosition[index].display='none';
             },
             back(){
-                if(this.fid[-1]==0)
+              console.log("fid[-1]:",this.fid[this.fid.length-1]);
+                if(this.fid[this.fid.length-1]==0)
                 this.$router.push('/PersonnelManagement');
                 else {
-                    this.did = parseInt(this.fid[-1]);
+                    this.did = parseInt(this.fid[this.fid.length-1]);
+                    console.log("did:",this.did);
                     this.fid.splice(-1,1);
                     this.getId();
                 }
@@ -728,15 +744,25 @@
                 this.did=id;
                 this.getId();
             },
-            EditDepart(index, did) {
-                this.editDepartVisible = true;
-                this.$nextTick(() => {
-                    //这里的dialog与上面dialog-component组件里面的ref属性值是一致的
-                    //init调用的是dialog-component组件里面的init方法
-                    //data是传递给弹窗页面的值
-                    // console.log(this.formInfo[index].name);
-                    this.$refs.dialog.init(this.formInfo[index].name, index, did);
-                })
+            startEditDepart(index,did,name){
+              this.showEditDepart=true;
+              this.oldname=name;
+              this.depart.name=name;
+              this.depart.did=did;
+            },
+            finishEditDepart(name, did) {
+              axios.post('api/users/udept', {
+                did: did,
+                dept: name
+              }).then(() => {
+                alert("编辑成功");
+                this.showEditDepart = false;
+                this.getId();
+              })
+                  .catch(_ => {
+                    alert("编辑失败");
+                  })
+
             },
             ToDeleteDepart(index, id) {
                 ElMessageBox.confirm("你确定要删除此部门吗", "注意！", {
@@ -773,6 +799,7 @@
                     fid:this.did
                 }).then(()=>{
                     alert("新建成功");
+                    this.showInsertDepart=false;
                     this.getId();
                 })
                 //     .catch(_=>{
@@ -812,9 +839,14 @@
                 })
             },
         },
+        created(){
+          this.showEditDepart=false;
+        },
+
         mounted(){
             // console.log(this.$route.params.id);
             this.getId();
+
         },
     }
 </script>

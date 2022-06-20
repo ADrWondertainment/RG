@@ -40,7 +40,7 @@
                     >
                     <el-button
                             size="small"
-                            @click="EditDepart(scope.$index,scope.row.did)"
+                            @click="EditDepart(scope.$index,scope.row.id)"
                             title="编辑部门"
                             type="success"
                             plain
@@ -157,9 +157,9 @@
         methods: {
             closeAddDepart() {
                 this.AddDepartVisible = false;
-                this.getDeparts();
             },
             getDeparts() {
+              this.formInfo.splice(0,this.formInfo.length);
                 axios.post('api/users/showdept', {
                     fid: 0
                 }).then((res) => {
@@ -216,6 +216,7 @@
                 console.log(index, id);
             },
             EnterDepartment(index, id) {
+              // console.log(id);
                 this.$router.push({name: "DetailPM", params: {did: id, fid: 0}});
             },
             EditDepart(index, did) {
@@ -225,24 +226,28 @@
                     //init调用的是dialog-component组件里面的init方法
                     //data是传递给弹窗页面的值
                     // console.log(this.formInfo[index].name);
+                  console.log("init前的did:",did);
                     this.$refs.dialog.init(this.formInfo[index].name, index, did);
                 })
             },
             finishEdit(index, name, did) {
-                this.editDepartVisible = false;
+
                 // console.log("成了");
                 console.log(index, name);
+                console.log("did==",did);
                 axios.post('api/users/udept', {
                     did: did,
-                    department: name
+                    dept: name
                 }).then(() => {
                     alert("编辑成功");
+                  this.editDepartVisible = false;
+                  this.getDeparts();
                 })
                     .catch(_ => {
                         alert("编辑失败");
                     })
                 // this.formInfo[index].name=name
-                this.getDeparts();
+
             },
             addDepart() {
                 this.AddDepartVisible = true;
