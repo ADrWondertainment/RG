@@ -298,39 +298,45 @@ export default {
       axios.post("/api/approves/groups", {}).then((res) => {
         this.data = res.data.data;
         console.log(res.data);
+        this.getMembers();
       });
     },
     getMembers() {
       this.allMembers = [];
       axios.post("/api/users/showbylevel", {}).then((res) => {
         for (let item in res.data.data) {
-          this.allMembers.push(res.data.data[item])
+          this.allMembers.push(res.data.data[item]);
         }
         console.log(res.data);
         console.log(this.allMembers);
+        this.deleteRedundent();
       });
     },
-    deleteRedundent(){
-      console.log(this.data)
-      console.log(this.allMembers)
+    deleteRedundent() {
+      console.log(this.data);
+      console.log(this.allMembers);
       // 上帝也不愿看懂这行代码
-      for(let inner in this.data){
-        for(let outer in this.allMembers){
-          for (let innerinner in this.data[inner].members){
-            console.log(this.data[inner].members[innerinner].id,this.allMembers[outer].id)
-            if(this.data[inner].members[innerinner].id === this.allMembers[outer].id){
-              this.allMembers.splice(outer,1)
+      for (let inner in this.data) {
+        for (let outer in this.allMembers) {
+          for (let innerinner in this.data[inner].members) {
+            console.log(
+              this.data[inner].members[innerinner].id,
+              this.allMembers[outer].id
+            );
+            if (
+              this.data[inner].members[innerinner].id ===
+              this.allMembers[outer].id
+            ) {
+              this.allMembers.splice(outer, 1);
             }
           }
         }
       }
-    }
+    },
   },
 
   mounted() {
     this.getOrg();
-    this.getMembers();
-    this.deleteRedundent();
   },
 };
 </script>
