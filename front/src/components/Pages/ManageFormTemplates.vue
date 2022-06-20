@@ -473,6 +473,7 @@ export default {
         name: "CreateForm",
         params: {
           json: JSON.stringify(this.formInfo[index]),
+          id: id
         },
       });
     },

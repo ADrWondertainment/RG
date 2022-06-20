@@ -690,6 +690,7 @@ export default {
           axios
             .post("api/templates/modify", {
               json: this.finalForm,
+              id: this.$route.params.id
             })
             .then((res) => {
               console.log(res.data);
