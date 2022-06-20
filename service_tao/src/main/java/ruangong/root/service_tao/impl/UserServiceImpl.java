@@ -265,7 +265,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         root_cuser.setLevel(0);
         cuserMapper.insert(root_cuser);
         UpdateWrapper<User> wp = new UpdateWrapper<>();
-        wp.set("type",root_cuser).eq("id",root_user.getId());
+        wp.set("type",root_cuser.getId()).eq("id",root_user.getId());
         userMapper.update(null,wp);
         ResultUtil.quickSet(
                 result,
@@ -286,16 +286,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         Company company = (Company) invite_result.getData();
         Integer cid = company.getId();
-        //修改user表
-        UpdateWrapper<User> wrap = new UpdateWrapper<>();
-        wrap.eq("id", id).set("type", cid);
-        int update = userMapper.update(null, wrap);
+
         //增加cuser表
         cuser.setCid(cid);
         cuser.setLevel(2);
         cuser.setUid(id);
         cuser.setDid(0);
         int insert = cuserMapper.insert(cuser);
+
+        //修改user表
+        UpdateWrapper<User> wrap = new UpdateWrapper<>();
+        wrap.eq("id", id).set("type", cuser.getId());
+        int update = userMapper.update(null, wrap);
 
         if (update == 0 || insert == 0) {
 
