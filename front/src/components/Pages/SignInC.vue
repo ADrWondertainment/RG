@@ -11,11 +11,11 @@
       <el-card class="box-card">
         <template #header>
           <div class="card-header">
-            <span style="margin-left: 30%; width: 40%">企业用户注册</span>
+            <span style="margin-left: 30%; width: 40%">企业注册</span>
           </div>
         </template>
         <el-row :gutter="20" justify="space-evenly">
-          <el-col :span="6"><div style="width: 96px">请创建用户名</div></el-col>
+          <el-col :span="6"><div style="width: 96px">请输入企业名</div></el-col>
           <!--          140% 96px-->
           <el-col :span="18">
             <el-input v-model="user.userName" clearable @click="clear">
@@ -26,23 +26,23 @@
           </el-col>
         </el-row>
         <div :style="[style, noticeuname]">用户名不能为空！</div>
-        <el-row :gutter="20" justify="space-evenly">
-          <el-col :span="6"
-            ><div style="width: 80px">请创建企业邀请码</div></el-col
-          >
-          <!--          12-% 80px-->
-          <el-col :span="18">
-            <el-input v-model="user.companyId" clearable @click="clear">
-              <template #suffix>
-                <el-icon class="el-input__icon"><check /></el-icon>
-              </template>
-            </el-input>
-          </el-col>
-        </el-row>
+<!--        <el-row :gutter="20" justify="space-evenly">-->
+<!--          <el-col :span="6"-->
+<!--            ><div style="width: 80px">请创建企业邀请码</div></el-col-->
+<!--          >-->
+<!--          &lt;!&ndash;          12-% 80px&ndash;&gt;-->
+<!--          <el-col :span="18">-->
+<!--            <el-input v-model="user.companyId" clearable @click="clear">-->
+<!--              <template #suffix>-->
+<!--                <el-icon class="el-input__icon"><check /></el-icon>-->
+<!--              </template>-->
+<!--            </el-input>-->
+<!--          </el-col>-->
+<!--        </el-row>-->
         <el-row>
           <el-alert
             title="您企业的初始密码默认为您设定的企业邀请码，"
-            description="请稍后到账户管理中手动修改，企业的初始登录名为企业名-root"
+            description="请稍后到账户管理中手动修改，企业的初始登录名为：企业名_root"
             type="warning"
             center
             :closable="false"
@@ -65,7 +65,7 @@
 
 <script>
 import axios from "axios";
-import { ElMessage } from "element-plus";
+import { ElMessage, ElMessageBox } from "element-plus";
 // var el=document.querySelector('el-buton');
 // window.addEventListener('resize',function(){
 //   if(window.innerWidth<=1000){
@@ -120,37 +120,44 @@ export default {
       if (this.user.userName == "") {
         // alert("请输入用户名");
         this.noticeuname.display = "block";
-        this.initUser("", "", "");
-      } else if (this.user.password == "") {
-        // alert("请输入密码");
-        this.noticeupass.display = "block";
-        this.message = "确认密码不能为空！";
-        this.noticeval.display = "block";
-        this.initUser(this.user.userName, "", "");
-      } else if (this.user.validPassword == "") {
-        // alert("请输入确认密码");
-        this.message = "确认密码不能为空！";
-        this.noticeval.display = "block";
-        this.initUser(this.user.userName, "", "");
-      } else if (this.user.password == this.user.validPassword) {
+        this.initUser("", "", "");}
+      // } else if (this.user.password == "") {
+      //   // alert("请输入密码");
+      //   this.noticeupass.display = "block";
+      //   this.message = "确认密码不能为空！";
+      //   this.noticeval.display = "block";
+      //   this.initUser(this.user.userName, "", "");
+      // } else if (this.user.validPassword == "") {
+      //   // alert("请输入确认密码");
+      //   this.message = "确认密码不能为空！";
+      //   this.noticeval.display = "block";
+      //   this.initUser(this.user.userName, "", "");
+      // } else if (this.user.password == this.user.validPassword) {
+      else {
         axios
-          .post("api/users/register", {
-            email: this.user.userName,
-            pass: this.user.password,
-          })
-          .then((res) => {
-            console.log(res);
-            if (res.data.data == 1) {
-              ElMessage.success("注册成功");
-              this.$router.push("/login");
-            }
-          });
-      } else {
-        // alert("两次输入密码需一致");
-        this.message = "两次输入密码需一致";
-        this.noticeval.display = "block";
-        this.initUser(this.user.userName, "", "");
+            .post("api/users/companyregister", {
+              name: this.user.userName,
+            })
+            .then((res) => {
+              console.log(res);
+              if (res.data.errorCode == 10101) {
+                ElMessageBox.alert(("您的企业邀请码为：" + res.data.data + "，此代码同时作为您的企业管理员密码，请务必妥善保存"),
+                    "重要！", {
+                      confirmButtonText: "确认",
+                      callback: _ => {
+                        ElMessage.success("注册成功");
+                        this.$router.push("/login");
+                      }
+                    });
+              }
+            });
       }
+      // } else {
+      //   // alert("两次输入密码需一致");
+      //   this.message = "两次输入密码需一致";
+      //   this.noticeval.display = "block";
+      //   this.initUser(this.user.userName, "", "");
+      // }
     },
     Back() {
       this.$router.push("login");

@@ -106,7 +106,7 @@ export default {
           })
           .then((res) => {
             console.log(res);
-            if (res.data.errorCode === "") {
+            if (res.data.errorCode === 10010) {
               this.joinCompanyDialog = false;
             }
           });
@@ -123,10 +123,10 @@ export default {
           })
           .then((res) => {
             console.log(res.data);
-            if (res.data.errorCode === "") {
+            if (res.data.errorCode === 10070) {
               this.changePasswordDialog = false;
               ElMessage.success("修改密码成功！");
-            } else if (res.data.errorCode === "") {
+            } else if (res.data.errorCode === 10060) {
               ElMessage.error("您输入了错误的当前密码");
               this.password = {
                 now: "",
