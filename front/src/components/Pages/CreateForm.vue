@@ -673,6 +673,7 @@ export default {
 
     // 业务逻辑
     ToFillForm() {
+      this.test();
       this.$router.push({
         name: "FillForm",
         params: {
@@ -682,6 +683,7 @@ export default {
     },
     uploadForm() {
       this.check();
+      this.test();
       if (this.form.formContent.length === 0) {
         ElMessage.error("表单不能为空");
         return;
