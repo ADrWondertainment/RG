@@ -157,7 +157,7 @@
                     <el-select :style="showManageDepart[scope.$index]"
                                v-model="value"
                                @change="finishManageRight(scope.$index,scope.row.id,value)"
-                               :placeholder=scope.row.right
+                               :placeholder=scope.row.level
                                :clearable="false"
                     >
 <!--                        <el-button @click="finishManageRight(scope.$index,scope.row.id,scope.$index.label)">确认</el-button>-->
@@ -269,7 +269,7 @@
             </el-form>
         </el-dialog>
 <!--      编辑部门弹框  -->
-      <el-dialog v-model="showEditDepart" title="编辑部门"  width="35%" model-value="1">
+      <el-dialog v-model="showEditDepart" title="编辑部门"  width="35%" >
         <div>当前部门名：{{oldname}}</div>
         <div>请输入新的部门名:
         </div>
@@ -608,12 +608,13 @@
                 // console.log(this.showManageDepart[0][index]);
                 // console.log(this.showManageDepart);
                 // console.log(index,id,value);
-                this.staff[index].right=value;
-                axios.put("api/users/",{
+                // this.staff[index].level=value;
+                axios.post("api/users/ulevel",{
                     level:value,
                     uid:id,
                 }).then(_=>{
                     alert("编辑成功");
+                    this.getId();
                 }).catch(()=>{
                     alert("改变失败");
                 })
