@@ -246,7 +246,7 @@ export default {
       //     }
       //   });
       // ElMessage.success("上传成功");
-      this.$$router.push('/manageFormTemplates')
+      this.$router.push('/manageFormTemplates')
     },
     InstantSubmitForm() {
       ElMessage.success("上传成功");
