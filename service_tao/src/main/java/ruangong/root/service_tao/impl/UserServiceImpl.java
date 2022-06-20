@@ -259,12 +259,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         root_user.setEmail(name + "_root");
         root_user.setPass(invite);
-        root_user.setType(company.getId());
         userMapper.insert(root_user);
         root_cuser.setUid(root_user.getId());
         root_cuser.setCid(company.getId());
         root_cuser.setLevel(0);
         cuserMapper.insert(root_cuser);
+        UpdateWrapper<User> wp = new UpdateWrapper<>();
+        wp.set("type",root_cuser).eq("id",root_user.getId());
+        userMapper.update(null,wp);
         ResultUtil.quickSet(
                 result,
                 ErrorCode.COMPANY_REGISTER_SUCCESS,
