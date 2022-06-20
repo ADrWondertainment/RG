@@ -103,7 +103,7 @@
       <el-table :data="allMembers" @current-change="handleCurrentChange">
         <el-table-column property="id" label="成员工号"></el-table-column>
         <el-table-column property="email" label="成员姓名"></el-table-column>
-        <el-table-column property="dept" label="成员部门"></el-table-column>
+        <el-table-column property="department" label="成员部门"></el-table-column>
         <el-table-column property="role" label="成员职位"></el-table-column>
       </el-table>
     </el-row>
