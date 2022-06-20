@@ -480,8 +480,16 @@ export default {
       console.log(formType);
       console.log(index, id);
       this.sheetDescription.tid = id;
-      this.dialog = true;
       this.rowType = formType;
+      axios.post('/api/approves/groups',{
+
+      }).then(res=>{
+        this.dialog = true;
+        if(res.data.errorCode === 66666){
+          console.log(res.data.data)
+          this.flowData = res.data.data
+        }
+      })
     },
     ToDeleteTemplate(index, id) {
       ElMessageBox.confirm("你确定要删除此模板吗", "注意！", {
