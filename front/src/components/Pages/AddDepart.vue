@@ -4,24 +4,6 @@
             <el-form-item label="部门名称">
                 <el-input v-model="depart.name" />
             </el-form-item>
-<!--            <el-form-item label="是否添加成员">-->
-<!--                <el-switch v-model="ifAddstaff" />-->
-<!--            </el-form-item>-->
-<!--            <el-form v-if="ifAddstaff">-->
-<!--                <el-form-item>-->
-<!--                    <div>hhh</div>-->
-<!--                </el-form-item>-->
-
-<!--            </el-form>-->
-<!--            <el-form-item label="Activity zone">-->
-<!--                <el-select v-model="depart" placeholder="please select your zone">-->
-<!--                    <el-option label="Zone one" value="shanghai" />-->
-<!--                    <el-option label="Zone two" value="beijing" />-->
-<!--                </el-select>-->
-<!--            </el-form-item>-->
-<!--            <el-form-item label="Activity form">-->
-<!--                <el-input v-model="depart" type="textarea" />-->
-<!--            </el-form-item>-->
             <el-form-item>
                 <el-button type="primary" @click="createDepart">创建</el-button>
             </el-form-item>
