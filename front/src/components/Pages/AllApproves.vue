@@ -3,6 +3,7 @@
   <el-card>
     <el-table :data="returnList">
       <el-table-column prop="id" label="表单id" />
+      <el-table-column prop="name" label="表单名称" />
       <el-table-column
         prop="type"
         label="表单类型"
@@ -118,6 +119,7 @@ export default {
       })
       .then((res) => {
         console.log(res.data)
+        returnList = res.data
         // returnData = JSON.parse(res.data);
         // if (returnData.errorCode === 66666) {
         //   console.log(returnData);
