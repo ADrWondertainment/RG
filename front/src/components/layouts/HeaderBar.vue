@@ -12,6 +12,7 @@
         padding-right: 35px;
         margin-left: 10px;
       "
+      @click="quitLogin"
       >退出登录</el-button
     >
   </el-header>
@@ -42,6 +43,8 @@
 
 <script>
 import { Message } from "@element-plus/icons-vue";
+import { ElMessage, ElMessageBox } from "element-plus";
+import axios from "axios";
 export default {
   data() {
     return {
@@ -51,6 +54,20 @@ export default {
   },
   mounted() {
     this.userName = sessionStorage["userName"];
+  },
+  methods: {
+    quitLogin() {
+      ElMessageBox("您确定要退出吗", "请确认", {
+        confirmButtonText: "确认",
+        callback: (_) => {
+          axios.post("url", {}).then(() => {
+            ElMessage.warning("已退出登录");
+            this.$router.push("/login");
+            sessionStorage.clear();
+          });
+        },
+      });
+    },
   },
 };
 </script>

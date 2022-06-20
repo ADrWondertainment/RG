@@ -107,7 +107,15 @@ export default {
           .then((res) => {
             console.log(res);
             if (res.data.errorCode === 10010) {
-              this.joinCompanyDialog = false;
+              // 退出登录
+              axios.post("url", {}).then(() => {
+                ElMessage.success("加入企业成功，请您重新登录");
+                this.$router.push("/login");
+                sessionStorage.clear();
+              });
+            } else if (res.data.errorCode === 10091) {
+              ElMessage.error("企业邀请码不存在，请联系邀请码提供人员");
+              this.companyId = "";
             }
           });
       } else {
@@ -115,7 +123,10 @@ export default {
       }
     },
     changePasswordSubmit() {
-      if (this.password.new === this.password.validNew) {
+      if (
+        this.password.new === this.password.validNew &&
+        this.password.validNew != ""
+      ) {
         axios
           .post("/api/users/changepass", {
             oldpass: this.password.now,
