@@ -1,6 +1,4 @@
 <template>
-  {{ formResult }}
-
   <fieldset style="width: 90%; margin-bottom: 300px">
     <legend>{{ formDescriptionObj.formName }}</legend>
     <el-form label-width="auto" label-position="" :model="formResult">
