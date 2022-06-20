@@ -14,6 +14,7 @@ import ruangong.root.exception.FrontException;
 import ruangong.root.service_tao.UserService;
 import ruangong.root.service_xiao.TemplateService;
 import ruangong.root.service_xiao.PageUtil;
+import ruangong.root.utils.ResultUtil;
 import ruangong.root.utils.TemplateUtil;
 
 import javax.annotation.Resource;
@@ -44,16 +45,27 @@ public class TemplateController {
 
 
     @PostMapping("/modify")
-    public Result modifyTemplate() {
-
-        return null;
+    public Result modifyTemplate(@RequestBody String data, HttpServletRequest request) {
+        Integer id = JSONUtil.parseObj(data).get("id", Integer.TYPE);
+        Temp temp = processTemplate(data, request);
+        Template template = temp.template;
+        template.setId(id);
+        boolean flag = templateService.modifyTemplate(template);
+        ResultUtil.quickSet(
+                result,
+                flag ? ErrorCode.ALL_SET : ErrorCode.TEMPLATE_MODIFY_FAILURE,
+                flag ? "修改成功" : "修改失败",
+                flag
+        );
+        return result;
     }
 
+    protected static class Temp {
+        Template template;
+        JsonBeanTemplate jsonBeanTemplate;
+    }
 
-    @PostMapping("/create")
-    public Result createOrUpdateTemplate(@RequestBody String data, HttpServletRequest request) {
-
-
+    private Temp processTemplate(String data, HttpServletRequest request) {
         JSONObject entries = JSONUtil.parseObj(data);
         String json = (String) entries.get("json");
         if (json == null) {
@@ -76,7 +88,17 @@ public class TemplateController {
         template.setUid(uid);
         jsonBeanTemplate.setUid(uid);
         template.setData(JSONUtil.toJsonPrettyStr(jsonBeanTemplate));
-        result = templateService.createOrUpdateTemplateByBean(template, jsonBeanTemplate);
+        Temp temp = new Temp();
+        temp.template = template;
+        temp.jsonBeanTemplate = jsonBeanTemplate;
+        return temp;
+    }
+
+    @PostMapping("/create")
+    public Result createOrUpdateTemplate(@RequestBody String data, HttpServletRequest request) {
+        Temp temp = processTemplate(data, request);
+
+        result = templateService.createOrUpdateTemplateByBean(temp.template, temp.jsonBeanTemplate);
 
         return result;
     }

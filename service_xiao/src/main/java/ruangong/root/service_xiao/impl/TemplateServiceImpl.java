@@ -65,6 +65,12 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template> i
     }
 
     @Override
+    public boolean modifyTemplate(Template template) {
+        int i = templateMapper.updateById(template);
+        return i == 1;
+    }
+
+    @Override
     public Result deleteTemplateById(Integer id) {
 
         int deleteCheck = templateMapper.deleteById(id);

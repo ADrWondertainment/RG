@@ -56,6 +56,7 @@ public class PageUtil {
         try {
             sheetIPage = baseMapper.selectPage(page, query);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new BackException(ErrorCode.SHEET_SELECT_FAILURE, "分页数据查询失败");
         }
         if (sheetIPage.getRecords().size() == 0) {

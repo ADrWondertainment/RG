@@ -44,5 +44,7 @@ public interface TemplateService extends IService<Template> {
      */
     public Result getTemplateById(Integer id);
 
+    public boolean modifyTemplate(Template template);
+
 
 }

@@ -55,7 +55,8 @@ public class SheetController {
      * }
      */
     @PostMapping
-    public Result debutSheet(@RequestBody Sheet sheet, HttpServletRequest httpServletRequest) {
+    public Result debutSheet(@RequestBody String data, HttpServletRequest httpServletRequest) {
+        Sheet sheet = JSONUtil.toBean(data, Sheet.class);
         HttpSession session = httpServletRequest.getSession();
         Integer uid = (Integer) session.getAttribute("id");
         Integer cid = (Integer) session.getAttribute("cid");
@@ -138,7 +139,7 @@ public class SheetController {
     @PostMapping("/pass/show")
     public Result showApproves(HttpServletRequest httpServletRequest) {
         HttpSession session = httpServletRequest.getSession();
-        Integer uid = (Integer)session.getAttribute("id");
+        Integer uid = (Integer) session.getAttribute("id");
         if (!spaceFederation.checkAstronauts(uid)) {
             return null;
         }

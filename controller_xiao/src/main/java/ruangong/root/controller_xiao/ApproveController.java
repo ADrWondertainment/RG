@@ -5,6 +5,7 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ruangong.root.bean.CuserView;
@@ -24,6 +25,7 @@ import ruangong.root.utils.ResultUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -74,7 +76,8 @@ public class ApproveController {
 
     @PostMapping("/groups")
     public Result getAllGroups(HttpServletRequest httpServletRequest) {
-        int cid = Integer.parseInt((String) (httpServletRequest.getSession().getAttribute("cid")));
+        HttpSession session = httpServletRequest.getSession();
+        Integer cid = (Integer) session.getAttribute("cid");
         List<GroupView> groups = groupViewMapper.selectList(new QueryWrapper<GroupView>().eq("cid", cid));
 
         JSONArray groupArray = JSONUtil.parseArray(groups);
@@ -115,6 +118,12 @@ public class ApproveController {
 
 
         return result;
+    }
+
+    @PostMapping("/set")
+    public Result setGroup(@RequestBody String data){
+
+        return null;
     }
 
 }
