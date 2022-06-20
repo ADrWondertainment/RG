@@ -86,6 +86,9 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template> i
 
         JSONArray recordsById = PageUtil.getPageRecordsById(id, pageNum, size, "uid", Template.class, templateMapper);
         List<Template> records = JSONUtil.toList(recordsById, Template.class);
+        if (records == null) {
+            return null;
+        }
         List<TemplateTransfer> transfers = new ArrayList<>();
         for (Template t : records) {
             TemplateTransfer temp = new TemplateTransfer();

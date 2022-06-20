@@ -137,8 +137,8 @@ public class SheetController {
 
     @PostMapping("/pass/show")
     public Result showApproves(HttpServletRequest httpServletRequest) {
-
-        int uid = Integer.parseInt((String) httpServletRequest.getSession().getAttribute("id"));
+        HttpSession session = httpServletRequest.getSession();
+        Integer uid = (Integer)session.getAttribute("id");
         if (!spaceFederation.checkAstronauts(uid)) {
             return null;
         }

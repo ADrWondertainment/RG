@@ -136,6 +136,7 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
         JSONArray recordsById = PageUtil.getPageRecordsById(uid, pageIndex, sizePerPage,
                 "uid", Answer.class, answerMapper);
 
+        assert recordsById != null;
         for (Object object : recordsById) {
             JSONObject temp = (JSONObject) object;
             Object data = temp.get("data");
