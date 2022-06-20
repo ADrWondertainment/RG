@@ -765,7 +765,7 @@
                         this.getId();
                     })
 
-            }
+            },
             // 部门部分
             EnterDepartment(index, id) {
                 this.fid.push(this.did);
