@@ -290,22 +290,24 @@ export default {
   methods: {
     SubmitForm() {
       if (this.firstTime) {
-        axios
-          .post("/api/answers/submit", {
-            sheetId: this.$route.params.FormId,
-            answers: {
-              data: this.formResult.content,
-              done: this.returnToBack.done,
-              pass: this.returnToBack.pass,
-              flow: null,
-            },
-          })
-          .then((res) => {
-            if (res.data.errorCode == 66666) {
-              ElMessage.success("上传成功");
-              this.$router.push("/userInfo");
-            }
-          });
+        setTimeout(() => {
+          axios
+            .post("/api/answers/submit", {
+              sheetId: this.$route.params.FormId,
+              answers: {
+                data: this.formResult.content,
+                done: this.returnToBack.done,
+                pass: this.returnToBack.pass,
+                flow: null,
+              },
+            })
+            .then((res) => {
+              if (res.data.errorCode == 66666) {
+                ElMessage.success("上传成功");
+                this.$router.push("/userInfo");
+              }
+            });
+        }, 1000);
       } else {
         setTimeout(() => {
           axios

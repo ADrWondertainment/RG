@@ -2,7 +2,7 @@
   <h1>审批表单</h1>
   <el-card>
     <el-table :data="returnList">
-      <el-table-column prop="id" label="表单id" />
+      <el-table-column prop="sid" label="表单id" />
       <el-table-column prop="name" label="表单名称" />
       <el-table-column
         prop="type"
@@ -22,7 +22,7 @@
             size="small"
             plain
             type="info"
-            @click="fillApprove(scope.row.id)"
+            @click="fillApprove(scope.row.sid)"
             >填写审批表</el-button
           >
         </template>
