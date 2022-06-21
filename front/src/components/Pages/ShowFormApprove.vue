@@ -9,7 +9,7 @@
             <el-col :span="24">
               <el-form-item :label="item.description">
                 <el-input
-                  v-model="formResult.content[index]"
+                  v-model="formResult.content[index].value"
                   placeholder="请输入答案"
                   type="textarea"
                   :rows="2"
