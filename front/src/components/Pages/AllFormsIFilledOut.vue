@@ -80,7 +80,7 @@ export default {
         if (row.type === 0) {
           return "已完成";
         } else {
-          if (row.pass === 1 || row.flow != "" || row.flow != null) {
+          if (row.pass === 1 && (row.flow != "" || row.flow != null)) {
             return "审批通过";
           } else if (row.pass === 0) {
             return "审批拒绝";
