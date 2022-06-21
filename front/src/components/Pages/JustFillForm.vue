@@ -198,7 +198,7 @@ export default {
       console.log("查看内容");
       console.log(this.$route.params.ShowResult);
       axios
-        .get("/api/answers/one" + this.$route.params.FormId, {})
+        .get("/api/answers/one/" + this.$route.params.FormId, {})
         .then((res) => {
           this.showResult = true;
           console.log(res.data);
