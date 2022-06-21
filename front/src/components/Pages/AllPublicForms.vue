@@ -22,7 +22,10 @@
             inline-prompt
             active-text="是"
             inactive-text="否"
-            style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
+            style="
+              --el-switch-on-color: #13ce66;
+              --el-switch-off-color: #ff4949;
+            "
             :loading="formStatus[scope.$index]"
             @change="beforeSwitch(scope.$index, scope.row)"
           />
@@ -66,7 +69,7 @@ export default {
     return {
       formKind: "all",
       returnList: [],
-      formStatus:[],
+      formStatus: [],
       testData: `{
     "errorCode": 66666,
     "message": "查询成功",
@@ -133,7 +136,7 @@ export default {
     }
 ]
 }`,
-    }
+    };
   },
   created() {
     console.log(1111111);
@@ -145,8 +148,8 @@ export default {
       })
       .then((res) => {
         if (res.data.errorCode === 66666) {
-          for(let item in res.data.data){
-            this.returnList.push(res.data.data[item])
+          for (let item in res.data.data) {
+            this.returnList.push(res.data.data[item]);
           }
           console.log(this.returnList);
         }
@@ -155,40 +158,38 @@ export default {
     // returnData = JSON.parse(this.testData);
     // this.returnList = returnData.data;
 
-
-    
-    for(let item in this.returnList){
-      this.formStatus.push(false)
+    for (let item in this.returnList) {
+      this.formStatus.push(false);
     }
     // console.log(this.returnList);
   },
   methods: {
-    beforeSwitch(index, row){
+    beforeSwitch(index, row) {
       // 实际上这个是处理switch（change）事件，没有before
-      console.log(row)
-      this.formStatus[index] = true
+      console.log(row);
+      this.formStatus[index] = true;
       // axios.post('url',{
 
       // }).then(res => {
       //   this.formStatus[index] = false
       // })
-      setTimeout(_ => {
-        this.formStatus[index] = false
-      },1000)
+      setTimeout((_) => {
+        this.formStatus[index] = false;
+      }, 1000);
     },
     selectChange(value) {
       console.log(value);
-      var returnData;
       axios
         .post("/api/sheets/" + value, {
           pageNum: 1,
           size: 10,
         })
         .then((res) => {
-          returnData = JSON.parse(res.data);
-          if (returnData.errorCode === 66666) {
-            console.log(returnData);
-            this.returnList = JSON.parse(returnData.data);
+          if (res.data.errorCode === 66666) {
+            for (let item in res.data.data) {
+              this.returnList.push(res.data.data[item]);
+            }
+            console.log(this.returnList);
           }
         });
       // returnData = JSON.parse(this.testData);
