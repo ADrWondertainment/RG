@@ -25,7 +25,7 @@
                 :prop="'content[' + index + '].value'"
               >
                 <el-input
-                  v-model="formResult.content[index].value"
+                  v-model="formResult.content[index].value[0]"
                   placeholder="请输入答案"
                   type="textarea"
                   :rows="2"
@@ -52,7 +52,7 @@
                 :prop="'content[' + index + '].value'"
               >
                 <el-input-number
-                  v-model="formResult.content[index].value"
+                  v-model="formResult.content[index].value[0]"
                 ></el-input-number>
               </el-form-item>
             </el-col>
@@ -76,7 +76,7 @@
                 :prop="'content[' + index + '].value'"
               >
                 <el-date-picker
-                  v-model="formResult.content[index].value"
+                  v-model="formResult.content[index].value[0]"
                   value-format="YYYY.MM.DD"
                 ></el-date-picker>
               </el-form-item>
@@ -100,7 +100,7 @@
                 ]"
                 :prop="'content[' + index + '].value'"
               >
-                <el-radio-group v-model="formResult.content[index].value">
+                <el-radio-group v-model="formResult.content[index].value[0]">
                   <el-radio
                     v-for="(checkItem, checkItemIndex) in item.value"
                     :key="checkItemIndex"
@@ -153,7 +153,7 @@
                 ]"
                 :prop="'content[' + index + '].value'"
               >
-                <el-select v-model="formResult.content[index].value">
+                <el-select v-model="formResult.content[index].value[0]">
                   <el-option
                     v-for="(checkItem, checkItemIndex) in item.value"
                     :key="checkItemIndex"
