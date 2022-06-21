@@ -101,7 +101,7 @@
     </el-row>
     <el-row>
       <el-table :data="availableMembers" @current-change="handleCurrentChange">
-        <el-table-column property="id" label="成员工号"></el-table-column>
+        <el-table-column property="typeId" label="成员工号"></el-table-column>
         <el-table-column property="email" label="成员姓名"></el-table-column>
         <el-table-column
           property="department"
@@ -323,11 +323,11 @@ export default {
           for (let innerinner in this.data[inner].member) {
             console.log(
               this.data[inner].member[innerinner].id,
-              this.availableMembers[outer].id
+              this.availableMembers[outer].typeId
             );
             if (
               this.data[inner].member[innerinner].id ===
-              this.availableMembers[outer].id
+              this.availableMembers[outer].typeId
             ) {
               this.availableMembers.splice(outer, 1);
             }
