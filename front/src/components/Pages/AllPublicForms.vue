@@ -140,7 +140,7 @@ export default {
   },
   created() {
     console.log(1111111);
-    var returnData;
+    this.returnList = [];
     axios
       .post("/api/sheets/all", {
         pageNum: 1,
@@ -179,6 +179,7 @@ export default {
     },
     selectChange(value) {
       console.log(value);
+      this.returnList = [];
       axios
         .post("/api/sheets/" + value, {
           pageNum: 1,
