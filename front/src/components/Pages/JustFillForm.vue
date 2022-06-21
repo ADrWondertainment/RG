@@ -295,7 +295,12 @@ export default {
           axios
             .post("/api/answers/submit", {
               sheetId: this.$route.params.FormId,
-              answers: this.formResult.content,
+              answers: {
+                data: this.formResult.content,
+                done: this.returnToBack.done,
+                pass: this.returnToBack.pass,
+                flow: null,
+              },
             })
             .then((res) => {
               if (res.data.errorCode == 66666) {
@@ -327,7 +332,12 @@ export default {
       } else {
         axios.post("/api/answers/save", {
           sheetId: this.$route.params.FormId,
-          answers: this.formResult.content,
+          answers: {
+            data: this.formResult.content,
+            done: this.returnToBack.done,
+            pass: this.returnToBack.pass,
+            flow: null,
+          },
         });
         // .then((res) => {
         //   if (res.data.errorCode == 66666) {
