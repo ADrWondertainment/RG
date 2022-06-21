@@ -9,7 +9,7 @@
             <el-col :span="24">
               <el-form-item :label="item.description">
                 <el-input
-                  v-model="item.value"
+                  v-model="formResult.content[index].value"
                   placeholder="请输入答案"
                   type="textarea"
                   :rows="2"
@@ -24,7 +24,9 @@
           <el-row :gutter="20" justify="space-evenly">
             <el-col :span="24">
               <el-form-item :label="item.description">
-                <el-input-number v-model="item.value"></el-input-number>
+                <el-input-number
+                  v-model="formResult.content[index].value"
+                ></el-input-number>
               </el-form-item>
             </el-col>
           </el-row>
@@ -35,7 +37,9 @@
           <el-row :gutter="20" justify="space-evenly">
             <el-col :span="24">
               <el-form-item :label="item.description">
-                <el-date-picker v-model="item.value"></el-date-picker>
+                <el-date-picker
+                  v-model="formResult.content[index].value"
+                ></el-date-picker>
               </el-form-item>
             </el-col>
           </el-row>
@@ -46,7 +50,7 @@
           <el-row :gutter="20" justify="space-evenly">
             <el-col :span="24">
               <el-form-item :label="item.description">
-                <el-radio-group v-model="item.value">
+                <el-radio-group v-model="formResult.content[index].value[0]">
                   <el-radio
                     v-for="(checkItem, checkItemIndex) in item.value"
                     :key="checkItemIndex"
@@ -61,7 +65,7 @@
         <!-- multi-check -->
         <template v-if="item.type == 'multi-check'">
           <el-form-item :label="item.description">
-            <el-checkbox-group v-model="item.value">
+            <el-checkbox-group v-model="formResult.content[index].value">
               <el-checkbox
                 v-for="(checkItem, checkItemIndex) in item.value"
                 :key="checkItemIndex"
@@ -77,7 +81,7 @@
           <el-row :gutter="20" justify="space-evenly">
             <el-col :span="24">
               <el-form-item :label="item.description">
-                <el-select v-model="item.value">
+                <el-select v-model="formResult.content[index].value[0]">
                   <el-option
                     v-for="(checkItem, checkItemIndex) in item.value"
                     :key="checkItemIndex"
@@ -163,11 +167,15 @@ export default {
     this.formObj = JSON.parse(this.$route.params.json);
 
     this.formContent = this.formObj.originContent;
-    this.formResult = this.formObj.data;
+    this.formResult.content = this.formObj.data.data;
+    // let answer = this.formObj.data.data;
 
-    console.log(this.formContent);
-    console.log(this.formContent);
-    console.log(this.formResult);
+    // for(let item in answer){
+    //   this.formResult.content.push(answer[item])
+    // }
+    // console.log(this.formObj);
+    // console.log(this.formContent);
+    // console.log(this.formResult);
     // var formItem;
     // for (formItem in this.formObj.originContent) {
     //   console.log(formItem);
@@ -236,13 +244,16 @@ export default {
       this.refuseDialog = true;
     },
     confirmPass() {
-      axios.post("url", {
-        name: this.passSignName,
+      console.log(this.formObj.id);
+      axios.post("/api/sheets/pass/check", {
+        index: this.formObj.id,
+        pass: 1,
       });
     },
     confirmRefuse() {
-      axios.post("url", {
-        reason: this.refuseReason,
+      axios.post("/api/sheets/pass/check", {
+        index: this.formObj.id,
+        pass: 0,
       });
     },
   },
