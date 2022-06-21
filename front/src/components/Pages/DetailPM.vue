@@ -46,7 +46,7 @@
                 <template #default="scope">
                     <el-button
                             size="small"
-                            @click="EnterDepartment(scope.$index, scope.row.id)"
+                            @click="EnterDepartment(scope.$index, scope.row.id,scope.row.name)"
                             title="进入部门"
                             type="success"
                             plain
@@ -76,9 +76,7 @@
             </el-table-column>
         </el-table>
 <!--        人员表格-->
-        <el-table :data="formInfo" style="width: 100%" height="440">
-            <el-table-column type="selection" width="55" />
-            <el-table-column prop="id" label="编号" width="180" align="center" />
+        <el-table :data="formInfo" style="width: 100%" height="440">a
             <el-table-column
                     prop="email"
                     label="姓名"
@@ -91,11 +89,13 @@
                     width="180"
                     align="center"
             >
-                <template v-if="showManagePosText[scope.$index]" #default="scope">
+                <template  #default="scope">
                     <el-input  v-model="midPosition[scope.$index].role"
-                               :placeholder="midPosition[scope.$index].role"
+                               :disabled="midPosition[scope.$index].disabled"
                     />
-                    <el-button @click="finishManagePosition(scope.$index,scope.row.id,midPosition[scope.$index].role)">确认</el-button>
+                    <el-button @click="finishManagePosition(scope.$index,scope.row.id,midPosition[scope.$index].role)"
+                               :style="showManagePosText[scope.$index]"
+                    >确认</el-button>
                 </template>
             </el-table-column>
             <el-table-column
@@ -153,7 +153,6 @@
                     <el-select :style="showManageDepart[scope.$index]"
                                v-model="value"
                                @change="finishManageRight(scope.$index,scope.row.id,value)"
-                               :placeholder=scope.row.level
                                :clearable="false"
                     >
 <!--                        <el-button @click="finishManageRight(scope.$index,scope.row.id,scope.$index.label)">确认</el-button>-->
@@ -226,9 +225,10 @@
         <el-dialog v-model="showInsertStaff" title="添加人员">
             <el-table
                     height="400px"
-                    :data="fatherStaffInfo"
+                    :data="FstaffFormInfo"
                     style="width: 100% "
                     @selection-change="InsertStaffSelectionChangeHandle"
+                    ref="insertStaff"
             >
                 <el-table-column type="selection" width="55" />
                 <el-table-column
@@ -247,7 +247,7 @@
             </el-table>
             <template #footer>
               <span class="dialog-footer">
-                <el-button @click="cancelEditPos">取消</el-button>
+                <el-button @click="showInsertStaff=false">取消</el-button>
                 <el-button type="primary" @click="confirmInsertStaff">确认</el-button>
               </span>
             </template>
@@ -293,11 +293,12 @@
         data(){
             return{
                 fid:[],
-                did:1,
+                did:[],
                 thisDepartName:[],//当前部门名
                 value:ref(''),
                 posvalue:ref(''),
                 formInfo:[],
+                FstaffFormInfo:[],
                 depart:{
                     did:0,
                     name:''
@@ -558,18 +559,19 @@
             this.departFormInfo.splice(0,this.departFormInfo.length);
             console.log(this.$route.params.did);
             if(this.$route.params.did!=null) {
-                this.did = this.$route.params.did;
+                this.did.push(this.$route.params.did);
                 this.fid.push(this.$route.params.fid);
                 this.thisDepartName.push(this.$route.params.thisDepart);
-                console.log("getId后的fid:",this.fid);
+                // console.log("getId后的fid:",this.fid);
                 this.$route.params.did=null;
                 this.$route.params.fid=null;
             }
-            let routeid=this.did;
+
+            let routeid=this.did[this.did.length-1];
             axios.post('api/users/showuserbydept',{
                 did:routeid
             }).then(res=>{
-                console.log(res.data);
+                console.log("查询到的人员名单:",res.data.data);
                 // console.log(Object.keys(res.data.data).length);
                 for(var i=0;i<Object.keys(res.data.data).length;i++){
                     this.formInfo.push(res.data.data[i]);
@@ -586,6 +588,7 @@
                     console.log(this.departFormInfo);
                     // console.log(this.departs);
                 })
+              this.getFatherId();
                 this.beforeenter();
                 // this.formInfo=res.data.data;
             })
@@ -634,44 +637,49 @@
             this.showManageDepart[index].display="none";
             // this.getStaffbyId();
         },
-        startManagePosition(index,id){
-            var i;
-            for(i=0;i<this.staffnum;i++){
-                if(this.showManagePosText[i].display=="block"){
-                    if(index==i)
-                        continue
-                    this.show
-                    this.positionButton[i]="管理角色";
-                }
-            }
-            if(this.showManagePosText[index].display=="block") {
-                this.showManagePosText[index].display = "none";
-                this.positionButton[index]="管理角色";
-            }
-            else {
-                this.showManagePosText[index].display = 'block';
-                this.positionButton[index] = "取消";
-                // console.log(this.staff);
-            }
-        },
-        finishManagePosition(index,id,value){
-            this.positionButton[index]="管理角色";
-            console.log(index);
-            // console.log(this.showManageDepart[0][index]);
-            // console.log(this.showManageDepart);
-            // console.log(index,id,value);
-            // this.staff[index].pos=value;
-            axios.post('api/users/role',{
-                role:value,
-                uid:id
-            }).then(_=>{
-                alert("编辑职位成功");
-                this.getId();
-            }).catch(()=>{
-                alert("编译失败");
-            })
-            this.showManagePosText[index].display="none";
-        },
+      startManagePosition(index,id){
+        var i;
+        for(i=0;i<this.staffnum;i++){
+          if(this.showManagePosText[i].display=="block"){
+            if(index==i)
+              continue
+            this.midPosition[i].disabled=true;
+            this.showManagePosText[i].display="none";
+            this.positionButton[i]="管理角色";
+          }
+        }
+        if(this.showManagePosText[index].display=="block") {
+          this.midPosition[index].disabled=true;
+          this.showManagePosText[index].display = "none";
+          this.positionButton[index]="管理角色";
+        }
+        else {
+          this.showManagePosText[index].display = 'block';
+          this.midPosition[index].disabled=false;
+          console.log("点击后的样式",this.midPosition);
+          this.positionButton[index] = "取消";
+          // console.log(this.staff);
+        }
+      },
+      finishManagePosition(index,id,value){
+        this.positionButton[index]="管理角色";
+        console.log(index);
+        // console.log(this.showManageDepart[0][index]);
+        // console.log(this.showManageDepart);
+        // console.log(index,id,value);
+        // this.staff[index].pos=value;
+        axios.post('api/users/role',{
+          role:value,
+          uid:id
+        }).then(_=>{
+          alert("编辑职位成功");
+          this.getId();
+        }).catch(()=>{
+          alert("编译失败");
+        })
+        this.showManagePosText[index].display="none";
+        this.midPosition[index].disabled="true";
+      },
         clearSelectStyle(index){
             this.showManageDepart[index].display="none";
             this.showManagePosition[index].display='none';
@@ -681,7 +689,7 @@
             if(this.fid[this.fid.length-1]==0)
             this.$router.push('/PersonnelManagement');
             else {
-                this.did = parseInt(this.fid[this.fid.length-1]);
+                this.did.splice(-1,1);
                 console.log("did:",this.did);
                 this.fid.splice(-1,1);
                 this.thisDepartName.splice(-1,1);
@@ -692,23 +700,17 @@
             this.staffnum=this.formInfo.length;
             // const element={"display":"none"};
             var i;
-            for(i=0;i<this.staffnum;i++){
-                this.showManagePosText.push({"display":"none"});
-                this.manageButton.push("管理权限");
-                this.showManagePosText.push({"display":"none"});
-                this.positionButton.push("管理角色");
-                this.midPosition.push({
-                    id:this.formInfo[i].id,
-                    role:this.formInfo[i].role
-                });
-                // this.select.push({
-                //     "<el-select :style=\"showManageDepart[scope.$index]\"v-model=\"value\"\"item.value\":label=\"item.label\":value=\"item.value\" /> </el-select>'"
-                // })
+            for(i=0;i<this.staffnum;i++) {
+              this.showManagePosText.push({"display": "none"});
+              this.manageButton.push("管理权限");
+              this.showManageDepart.push({"display": "none"});
+              this.positionButton.push("管理角色");
+              this.midPosition.push({
+                id: this.formInfo[i].id,
+                role: this.formInfo[i].role,
+                disabled: true
+              });
             }
-            // this.showManageDepart=stylelist;
-            // console.log(this.showManageDepart);
-            // console.log(this.showManageDepart[0]);
-            // this.showManageDepart=this.showManageDepartMid;
         },
         EditPosition(){
             this.showEdit=true;
@@ -726,6 +728,25 @@
         // cancelEditPos(){
         //     this.showEdit=false;
         // },
+        getFatherId() {
+          this.FstaffFormInfo = null;
+          this.FstaffFormInfo = [];
+          let routeid = this.fid[this.fid.length-1];
+          console.log("传过去的did",routeid);
+          axios.post('api/users/showuserbydept', {
+            did: routeid
+          }).then(res => {
+            console.log(res.data);
+            console.log(Object.keys(res.data.data).length);
+            for (var i = 0; i < Object.keys(res.data.data).length; i++) {
+              this.FstaffFormInfo.push(res.data.data[i]);
+            }
+          // this.formInfo=res.data.data;
+        })
+        //     .catch(()=>{
+        //     alert("获取部门人员失败")
+        // })
+      },
         insertStaff(){
             this.showInsertStaff=true;
         },
@@ -733,33 +754,32 @@
             this.showInsertStaff=false;
         },
         InsertStaffSelectionChangeHandle(val){
+          console.log("xuanzhong",val);
             this.selectedStaff=val;
         },
         confirmInsertStaff(){
+          console.log("当前选中对象",this.selectedStaff);
+          console.log("当前选中对象1",this.selectedStaff[0]);
+          console.log("当前选中id1",this.selectedStaff[0].id,"当前部门",this.thisDepartName[this.thisDepartName.length-1]);
+          // console.log("用ref选中的:",this.$refs.insertStaff.selection);
             this.$nextTick(()=>{
                 for(var i=0;i<this.selectedStaff.length;i++){
                     axios.post("api/users/sdept",{
-                        id:this.selectedStaff[i].id,
+                        uid:this.selectedStaff[i].id,
                         name:this.thisDepartName[this.thisDepartName.length-1]
                     })
                     .then(_=>{
-                        this.showInsertStaff=false;
-                        alert("添加",id,"号人员成功!");
-
+                        // this.getId();
                     })
                 }
-                this.selectedStaff.splice(0,this.selectedStaff.length);
-                this.getId();
-                // let deltaStaff;
-                // deltaStaff=[];
-                // deltaStaff=this.selectedStaff;
-                // for(var i=0;i<deltaStaff.length;i++){
-                //     this.staff.push(deltaStaff[i]);
-                // }
-                // console.log(deltaStaff);
-                // console.log(this.$refs.InsertStaff.selection);
-                // console.log(this.selectedStaff);
+
             })
+          this.showInsertStaff=false;
+          this.$nextTick(()=>{
+            this.getId();
+          })
+
+          // this.selectedStaff.splice(0,this.selectedStaff.length);
         },
         startMoveStaff(id,oldname){
             this.showMoveStaff=true;
@@ -780,9 +800,10 @@
 
         },
         // 部门部分
-        EnterDepartment(index, id) {
-            this.fid.push(this.did);
-            this.did=id;
+        EnterDepartment(index, id,name) {
+            this.fid.push(this.did[this.did.length-1]);
+            this.did.push(id);
+            this.thisDepartName.push(name);
             this.getId();
         },
         startEditDepart(index,did,name){
@@ -838,7 +859,7 @@
         finishCreateDepart(){
             axios.put("api/users/cdept",{
                 name:this.depart.name,
-                fid:this.did
+                fid:this.did[this.did.length-1]
             }).then(()=>{
                 alert("新建成功");
                 this.showInsertDepart=false;
