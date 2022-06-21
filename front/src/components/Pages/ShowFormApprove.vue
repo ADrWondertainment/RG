@@ -24,7 +24,9 @@
           <el-row :gutter="20" justify="space-evenly">
             <el-col :span="24">
               <el-form-item :label="item.description">
-                <el-input-number v-model="formResult.content[index].value"></el-input-number>
+                <el-input-number
+                  v-model="formResult.content[index].value"
+                ></el-input-number>
               </el-form-item>
             </el-col>
           </el-row>
@@ -35,7 +37,9 @@
           <el-row :gutter="20" justify="space-evenly">
             <el-col :span="24">
               <el-form-item :label="item.description">
-                <el-date-picker v-model="formResult.content[index].value"></el-date-picker>
+                <el-date-picker
+                  v-model="formResult.content[index].value"
+                ></el-date-picker>
               </el-form-item>
             </el-col>
           </el-row>
@@ -169,9 +173,9 @@ export default {
     // for(let item in answer){
     //   this.formResult.content.push(answer[item])
     // }
-    console.log(this.formObj);
-    console.log(this.formContent);
-    console.log(this.formResult);
+    // console.log(this.formObj);
+    // console.log(this.formContent);
+    // console.log(this.formResult);
     // var formItem;
     // for (formItem in this.formObj.originContent) {
     //   console.log(formItem);
@@ -240,13 +244,16 @@ export default {
       this.refuseDialog = true;
     },
     confirmPass() {
-      axios.post("url", {
-        name: this.passSignName,
+      console.log(this.formObj.id);
+      axios.post("/api/sheets/pass/check", {
+        index: this.formObj.id,
+        pass: 1,
       });
     },
     confirmRefuse() {
-      axios.post("url", {
-        reason: this.refuseReason,
+      axios.post("/api/sheets/pass/check", {
+        index: this.formObj.id,
+        pass: 0,
       });
     },
   },
