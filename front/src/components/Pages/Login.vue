@@ -51,7 +51,7 @@
 
 <script>
 import axios from "axios";
-import { ElMessage } from 'element-plus';
+import { ElMessage } from "element-plus";
 export default {
   data() {
     return {
@@ -65,7 +65,7 @@ export default {
   methods: {
     login() {
       // 后端调试时解除此段注释(林志康是傻逼)
-      sessionStorage.clear()
+      sessionStorage.clear();
       axios
         .post("api/users/login", {
           email: this.logInfo.userName,
@@ -74,6 +74,7 @@ export default {
         .then((res) => {
           console.log(res.data);
           this.userInfo = JSON.parse(res.data.data);
+          sessionStorage["level"] = this.userInfo.level;
           if (res.data.errorCode == 1 || res.data.errorCode == 10050) {
             sessionStorage["isLogin"] = true;
             sessionStorage["userName"] = this.logInfo.userName;
@@ -99,8 +100,8 @@ export default {
                 path: sessionStorage["targetPage"],
               });
             }
-          }else{
-            ElMessage("登陆失败，请检查密码正确性")
+          } else {
+            ElMessage("登陆失败，请检查密码正确性");
           }
         });
 
