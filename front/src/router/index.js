@@ -148,7 +148,7 @@ const router = createRouter({
     routes,
 })
 
-router.beforeResolve(to => {
+router.beforeEach((to, from) => {
     // console.log(to.path)
     // 已登录 || 要跳转到login || 要到signIn
     console.log(to.path)
