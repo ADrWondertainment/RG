@@ -72,7 +72,6 @@ public class UserController {
             System.out.println(userData);
             HttpSessionUtil.quickSetAttribute(session, userData);
         }
-        System.out.println(userData);
         result.setData(JSONUtil.toJsonPrettyStr(userData));
         return result;
     }
@@ -141,7 +140,8 @@ public class UserController {
         String fid = JSONUtil.parseObj(did).get("did", String.class);
         HttpSession session = request.getSession();
         Integer cid = (Integer) session.getAttribute("cid");
-        return userService.ShowCuser(cid, Integer.parseInt(fid));
+        Result result = userService.ShowCuser(cid, Integer.parseInt(fid));
+        return result;
     }
 
     @PostMapping("/showbylevel")

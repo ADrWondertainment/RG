@@ -20,6 +20,7 @@ import ruangong.root.utils.ResultUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Transactional
@@ -360,6 +361,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         if (rid != 0) {
             userData1.setRole(roleMapper.selectById(rid).getName());
+        }else {
+            userData1.setRole("无");
         }
         return userData1;
     }
@@ -398,6 +401,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         if (ridValue != 0) {
             userData1.setRole(roleMapper.selectById(ridValue).getName());
+        }else{
+            userData1.setRole("无");
         }
         return userData1;
 
@@ -487,10 +492,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public Result SetDept(Integer uid, String name, Integer cid) {
-        if(name == "空"){
+        if(Objects.equals(name, "空")){
             UpdateWrapper<Cuser> wp = new UpdateWrapper<>();
             wp.set("did", 0).eq("uid", uid);
             cuserMapper.update(null, wp);
+            ResultUtil.quickSet(
+                    result,
+                    ErrorCode.USER_SET_DEPARTMENT,
+                    "部门调整成功",
+                    1
+            );
+            return result;
         }
         QueryWrapper<Dept> wrapper = new QueryWrapper<>();
         wrapper.eq("name", name).eq("cid", cid);
