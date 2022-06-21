@@ -225,7 +225,7 @@ export default {
             console.log(this.gettenData.unfinished);
             if ("unfinished" in this.gettenData) {
               this.firstTime = false;
-              this.formResult.content = JSON.parse(this.gettenData.unfinished);
+              this.formResult.content = JSON.parse(this.gettenData.unfinished).data;
             } else {
               this.firstTime = true;
               console.log('formObj',this.formObj)
