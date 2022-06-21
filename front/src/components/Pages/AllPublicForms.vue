@@ -145,7 +145,7 @@ export default {
         size: 10,
       })
       .then((res) => {
-        if (returnData.errorCode === 66666) {
+        if (res.data.errorCode === 66666) {
           for(let item in res.data.data){
             this.returnList.push(res.data.data[item])
           }
