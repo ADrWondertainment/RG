@@ -62,8 +62,6 @@
         </el-table>
 <!--        人员表单-->
         <el-table :data="staffFormInfo" style="width: 100%" height="440">
-            <el-table-column type="selection" width="55" />
-            <el-table-column prop="id" label="编号" width="180" align="center" />
             <el-table-column
                     prop="email"
                     label="姓名"
@@ -76,7 +74,7 @@
                     width="180"
                     align="center"
             >
-                <template v-if="showManagePosText[scope.$index]" #default="scope">
+                <template :style="showManagePosText[scope.$index]" #default="scope">
                     <el-input  v-model="midPosition[scope.$index].role"
                                :placeholder="midPosition[scope.$index].role"
                     />
