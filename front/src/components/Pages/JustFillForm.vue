@@ -1,7 +1,12 @@
 <template>
   <fieldset style="width: 90%; margin-bottom: 300px">
     <legend>{{ formDescriptionObj.formName }}</legend>
-    <el-form label-width="auto" label-position="" :model="formResult">
+    <el-form
+      label-width="auto"
+      label-position=""
+      :model="formResult"
+      :disabled="!showResult"
+    >
       <template v-for="(item, index) in formObj" :key="index">
         <!-- input -->
         <template v-if="item.type === 'input'">
@@ -202,6 +207,8 @@ export default {
         .then((res) => {
           this.showResult = true;
           console.log(res.data);
+          this.formObj = res.data.data.originContent;
+          this.formResult.content = JSON.parse(res.data.data.data).data
         });
     } else {
       console.log("填写");
@@ -233,10 +240,23 @@ export default {
               for (formItem in this.formObj) {
                 // console.log(formItem);
                 // console.log(123456);
-                this.formResult.content.push({
-                  id: formItem,
-                  value: [],
-                });
+                if (
+                  this.formObj[formItem].type === "single-check" ||
+                  this.formObj[formItem].type === "pull-selector" ||
+                  this.formObj[formItem].type === "input" ||
+                  this.formObj[formItem].type === "date-selector" ||
+                  this.formObj[formItem].type === "num-input"
+                ) {
+                  this.formResult.content.push({
+                    id: formItem,
+                    value: [""],
+                  });
+                } else {
+                  this.formResult.content.push({
+                    id: formItem,
+                    value: [],
+                  });
+                }
               }
               console.log(this.formResult.content);
             }
