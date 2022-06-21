@@ -194,7 +194,7 @@ export default {
   mounted() {
     // console.log(this.$route.params.FormId);
     if (this.$route.params.FormResult) {
-      console.log('查看内容')
+      console.log("查看内容");
       axios
         .post("/api/answers/pre", {
           sheetId: this.$route.params.FormId,
@@ -205,7 +205,7 @@ export default {
           console.log(res.data);
         });
     } else {
-      console.log('填写')
+      console.log("填写");
       axios
         .post("/api/answers/pre", {
           sheetId: this.$route.params.FormId,
@@ -225,10 +225,12 @@ export default {
             console.log(this.gettenData.unfinished);
             if ("unfinished" in this.gettenData) {
               this.firstTime = false;
-              this.formResult.content = JSON.parse(this.gettenData.unfinished).data;
+              this.formResult.content = JSON.parse(
+                this.gettenData.unfinished
+              ).data;
             } else {
               this.firstTime = true;
-              console.log('formObj',this.formObj)
+              console.log("formObj", this.formObj);
               for (formItem in this.formObj) {
                 // console.log(formItem);
                 // console.log(123456);
@@ -237,7 +239,7 @@ export default {
                   value: [],
                 });
               }
-              console.log(this.formResult.content)
+              console.log(this.formResult.content);
             }
           } else if (res.data.errorCode === 20220) {
             ElMessage.info("您已完成过此表单的填写，请勿重复填写");
@@ -285,21 +287,23 @@ export default {
           .then((res) => {
             if (res.data.errorCode == 66666) {
               ElMessage.success("上传成功");
-              this.$router.push('/userInfo')
+              this.$router.push("/userInfo");
             }
           });
       } else {
-        axios
-          .post("/api/answers/submit", {
-            sheetId: this.$route.params.FormId,
-            answers: this.formResult.content,
-          })
-          .then((res) => {
-            if (res.data.errorCode == 66666) {
-              ElMessage.success("上传成功");
-              this.$router.push('/userInfo')
-            }
-          });
+        setTimeout(() => {
+          axios
+            .post("/api/answers/submit", {
+              sheetId: this.$route.params.FormId,
+              answers: this.formResult.content,
+            })
+            .then((res) => {
+              if (res.data.errorCode == 66666) {
+                ElMessage.success("上传成功");
+                this.$router.push("/userInfo");
+              }
+            });
+        }, 1000);
       }
       // ElMessage.success("上传成功");
     },
