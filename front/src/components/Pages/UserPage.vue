@@ -12,7 +12,13 @@
         {{ userTypeStr }}
       </el-col>
     </el-row>
-    <el-row>
+    <el-row v-if="userTypeStr == '企业用户'">
+      <el-col :span="4"> 用户企业： </el-col>
+      <el-col :span="4">
+        {{ userCompany }}
+      </el-col>
+    </el-row>
+    <el-row v-if="userTypeStr == '企业用户'">
       <el-col :span="4"> 用户部门： </el-col>
       <el-col :span="4">
         {{ userDepartment }}
@@ -72,6 +78,7 @@ export default {
       userType: 0,
       userTypeStr: "",
       userDepartment: "",
+      userCompany: "",
       companyId: "",
       joinCompanyDialog: false,
       changePasswordDialog: false,
@@ -84,10 +91,17 @@ export default {
   },
 
   mounted() {
-    if (this.userType === 0) {
-      this.userTypeStr = "普通用户";
-    } else {
+    this.userType = sessionStorage.getItem("typeId");
+    if (typeof this.userType != "undefined") {
       this.userTypeStr = "企业用户";
+      this.userCompany = sessionStorage["userCompany"];
+      if (sessionStorage["userInfo"].did > 0) {
+        this.userDepartment = sessionStorage["userDepartment"];
+      } else {
+        this.userDepartment = "暂无部门";
+      }
+    } else {
+      this.userTypeStr = "普通用户";
     }
   },
 
@@ -106,14 +120,16 @@ export default {
           })
           .then((res) => {
             console.log(res);
-            if (res.data.errorCode === 10010) {
+            if (res.data.errorCode === 10110) {
               // 退出登录
               axios.post("/api/users/logout", {}).then(() => {
+                this.joinCompanyDialog = false;
                 ElMessage.success("加入企业成功，请您重新登录");
                 this.$router.push("/login");
                 sessionStorage.clear();
               });
             } else if (res.data.errorCode === 10091) {
+              this.joinCompanyDialog = false;
               ElMessage.error("企业邀请码不存在，请联系邀请码提供人员");
               this.companyId = "";
             }
