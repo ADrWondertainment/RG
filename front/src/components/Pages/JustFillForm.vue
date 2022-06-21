@@ -194,6 +194,7 @@ export default {
   mounted() {
     // console.log(this.$route.params.FormId);
     if (this.$route.params.FormResult) {
+      console.log('查看内容')
       axios
         .post("/api/answers/pre", {
           sheetId: this.$route.params.FormId,
@@ -204,6 +205,7 @@ export default {
           console.log(res.data);
         });
     } else {
+      console.log('填写')
       axios
         .post("/api/answers/pre", {
           sheetId: this.$route.params.FormId,
@@ -235,6 +237,7 @@ export default {
                   value: [],
                 });
               }
+              console.log(this.formResult.content)
             }
           } else if (res.data.errorCode === 20220) {
             ElMessage.info("您已完成过此表单的填写，请勿重复填写");
