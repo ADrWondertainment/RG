@@ -95,7 +95,7 @@ export default {
     if (typeof this.userType != "undefined") {
       this.userTypeStr = "企业用户";
       this.userCompany = sessionStorage["userCompany"];
-      if (sessionStorage["userInfo"].did > 0) {
+      if (sessionStorage["userDid"] > 0) {
         this.userDepartment = sessionStorage["userDepartment"];
       } else {
         this.userDepartment = "暂无部门";
