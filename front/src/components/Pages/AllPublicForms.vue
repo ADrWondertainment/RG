@@ -66,7 +66,7 @@ export default {
   data() {
     return {
       formKind: "all",
-      returnList: null,
+      returnList: [],
       formStatus:[],
       testData: `{
     "errorCode": 66666,
