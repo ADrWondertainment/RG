@@ -151,7 +151,8 @@ const router = createRouter({
 router.beforeEach((to, from) => {
     // console.log(to.path)
     // 已登录 || 要跳转到login || 要到signIn
-    console.log(to.path)
+    console.log(to.path);
+    console.log(from.path);
     if (sessionStorage["isLogin"] || to.path === '/login' || to.path === '/signIn' || to.path === '/signInC') {
         return true
     }
@@ -160,7 +161,7 @@ router.beforeEach((to, from) => {
     // }
     else {
         // sessionStorage.clear();
-        sessionStorage["targetPage"] = to.path;
+        sessionStorage["targetPage"] = from.path;
         // console.log(to.path)
         return { name: 'Login' }
     }
