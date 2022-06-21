@@ -234,11 +234,7 @@ export default {
   mounted() {
     // console.log(111111);
     axios
-      .post("/api/approves/show", {
-        sheetId: 18,
-        pageIndex: 1,
-        size: 4,
-        mode: 0,
+      .post("/api/sheets/pass/show", {
       })
       .then((res) => {
         if (res.data.errorCode == 66666) {

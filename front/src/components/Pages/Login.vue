@@ -51,6 +51,7 @@
 
 <script>
 import axios from "axios";
+import { ElMessage } from 'element-plus';
 export default {
   data() {
     return {
@@ -98,6 +99,8 @@ export default {
                 path: sessionStorage["targetPage"],
               });
             }
+          }else{
+            ElMessage("登陆失败，请检查密码正确性")
           }
         });
 
