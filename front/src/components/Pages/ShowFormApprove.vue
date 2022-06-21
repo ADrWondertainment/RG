@@ -1,8 +1,8 @@
 <template>
   <fieldset style="width: 60%; margin-bottom: 300px; margin-top: 30px">
-    <legend>{{ formObj.name }}</legend>
+    <legend>{{ formContent.name }}</legend>
     <el-form label-width="200px" label-position="top" disabled>
-      <template v-for="(item, index) in formObj.originContent" :key="index">
+      <template v-for="(item, index) in formContent" :key="index">
         <!-- input -->
         <template v-if="item.type === 'input'">
           <el-row :gutter="20" justify="space-evenly">
