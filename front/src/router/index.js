@@ -153,7 +153,7 @@ router.beforeEach((to, from) => {
     // 已登录 || 要跳转到login || 要到signIn
     console.log(to.path);
     console.log(from.path);
-    if (sessionStorage["isLogin"] || to.path === '/beforeMain') {
+    if (sessionStorage["isLogin"] || to.path === '/login' || to.path === '/signIn' || to.path === '/signInC') {
         return true
     }
     // else if (sessionStorage["isLogin"] && to.path != '/Login') {
