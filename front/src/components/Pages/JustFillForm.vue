@@ -275,6 +275,7 @@ export default {
               data: this.formResult.content,
               done: this.returnToBack.done,
               pass: this.returnToBack.pass,
+              flow: null,
             },
           })
           .then((res) => {
@@ -305,6 +306,7 @@ export default {
             data: this.formResult.content,
             done: this.returnToBack.done,
             pass: this.returnToBack.pass,
+            flow: null,
           },
         });
         // .then((res) => {
