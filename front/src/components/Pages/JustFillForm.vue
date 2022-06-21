@@ -1,6 +1,6 @@
 <template>
   <fieldset style="width: 90%; margin-bottom: 300px">
-    <legend>{{ formDescriptionObj.formName }}</legend>
+    <!-- <legend>{{ formDescriptionObj.formName }}</legend> -->
     <el-form
       label-width="auto"
       label-position=""
@@ -220,19 +220,17 @@ export default {
           console.log(res.data.data);
           if (res.data.errorCode == 66666) {
             ElMessage.success("获取成功");
-            this.gettenData = JSON.parse(res.data.data);
-            this.formDescriptionObj = JSON.parse(this.gettenData.template);
+            this.gettenData = JSON.parse(res.data.data.data).data;
+            this.formDescriptionObj = res.data.data;
             console.log(this.gettenData);
-            this.formObj = JSON.parse(this.formDescriptionObj.originContent);
+            this.formObj = this.res.data.data.originContent;
             console.log(this.formObj);
             var formItem;
             // console.log(JSON.parse(this.gettenData.unfinished))
-            console.log(this.gettenData.unfinished);
-            if ("unfinished" in this.gettenData) {
+            // console.log(this.gettenData.unfinished);
+            if (this.formDescriptionObj.done === 1) {
               this.firstTime = false;
-              this.formResult.content = JSON.parse(
-                this.gettenData.unfinished
-              ).data;
+              this.formResult.content = this.gettenData;
             } else {
               this.firstTime = true;
               console.log("formObj", this.formObj);
