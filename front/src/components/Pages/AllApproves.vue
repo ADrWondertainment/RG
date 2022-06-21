@@ -2,7 +2,7 @@
   <h1>审批表单</h1>
   <el-card>
     <el-table :data="returnList">
-      <el-table-column prop="sid" label="表单id" />
+      <el-table-column prop="id" label="表单id" />
       <el-table-column prop="name" label="表单名称" />
       <el-table-column
         prop="type"
@@ -191,7 +191,7 @@ export default {
       });
     },
     fillApprove(id) {
-      console.log(id)
+      // console.log(id)
       this.$router.push('/justFillForm/'+id)
     },
     viewFormResult(id) {

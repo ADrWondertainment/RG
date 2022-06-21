@@ -2,7 +2,7 @@
   <div>
     <h1>我填过的表单</h1>
     <el-table :data="objList">
-      <el-table-column prop="id" label="表单编号" />
+      <el-table-column prop="sid" label="表单编号" />
       <el-table-column prop="name" label="表单名称" />
       <el-table-column label="表单类型" :formatter="formType" />
       <el-table-column label="表单状态" :formatter="formStatus" />
@@ -108,10 +108,10 @@ export default {
     },
     toOneForm(row) {
       console.log(row);
-      this.$router.push("/justFillForm/" + row.id + "/split/yes");
+      this.$router.push("/justFillForm/" + row.sid + "/split/yes");
     },
     toContinueFill(row){
-      this.$router.push("/justFillForm/" + row.id);
+      this.$router.push("/justFillForm/" + row.sid);
     }
   },
 };
