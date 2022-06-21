@@ -64,11 +64,11 @@ public interface UserService extends IService<User> {
 
     public List<Dept> GetAllDept(Integer cid,Integer did);
 
-    //----------------------------------------------------------------------------
     public UserData GetAllData(String email);
 
     public User getUserByEmail(String email);
 
     public Result GetCuserByLevel(Integer cid);
 
+    public List<Integer> GetAllSon(Integer cid ,Integer did);
 }

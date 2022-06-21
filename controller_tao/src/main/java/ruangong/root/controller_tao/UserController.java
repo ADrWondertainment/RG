@@ -172,6 +172,28 @@ public class UserController {
         return userService.SetDept(uid, name, cid);
     }
 
+    @PostMapping("/sdeptlist")
+    public Result setdeptlist(HttpServletRequest request, @RequestBody String data){
+        HttpSession session = request.getSession();
+        Integer cid = (Integer) session.getAttribute("cid");
+        JSONObject entries = JSONUtil.parseObj(data);
+        String name = entries.get("name", String.class);
+        List<Integer> uid_list =(List<Integer>) entries.get("uid_list");
+        for (Integer uid:
+             uid_list) {
+            userService.SetDept(uid, name, cid);
+        }
+        ResultUtil.quickSet(
+                result,
+                ErrorCode.SUCCESS,
+                "更改成功",
+                null
+        );
+        return result;
+    }
+
+
+
     @PutMapping("/cdept")
     public Result createdept(HttpServletRequest request, @RequestBody String data) {
         JSONObject entries = JSONUtil.parseObj(data);
