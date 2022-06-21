@@ -5,7 +5,7 @@
       label-width="auto"
       label-position=""
       :model="formResult"
-      :disabled="!ifDone"
+      :disabled="ifDone"
     >
       <template v-for="(item, index) in formObj" :key="index">
         <!-- input -->
