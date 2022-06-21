@@ -196,10 +196,7 @@ export default {
     if (this.$route.params.FormResult) {
       console.log("查看内容");
       axios
-        .post("/api/answers/pre", {
-          sheetId: this.$route.params.FormId,
-          answers: null,
-        })
+        .get("/api/answers/one" + this.$route.params.FormId, {})
         .then((res) => {
           this.showResult = true;
           console.log(res.data);

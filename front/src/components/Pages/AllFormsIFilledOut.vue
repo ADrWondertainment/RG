@@ -12,7 +12,7 @@
             >继续填写表单</el-button
           >
           <el-button @click="toOneForm(scope.row)" v-if="scope.row.done===1"
-            >查看表单结果</el-button
+            >查看表单内容</el-button
           >
         </template>
       </el-table-column>
