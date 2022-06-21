@@ -487,6 +487,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public Result SetDept(Integer uid, String name, Integer cid) {
+        if(name == "空"){
+            UpdateWrapper<Cuser> wp = new UpdateWrapper<>();
+            wp.set("did", 0).eq("uid", uid);
+            cuserMapper.update(null, wp);
+        }
         QueryWrapper<Dept> wrapper = new QueryWrapper<>();
         wrapper.eq("name", name).eq("cid", cid);
         Dept company_result = deptMapper.selectOne(wrapper);
