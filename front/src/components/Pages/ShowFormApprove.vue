@@ -24,7 +24,7 @@
           <el-row :gutter="20" justify="space-evenly">
             <el-col :span="24">
               <el-form-item :label="item.description">
-                <el-input-number v-model="item.value"></el-input-number>
+                <el-input-number v-model="formResult.content[index].value"></el-input-number>
               </el-form-item>
             </el-col>
           </el-row>
@@ -35,7 +35,7 @@
           <el-row :gutter="20" justify="space-evenly">
             <el-col :span="24">
               <el-form-item :label="item.description">
-                <el-date-picker v-model="item.value"></el-date-picker>
+                <el-date-picker v-model="formResult.content[index].value"></el-date-picker>
               </el-form-item>
             </el-col>
           </el-row>
@@ -46,9 +46,9 @@
           <el-row :gutter="20" justify="space-evenly">
             <el-col :span="24">
               <el-form-item :label="item.description">
-                <el-radio-group v-model="item.value">
+                <el-radio-group v-model="formResult.content[index].value">
                   <el-radio
-                    v-for="(checkItem, checkItemIndex) in item.value"
+                    v-for="(checkItem, checkItemIndex) in formResult.content[index].value"
                     :key="checkItemIndex"
                     :label="checkItem"
                   ></el-radio>
@@ -61,9 +61,9 @@
         <!-- multi-check -->
         <template v-if="item.type == 'multi-check'">
           <el-form-item :label="item.description">
-            <el-checkbox-group v-model="item.value">
+            <el-checkbox-group v-model="formResult.content[index].value">
               <el-checkbox
-                v-for="(checkItem, checkItemIndex) in item.value"
+                v-for="(checkItem, checkItemIndex) in formResult.content[index].value"
                 :key="checkItemIndex"
                 :label="checkItem"
               >
@@ -77,9 +77,9 @@
           <el-row :gutter="20" justify="space-evenly">
             <el-col :span="24">
               <el-form-item :label="item.description">
-                <el-select v-model="item.value">
+                <el-select v-model="formResult.content[index].value">
                   <el-option
-                    v-for="(checkItem, checkItemIndex) in item.value"
+                    v-for="(checkItem, checkItemIndex) in formResult.content[index].value"
                     :key="checkItemIndex"
                     :label="checkItem"
                     :value="checkItem"
