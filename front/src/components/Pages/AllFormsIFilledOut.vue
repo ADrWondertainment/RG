@@ -82,7 +82,11 @@ export default {
         if (row.type === 0) {
           return "已完成";
         } else {
-          if (row.pass === 1 && (row.flow != "" || row.flow != null)) {
+          if (
+            row.pass === 1 &&
+            (row.flow != "" || row.flow != null) &&
+            row.flow != "[]"
+          ) {
             return "group" + JSON.parse(row.flow)[0] + "审核中";
           } else if (row.pass === 0) {
             return "审批拒绝";
