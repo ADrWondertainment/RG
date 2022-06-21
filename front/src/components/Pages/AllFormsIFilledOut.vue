@@ -8,8 +8,11 @@
       <el-table-column label="表单状态" :formatter="formStatus" />
       <el-table-column label="操作">
         <template #default="scope">
-          <el-button @click="toOneForm(scope.row)"
-            >查看、继续填写表单</el-button
+          <el-button @click="toContinueFill(scope.row)" v-if="scope.row.done===0"
+            >继续填写表单</el-button
+          >
+          <el-button @click="toOneForm(scope.row)" v-if="scope.row.done===1"
+            >查看表单结果</el-button
           >
         </template>
       </el-table-column>
@@ -107,6 +110,9 @@ export default {
       console.log(row);
       this.$router.push("/justFillForm/" + row.id + "/split/yes");
     },
+    toContinueFill(row){
+      this.$router.push("/justFillForm/" + row.id);
+    }
   },
 };
 </script>
