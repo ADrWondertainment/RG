@@ -9,6 +9,7 @@
             </el-col>
             <el-col :span="4">
                 <el-button
+                        v-if="levelShow"
                         style="padding: 20px"
                         title="新建部门"
                         type="primary"

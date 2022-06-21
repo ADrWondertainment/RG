@@ -16,6 +16,7 @@
             </el-col>
             <el-col :span="4">
                 <el-button
+                        v-if="levelShow"
                         style="padding: 20px"
                         title="添加人员"
                         type="primary"
@@ -24,6 +25,7 @@
                 >添加人员</el-button
                 >
                 <el-button
+                        v-if="levelShow"
                         style="padding: 20px"
                         title="新建部门"
                         type="primary"
