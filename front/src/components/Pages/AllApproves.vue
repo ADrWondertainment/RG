@@ -191,6 +191,7 @@ export default {
       });
     },
     fillApprove(id) {
+      console.log(id)
       this.$router.push('/justFillForm/'+id)
     },
     viewFormResult(id) {
