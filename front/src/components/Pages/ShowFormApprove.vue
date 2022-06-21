@@ -9,7 +9,7 @@
             <el-col :span="24">
               <el-form-item :label="item.description">
                 <el-input
-                  v-model="item.value"
+                  v-model="formResult.content[index]"
                   placeholder="请输入答案"
                   type="textarea"
                   :rows="2"
@@ -163,8 +163,12 @@ export default {
     this.formObj = JSON.parse(this.$route.params.json);
 
     this.formContent = this.formObj.originContent;
-    this.formResult = this.formObj.data.data;
+    this.formResult.content = this.formObj.data.data;
+    // let answer = this.formObj.data.data;
 
+    // for(let item in answer){
+    //   this.formResult.content.push(answer[item])
+    // }
     console.log(this.formObj);
     console.log(this.formContent);
     console.log(this.formResult);
