@@ -241,7 +241,6 @@
                 this.AddDepartVisible = false;
             },
             getDeparts() {
-                if()
               this.formInfo.splice(0,this.formInfo.length);
                 axios.post('api/users/showdept', {
                     fid: 0
