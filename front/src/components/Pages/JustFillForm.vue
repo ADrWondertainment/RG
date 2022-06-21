@@ -267,7 +267,7 @@ export default {
   },
   methods: {
     SubmitForm() {
-      if ((this, this.firstTime)) {
+      if (this.firstTime) {
         axios
           .post("/api/answers/submit", {
             sheetId: this.$route.params.FormId,
@@ -298,11 +298,32 @@ export default {
     },
     InstantSubmitForm(rule, value, callback) {
       console.log(JSON.stringify(this.formResult.content));
-      axios.post("/api/answers/save/", {
-        sheetId: this.$route.params.FormId,
-        answers: this.formResult.content,
-      });
-      // ElMessage.success("上传成功");
+      if (this.firstTime) {
+        axios.post("/api/answers/save", {
+          sheetId: this.$route.params.FormId,
+          answers: {
+            data: this.formResult.content,
+            done: this.returnToBack.done,
+            pass: this.returnToBack.pass,
+          },
+        });
+        // .then((res) => {
+        //   if (res.data.errorCode == 66666) {
+        //     ElMessage.success("上传成功");
+        //   }
+        // });
+      } else {
+        axios.post("/api/answers/save", {
+          sheetId: this.$route.params.FormId,
+          answers: this.formResult.content,
+        });
+        // .then((res) => {
+        //   if (res.data.errorCode == 66666) {
+        //     ElMessage.success("上传成功");
+        //   }
+        // });
+        // ElMessage.success("上传成功");
+      }
     },
   },
 };
