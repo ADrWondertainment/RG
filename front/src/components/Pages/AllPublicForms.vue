@@ -145,11 +145,10 @@ export default {
         size: 10,
       })
       .then((res) => {
-        console.log(res.data)
-        returnData = JSON.parse(res.data);
         if (returnData.errorCode === 66666) {
-          console.log(returnData);
-          this.returnList = JSON.parse(returnData.data);
+          for(let item in res.data.data){
+            this.returnList.push(res.data.data[item])
+          }
           console.log(this.returnList);
         }
       });
