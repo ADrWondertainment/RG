@@ -210,15 +210,12 @@ export default {
           this.showResult = true;
           console.log(res.data);
           this.formObj = res.data.data.originContent;
-          this.formResult.content = JSON.parse(res.data.data.data).data
+          this.formResult.content = JSON.parse(res.data.data.data).data;
         });
     } else {
       console.log("填写");
       axios
-        .post("/api/answers/pre", {
-          sheetId: this.$route.params.FormId,
-          answers: null,
-        })
+        .post("/api/answers/one/" + this.$route.params.FormId, {})
         .then((res) => {
           console.log(res.data.data);
           if (res.data.errorCode == 66666) {
