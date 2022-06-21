@@ -72,7 +72,6 @@ public class UserController {
             System.out.println(userData);
             HttpSessionUtil.quickSetAttribute(session, userData);
         }
-        System.out.println(userData);
         result.setData(JSONUtil.toJsonPrettyStr(userData));
         return result;
     }
@@ -141,7 +140,8 @@ public class UserController {
         String fid = JSONUtil.parseObj(did).get("did", String.class);
         HttpSession session = request.getSession();
         Integer cid = (Integer) session.getAttribute("cid");
-        return userService.ShowCuser(cid, Integer.parseInt(fid));
+        Result result = userService.ShowCuser(cid, Integer.parseInt(fid));
+        return result;
     }
 
     @PostMapping("/showbylevel")
@@ -171,6 +171,28 @@ public class UserController {
         Integer uid = entries.get("uid", Integer.TYPE);
         return userService.SetDept(uid, name, cid);
     }
+
+    @PostMapping("/sdeptlist")
+    public Result setdeptlist(HttpServletRequest request, @RequestBody String data){
+        HttpSession session = request.getSession();
+        Integer cid = (Integer) session.getAttribute("cid");
+        JSONObject entries = JSONUtil.parseObj(data);
+        String name = entries.get("name", String.class);
+        List<Integer> uid_list =(List<Integer>) entries.get("uid_list");
+        for (Integer uid:
+             uid_list) {
+            userService.SetDept(uid, name, cid);
+        }
+        ResultUtil.quickSet(
+                result,
+                ErrorCode.SUCCESS,
+                "更改成功",
+                null
+        );
+        return result;
+    }
+
+
 
     @PutMapping("/cdept")
     public Result createdept(HttpServletRequest request, @RequestBody String data) {

@@ -20,6 +20,7 @@ import ruangong.root.utils.ResultUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Transactional
@@ -360,6 +361,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         if (rid != 0) {
             userData1.setRole(roleMapper.selectById(rid).getName());
+        }else {
+            userData1.setRole("无");
         }
         return userData1;
     }
@@ -398,6 +401,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         if (ridValue != 0) {
             userData1.setRole(roleMapper.selectById(ridValue).getName());
+        }else{
+            userData1.setRole("无");
         }
         return userData1;
 
@@ -446,6 +451,32 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
+    public List<Integer> GetAllSon(Integer cid ,Integer did) {
+        List<Integer> son_list = new ArrayList<>();
+        son_list.add(did);
+        List<Integer> while_list = new ArrayList<>();
+        while_list.add(did);
+        while(true){
+            if(while_list.isEmpty()){
+                break;
+            }
+            Integer tmp_did = while_list.get(0);
+            while_list.remove(0);
+            List<Dept> tmp_depts = GetAllDept(cid, tmp_did);
+            if(tmp_depts.isEmpty()){
+                continue;
+            }
+            for (Dept tmp_dept:
+                 tmp_depts) {
+                Integer son_did = tmp_dept.getId();
+                son_list.add(son_did);
+                while_list.add(son_did);
+            }
+        }
+        return son_list;
+    }
+
+    @Override
     public Result SelectByUid(Integer uid) {
         QueryWrapper<Cuser> wrapper = new QueryWrapper<>();
         wrapper.eq("uid", uid);
@@ -487,10 +518,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public Result SetDept(Integer uid, String name, Integer cid) {
-        if(name == "空"){
+        if(Objects.equals(name, "空")){
             UpdateWrapper<Cuser> wp = new UpdateWrapper<>();
             wp.set("did", 0).eq("uid", uid);
             cuserMapper.update(null, wp);
+            ResultUtil.quickSet(
+                    result,
+                    ErrorCode.USER_SET_DEPARTMENT,
+                    "部门调整成功",
+                    1
+            );
+            return result;
         }
         QueryWrapper<Dept> wrapper = new QueryWrapper<>();
         wrapper.eq("name", name).eq("cid", cid);
@@ -596,8 +634,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (!all_dept.isEmpty()) {
             for (Integer i = 0; i < all_dept.size(); i++) {
                 Dept tmp_dept = all_dept.get(i);
-                List<CompanyUser> tmp_companyUsers = GetComanyUserByDepartment(cid, tmp_dept.getId());
-                obj.putOnce(i.toString(), JSONUtil.parseObj(tmp_dept).putOnce("num", tmp_companyUsers.size()));
+//                List<CompanyUser> tmp_companyUsers = GetComanyUserByDepartment(cid, tmp_dept.getId());
+                List<Integer> tmp_sons = GetAllSon(cid, tmp_dept.getId());
+                int tmp_count = 0;
+                for (Integer tmp_did:
+                     tmp_sons) {
+                    int size = GetComanyUserByDepartment(cid, tmp_did).size();
+                    tmp_count +=size;
+                }
+                obj.putOnce(i.toString(), JSONUtil.parseObj(tmp_dept).putOnce("num", tmp_count));
             }
 
         }
