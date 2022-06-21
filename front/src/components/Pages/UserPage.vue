@@ -91,7 +91,7 @@ export default {
   },
 
   mounted() {
-    this.userType = sessionStorage.getItem("typeId");
+    this.userType = sessionStorage.getItem("userType");
     console.log(this.userType)
     if (this.userType != null) {
       this.userTypeStr = "企业用户";
