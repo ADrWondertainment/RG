@@ -226,6 +226,7 @@ export default {
               this.formResult.content = JSON.parse(this.gettenData.unfinished);
             } else {
               this.firstTime = true;
+              console.log('formObj',this.formObj)
               for (formItem in this.formObj) {
                 // console.log(formItem);
                 // console.log(123456);
