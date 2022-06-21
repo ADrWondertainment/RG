@@ -1,6 +1,5 @@
 <template>
   <h1>我的表单</h1>
-  {{ formKind }}
   <div>
     <el-radio-group v-model="formKind" @change="selectChange">
       <el-radio-button label="all">全部表单</el-radio-button>
