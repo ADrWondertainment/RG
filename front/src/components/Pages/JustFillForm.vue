@@ -193,8 +193,10 @@ export default {
   },
   mounted() {
     // console.log(this.$route.params.FormId);
+    console.log(this.$route.params);
     if (this.$route.params.FormResult) {
       console.log("查看内容");
+      console.log(this.$route.params.FormResult);
       axios
         .get("/api/answers/one" + this.$route.params.FormId, {})
         .then((res) => {
