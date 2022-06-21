@@ -184,6 +184,11 @@ export default {
         content: [],
       },
       showResult: false,
+      returnToBack: {
+        done: 0,
+        pass: 1,
+      },
+      firstTime: false,
     };
   },
   mounted() {
@@ -195,7 +200,7 @@ export default {
           answers: null,
         })
         .then((res) => {
-          this.showResult = true
+          this.showResult = true;
           console.log(res.data);
         });
     } else {
@@ -217,8 +222,10 @@ export default {
             // console.log(JSON.parse(this.gettenData.unfinished))
             console.log(this.gettenData.unfinished);
             if ("unfinished" in this.gettenData) {
+              this.firstTime = false;
               this.formResult.content = JSON.parse(this.gettenData.unfinished);
             } else {
+              this.firstTime = true;
               for (formItem in this.formObj) {
                 // console.log(formItem);
                 // console.log(123456);
@@ -260,16 +267,33 @@ export default {
   },
   methods: {
     SubmitForm() {
-      axios
-        .post("/api/answers/submit", {
-          sheetId: this.$route.params.FormId,
-          answers: this.formResult.content,
-        })
-        .then((res) => {
-          if (res.data.errorCode == 66666) {
-            ElMessage.success("上传成功");
-          }
-        });
+      if ((this, this.firstTime)) {
+        axios
+          .post("/api/answers/submit", {
+            sheetId: this.$route.params.FormId,
+            answers: {
+              data: this.formResult.content,
+              done: this.returnToBack.done,
+              pass: this.returnToBack.pass,
+            },
+          })
+          .then((res) => {
+            if (res.data.errorCode == 66666) {
+              ElMessage.success("上传成功");
+            }
+          });
+      } else {
+        axios
+          .post("/api/answers/submit", {
+            sheetId: this.$route.params.FormId,
+            answers: this.formResult.content,
+          })
+          .then((res) => {
+            if (res.data.errorCode == 66666) {
+              ElMessage.success("上传成功");
+            }
+          });
+      }
       // ElMessage.success("上传成功");
     },
     InstantSubmitForm(rule, value, callback) {
