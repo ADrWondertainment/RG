@@ -68,7 +68,7 @@ export default {
       // let toPath = sessionStorage["targetPage"];
       // sessionStorage.clear();
       // sessionStorage["targetPage"] = toPath;
-      console.log(sessionStorage["targetPage"]);
+      // console.log(sessionStorage["targetPage"]);
       axios
         .post("api/users/login", {
           email: this.logInfo.userName,
