@@ -56,6 +56,7 @@ export default {
         "pageNum": 1,
         "size": 10
     }).then(res => {
+      console.log(res.data)
         if(res.data.errorCode === 66666){
             this.objList = JSON.parse(res.data).data
         }
