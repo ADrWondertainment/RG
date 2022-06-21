@@ -223,7 +223,7 @@ export default {
             this.gettenData = JSON.parse(res.data.data.data).data;
             this.formDescriptionObj = res.data.data;
             console.log(this.gettenData);
-            this.formObj = formDescriptionObj.originContent;
+            this.formObj = this.formDescriptionObj.originContent;
             console.log(this.formObj);
             var formItem;
             // console.log(JSON.parse(this.gettenData.unfinished))
