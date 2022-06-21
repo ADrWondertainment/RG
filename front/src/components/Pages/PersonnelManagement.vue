@@ -40,6 +40,7 @@
                     >
                     <el-button
                             size="small"
+                            v-if="levelShow"
                             @click="EditDepart(scope.$index,scope.row.id)"
                             title="编辑部门"
                             type="success"
@@ -50,6 +51,7 @@
                     <el-button
                             size="small"
                             type="danger"
+                            v-if="levelShow"
                             @click="ToDeleteDepart(scope.$index, scope.row.id)"
                             title="删除部门"
                             plain
@@ -92,6 +94,7 @@
             <el-table-column label="操作" align="center">
                 <template #default="scope">
                     <el-button
+                            v-if="levelShow"
                             size="small"
                             @click="startManageRight(scope.$index,scope.row.id)"
                             :title="this.manageButton[scope.$index]"
@@ -101,6 +104,7 @@
                     >{{this.manageButton[scope.$index]}}</el-button
                     >
                     <el-button
+                            v-if="levelShow"
                             size="small"
                             @click="startManagePosition(scope.$index,scope.row.id)"
                             :title="this.positionButton[scope.$index]"
@@ -110,6 +114,7 @@
                     >{{this.positionButton[scope.$index]}}</el-button
                     >
                     <el-button
+                            v-if="levelShow"
                             size="small"
                             @click="startMoveStaff(scope.row.id,this.did)"
                             title="移动人员"
@@ -119,6 +124,7 @@
                     >移动人员</el-button
                     >
                     <el-button
+                            v-if="levelShow"
                             size="small"
                             type="danger"
                             @click="ToDeleteStaff(scope.$index, scope.row.id)"
@@ -173,7 +179,7 @@
         components: {EditDepart, AddDepart},
         data() {
             return {
-                level:0,
+                levelShow:false,
                 did:0,
                 staffFormInfo: [],
                 formInfo: [],
@@ -225,6 +231,9 @@
         mounted() {
             this.getDeparts();
             this.getId();
+            if(sessionStorage.getItem('level') ==0){
+                this.levelShow=true;
+            }
         },
         methods: {
             closeAddDepart() {

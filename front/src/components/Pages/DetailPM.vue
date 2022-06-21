@@ -54,6 +54,7 @@
                     >进入部门</el-button
                     >
                     <el-button
+                            v-if="levelShow"
                             size="small"
                             @click="startEditDepart(scope.$index,scope.row.id,scope.row.name)"
                             title="编辑部门"
@@ -63,6 +64,7 @@
                     >编辑部门</el-button
                     >
                     <el-button
+                            v-if="levelShow"
                             size="small"
                             type="danger"
                             @click="ToDeleteDepart(scope.$index, scope.row.id)"
@@ -113,6 +115,7 @@
             <el-table-column label="操作" align="center">
                 <template #default="scope">
                     <el-button
+                            v-if="levelShow"
                             size="small"
                             @click="startManageRight(scope.$index,scope.row.id)"
                             :title="this.manageButton[scope.$index]"
@@ -122,6 +125,7 @@
                     >{{this.manageButton[scope.$index]}}</el-button
                     >
                     <el-button
+                            v-if="levelShow"
                             size="small"
                             @click="startManagePosition(scope.$index,scope.row.id)"
                             :title="this.positionButton[scope.$index]"
@@ -131,6 +135,7 @@
                     >{{this.positionButton[scope.$index]}}</el-button
                     >
                     <el-button
+                            v-if="levelShow"
                             size="small"
                             @click="startMoveStaff(scope.row.id, this.thisDepartName)"
                             title="移动人员"
@@ -140,6 +145,7 @@
                     >移动人员</el-button
                     >
                     <el-button
+                            v-if="levelShow"
                             size="small"
                             type="danger"
                             @click="ToDeleteStaff(scope.$index, scope.row.id)"
@@ -292,6 +298,7 @@
         name:'DetailPM',
         data(){
             return{
+                levelShow:false,
                 fid:[],
                 did:[],
                 thisDepartName:[],//当前部门名
@@ -905,6 +912,9 @@
         mounted(){
             // console.log(this.$route.params.id);
             this.getId();
+            if(sessionStorage.getItem('level') ==0){
+                this.levelShow=true;
+            }
 
         },
     }
