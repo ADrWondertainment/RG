@@ -100,7 +100,7 @@
       <el-col :span="24">请选择添加的成员</el-col>
     </el-row>
     <el-row>
-      <el-table :data="allMembers" @current-change="handleCurrentChange">
+      <el-table :data="availableMembers" @current-change="handleCurrentChange">
         <el-table-column property="id" label="成员工号"></el-table-column>
         <el-table-column property="email" label="成员姓名"></el-table-column>
         <el-table-column
@@ -174,7 +174,7 @@ export default {
         },
       ],
 
-      allMembers: [
+      availableMembers: [
         {
           id: 2,
           uid: 11,
@@ -226,6 +226,8 @@ export default {
           dept: "事业部",
         },
       ],
+
+      allMembers:[],
     };
   },
   methods: {
@@ -303,31 +305,31 @@ export default {
       });
     },
     getMembers() {
-      this.allMembers = [];
       axios.post("/api/users/showbylevel", {}).then((res) => {
         for (let item in res.data.data) {
           this.allMembers.push(res.data.data[item]);
         }
         // console.log(res.data);
-        // console.log(this.allMembers);
+        // console.log(this.availableMembers);
       });
     },
     deleteRedundent() {
       console.log(this.data);
-      console.log(this.allMembers);
+      console.log(this.availableMembers);
+      this.availableMembers = this.allMembers;
       // 上帝也不愿看懂这行代码
       for (let inner in this.data) {
-        for (let outer in this.allMembers) {
+        for (let outer in this.availableMembers) {
           for (let innerinner in this.data[inner].member) {
             console.log(
               this.data[inner].member[innerinner].id,
-              this.allMembers[outer].id
+              this.availableMembers[outer].id
             );
             if (
               this.data[inner].member[innerinner].id ===
-              this.allMembers[outer].id
+              this.availableMembers[outer].id
             ) {
-              this.allMembers.splice(outer, 1);
+              this.availableMembers.splice(outer, 1);
             }
           }
         }
