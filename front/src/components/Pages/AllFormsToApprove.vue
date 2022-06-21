@@ -239,7 +239,7 @@ export default {
       .then((res) => {
         if (res.data.errorCode == 66666) {
           console.log(res.data.data);
-          // this.formInfo = JSON.parse(res.data.data);
+          this.formInfo = JSON.parse(res.data.data);
           console.log(this.formInfo);
         }
       });
