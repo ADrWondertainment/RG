@@ -285,6 +285,23 @@ public class AnswerController {
 
     @GetMapping("/one/{answerId}")
     public Result getAnswerByAnswerId(@PathVariable String answerId) {
-        return answerService.selectAnswerByAnswerId(Integer.parseInt(answerId));
+        Result temp = answerService.selectAnswerByAnswerId(Integer.parseInt(answerId));
+
+        Answer answerFromData = ResultUtil.getBeanFromData(temp, Answer.class);
+        Result temp2 = sheetService.getSheetById(answerFromData.getSid());
+        Sheet sheetFromData = ResultUtil.getBeanFromData(temp2, Sheet.class);
+        Result templateById = templateService.getTemplateById(sheetFromData.getTid());
+        Template templateFromData = ResultUtil.getBeanFromData(templateById, Template.class);
+        JsonBeanTemplate jsonBeanTemplate = JSONUtil.toBean(templateFromData.getData(), JsonBeanTemplate.class);
+        JSONObject entries = JSONUtil.parseObj(jsonBeanTemplate);
+        JSONArray originContent = JSONUtil.parseArray(entries.get("originContent"));
+
+        String data = (String) temp.getData();
+        JSONObject entries1 = JSONUtil.parseObj(data);
+        entries1.putOnce("originContent", originContent);
+
+        temp.setData(entries1);
+
+        return temp;
     }
 }
