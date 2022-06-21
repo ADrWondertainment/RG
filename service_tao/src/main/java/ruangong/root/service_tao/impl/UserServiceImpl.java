@@ -549,11 +549,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public Result RemoveDept(Integer did, Integer fid) {
         UpdateWrapper<Cuser> wrap = new UpdateWrapper<>();
-        wrap.set("did", 0).eq("did", did);
+        wrap.set("did", fid).eq("did", did);
         cuserMapper.update(null, wrap);
+
+        Dept updatemessage =new Dept();
+        updatemessage.setFid(fid);
         UpdateWrapper<Dept> dwrap = new UpdateWrapper<>();
-        wrap.set("fid", fid).eq("fid", did);
-        deptMapper.update(null, dwrap);
+        dwrap.eq("fid", did);
+        deptMapper.update(updatemessage, dwrap);
         deptMapper.deleteById(did);
         ResultUtil.quickSet(
                 result,

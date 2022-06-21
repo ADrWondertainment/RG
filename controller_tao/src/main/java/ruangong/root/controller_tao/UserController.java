@@ -192,8 +192,10 @@ public class UserController {
     }
 
     @PostMapping("/ddept")
-    public Result deletedept(Integer did, @RequestBody String data) {
-        Integer fid = JSONUtil.parseObj(data).get("fid", Integer.TYPE);
+    public Result deletedept(@RequestBody String data) {
+        JSONObject entries = JSONUtil.parseObj(data);
+        Integer did = entries.get("did", Integer.TYPE);
+        Integer fid = entries.get("fid", Integer.TYPE);
         return userService.RemoveDept(did, fid);
     }
 
