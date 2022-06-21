@@ -65,9 +65,10 @@ export default {
   methods: {
     login() {
       // 后端调试时解除此段注释(林志康是傻逼)
-      let toPath = sessionStorage["targetPage"];
-      sessionStorage.clear();
-      sessionStorage["targetPage"] = toPath;
+      // let toPath = sessionStorage["targetPage"];
+      // sessionStorage.clear();
+      // sessionStorage["targetPage"] = toPath;
+      console.log(sessionStorage["targetPage"]);
       axios
         .post("api/users/login", {
           email: this.logInfo.userName,
