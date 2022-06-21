@@ -5,7 +5,7 @@
       label-width="auto"
       label-position=""
       :model="formResult"
-      :disabled="!showResult"
+      :disabled="!ifDone"
     >
       <template v-for="(item, index) in formObj" :key="index">
         <!-- input -->
@@ -194,6 +194,7 @@ export default {
         pass: 1,
       },
       firstTime: false,
+      ifDone: false,
     };
   },
   mounted() {
@@ -202,6 +203,7 @@ export default {
     if (this.$route.params.ShowResult) {
       console.log("查看内容");
       console.log(this.$route.params.ShowResult);
+      this.ifDone = true;
       axios
         .get("/api/answers/one/" + this.$route.params.FormId, {})
         .then((res) => {
