@@ -52,14 +52,20 @@ export default {
     };
   },
   mounted() {
-    axios.post('/api/sheets/answer',{
-        "pageNum": 1,
-        "size": 10
-    }).then(res => {
-        if(res.data.errorCode === 66666){
-            this.objList = JSON.parse(res.data).data
+    axios
+      .post("/api/sheets/answer", {
+        pageNum: 1,
+        size: 10,
+      })
+      .then((res) => {
+        console.log(res.data);
+        this.objList = [];
+        if (res.data.errorCode === 66666) {
+          for (let item in res.data.data) {
+            this.objList.push(res.data.data[item]);
+          }
         }
-    })
+      });
 
     // console.log(JSON.parse(this.testStr));
     // this.objList = JSON.parse(this.testStr).data;
@@ -67,16 +73,21 @@ export default {
   },
   methods: {
     formStatus(row, column, cellValue, index) {
+      console.log(row);
+      console.log(row.flow != "");
+      console.log(row.flow != null);
       if (row.done === 0) {
-        return row.status;
+        return "未完成，已暂存";
       } else {
         if (row.type === 0) {
           return "已完成";
         } else {
-          if (row.pass === 1) {
-            return "审批通过";
+          if (row.pass === 1 && (row.flow != "" || row.flow != null)) {
+            return "group" + JSON.parse(row.flow)[0] + "审核中";
+          } else if (row.pass === 0) {
+            return "审批拒绝";
           } else {
-            return row.status;
+            return "审批通过";
           }
         }
       }
@@ -90,7 +101,7 @@ export default {
     },
     toOneForm(row) {
       console.log(row);
-      this.$router.push('/justFillForm/'+ row.id +'/split/yes')
+      this.$router.push("/justFillForm/" + row.id + "/split/yes");
     },
   },
 };

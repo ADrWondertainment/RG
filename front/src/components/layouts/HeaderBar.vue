@@ -57,15 +57,17 @@ export default {
   },
   methods: {
     quitLogin() {
-      ElMessageBox("您确定要退出吗", "请确认", {
+      ElMessageBox.confirm("您确定要退出吗", "请确认", {
         confirmButtonText: "确认",
-        callback: (_) => {
-          axios.post("/api/users/logout", {}).then(() => {
-            ElMessage.warning("已退出登录");
-            this.$router.push("/login");
-            sessionStorage.clear();
-          });
-        },
+        cancelButtonText: "取消",
+      }).then(() => {
+        axios.post("/api/users/logout", {}).then(() => {
+          ElMessage.warning("已退出登录");
+          this.$router.push("/login");
+          sessionStorage.clear();
+        }).catch(() => {
+          ElMessage.success("已取消");
+        });
       });
     },
   },

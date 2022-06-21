@@ -1,8 +1,8 @@
 <template>
   <fieldset style="width: 60%; margin-bottom: 300px; margin-top: 30px">
-    <legend>{{ formObj.name }}</legend>
+    <legend>{{ formContent.name }}</legend>
     <el-form label-width="200px" label-position="top" disabled>
-      <template v-for="(item, index) in formObj.originContent" :key="index">
+      <template v-for="(item, index) in formContent" :key="index">
         <!-- input -->
         <template v-if="item.type === 'input'">
           <el-row :gutter="20" justify="space-evenly">
@@ -143,11 +143,12 @@
 
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 export default {
   data() {
     return {
       formObj: {},
+      formContent: [],
       formResult: {
         content: [],
       },
@@ -161,7 +162,12 @@ export default {
   mounted() {
     this.formObj = JSON.parse(this.$route.params.json);
 
-    this.formObj = this.formObj.data;
+    this.formContent = this.formObj.originContent;
+    this.formResult = this.formObj.data;
+
+    console.log(this.formContent);
+    console.log(this.formContent);
+    console.log(this.formResult);
     // var formItem;
     // for (formItem in this.formObj.originContent) {
     //   console.log(formItem);
@@ -229,15 +235,15 @@ export default {
     refuse() {
       this.refuseDialog = true;
     },
-    confirmPass(){
-      axios.post('url',{
-        name:this.passSignName,
-      })
+    confirmPass() {
+      axios.post("url", {
+        name: this.passSignName,
+      });
     },
-    confirmRefuse(){
-      axios.post('url',{
-        reason:this.refuseReason,
-      })
+    confirmRefuse() {
+      axios.post("url", {
+        reason: this.refuseReason,
+      });
     },
   },
 };

@@ -39,7 +39,9 @@
         </el-row>
         <el-row :gutter="20" justify="space-evenly">
           <el-col :span="24"
-            ><el-button type="info" @click="ToSignInC">企业用户注册</el-button></el-col
+            ><el-button type="info" @click="ToSignInC"
+              >企业用户注册</el-button
+            ></el-col
           >
         </el-row>
       </el-card>
@@ -49,6 +51,7 @@
 
 <script>
 import axios from "axios";
+import { ElMessage } from 'element-plus';
 export default {
   data() {
     return {
@@ -56,11 +59,13 @@ export default {
         userName: "",
         password: "",
       },
+      userInfo: null,
     };
   },
   methods: {
     login() {
-      后端调试时解除此段注释(林志康是傻逼)
+      // 后端调试时解除此段注释(林志康是傻逼)
+      sessionStorage.clear()
       axios
         .post("api/users/login", {
           email: this.logInfo.userName,
@@ -68,24 +73,36 @@ export default {
         })
         .then((res) => {
           console.log(res.data);
+          this.userInfo = JSON.parse(res.data.data);
           if (res.data.errorCode == 1 || res.data.errorCode == 10050) {
-            sessionStorage["isLogin"]=true;
-            sessionStorage["userName"]=this.logInfo.userName;
+            sessionStorage["isLogin"] = true;
+            sessionStorage["userName"] = this.logInfo.userName;
+            sessionStorage["userType"] = this.userInfo.typeId || null;
+            if (this.userInfo.typeId > 0) {
+              sessionStorage["userCompany"] = this.userInfo.company;
+              if (this.userInfo.did > 0) {
+                sessionStorage["userDid"] = this.userInfo.did;
+                sessionStorage["userDepartment"] = this.userInfo.department;
+              }
+            }
+
+            // console.log(sessionStorage["userInfo"]);
             // sessionStorage["userType"]=true;
             if (sessionStorage.getItem("targetPage") === null) {
-              console.log(111)
+              console.log(111);
               this.$router.push({
                 name: "UserInfo",
               });
             } else {
-              console.log(222)
+              console.log(222);
               this.$router.push({
                 path: sessionStorage["targetPage"],
               });
             }
+          }else{
+            ElMessage("登陆失败，请检查密码正确性")
           }
         });
-
 
       // 前端调试时解除此段注释
       // sessionStorage["isLogin"] = true;
@@ -100,13 +117,11 @@ export default {
       //     path: sessionStorage["targetPage"],
       //   });
       // }
-
-
     },
     ToSignIn() {
       this.$router.push("/signIn");
     },
-    ToSignInC(){
+    ToSignInC() {
       this.$router.push("/signInC");
     },
   },

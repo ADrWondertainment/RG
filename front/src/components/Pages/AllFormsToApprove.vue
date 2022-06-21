@@ -10,13 +10,13 @@
       <el-table :data="formInfo" style="width: 100%">
         <el-table-column
           prop="id"
-          label="模板编号"
+          label="表单编号"
           width="180"
           align="center"
         />
         <el-table-column
           prop="name"
-          label="模板名称"
+          label="表单名称"
           width="180"
           align="center"
         />
@@ -233,25 +233,25 @@ export default {
 
   mounted() {
     // console.log(111111);
-    axios
-      .post("/api/sheets/pass/show", {
-        sheetId: 18,
-        pageIndex: 1,
-        size: 4,
-        mode: 0,
-      })
-      .then((res) => {
-        if (res.data.errorCode == 66666) {
-          console.log(res.data.data);
-          this.formInfo = JSON.parse(res.data.data);
-          console.log(this.formInfo);
+    axios.post("/api/sheets/pass/show", {}).then((res) => {
+      this.formInfo = [];
+      if (res.data.errorCode == 66666) {
+        console.log(res.data.data);
+        for (let item in res.data.data) {
+          this.formInfo.push(res.data.data[item]);
         }
-      });
+        console.log(this.formInfo);
+        for (let item in this.formInfo) {
+          this.formInfo[item].data = JSON.parse(this.formInfo[item].data);
+        }
+        console.log(this.formInfo);
+      }
+    });
 
     // console.log(this.testStr)
     // console.log(JSON.parse(this.test2))
     // console.log(JSON.parse(this.testStr))
-    
+
     // testStr符合正确格式
     // this.formInfo = JSON.parse(this.testStr);
     // console.log(this.formInfo)
@@ -315,18 +315,20 @@ export default {
       this.drawer = false;
     },
     confirmClick() {
-      axios.post("url",{
-        tid:this.sheetDescription.tid,
-        did:this.sheetDescription.tid,
-        name:this.sheetDescription.name,
-        description:this.sheetDescription.description,
-        start:this.sheetDescription.start,
-        end:this.sheetDescription.end,
-      }).then(res => {
-        if(res.data.errorCode == 66666){
-          ElMessage.success("发布成功")
-        }
-      });
+      axios
+        .post("url", {
+          tid: this.sheetDescription.tid,
+          did: this.sheetDescription.tid,
+          name: this.sheetDescription.name,
+          description: this.sheetDescription.description,
+          start: this.sheetDescription.start,
+          end: this.sheetDescription.end,
+        })
+        .then((res) => {
+          if (res.data.errorCode == 66666) {
+            ElMessage.success("发布成功");
+          }
+        });
       console.log(this.sheetDescription);
       this.drawer = false;
     },
