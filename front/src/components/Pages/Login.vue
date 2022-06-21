@@ -64,6 +64,7 @@ export default {
   methods: {
     login() {
       // 后端调试时解除此段注释(林志康是傻逼)
+      sessionStorage.clear()
       axios
         .post("api/users/login", {
           email: this.logInfo.userName,
@@ -75,7 +76,7 @@ export default {
           if (res.data.errorCode == 1 || res.data.errorCode == 10050) {
             sessionStorage["isLogin"] = true;
             sessionStorage["userName"] = this.logInfo.userName;
-            sessionStorage["userType"] = this.userInfo.typeId;
+            sessionStorage["userType"] = this.userInfo.typeId || null;
             if (this.userInfo.typeId > 0) {
               sessionStorage["userCompany"] = this.userInfo.company;
               if (this.userInfo.did > 0) {
