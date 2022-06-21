@@ -173,7 +173,7 @@
         components: {EditDepart, AddDepart},
         data() {
             return {
-              test:false,
+                level:0,
                 did:0,
                 staffFormInfo: [],
                 formInfo: [],
@@ -231,6 +231,7 @@
                 this.AddDepartVisible = false;
             },
             getDeparts() {
+                if()
               this.formInfo.splice(0,this.formInfo.length);
                 axios.post('api/users/showdept', {
                     fid: 0

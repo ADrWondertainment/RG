@@ -836,7 +836,7 @@
                     axios
                         .post("/api/users/ddept", {
                             did: id,
-                            fid: this.fid[this.fid.length-1]
+                            fid: this.did[this.did.length-1]
                         })
                         .then(() => {
                             alert("删除成功");
