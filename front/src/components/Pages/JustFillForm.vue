@@ -215,7 +215,7 @@ export default {
     } else {
       console.log("填写");
       axios
-        .post("/api/answers/one/" + this.$route.params.FormId, {})
+        .get("/api/answers/one/" + this.$route.params.FormId, {})
         .then((res) => {
           console.log(res.data.data);
           if (res.data.errorCode == 66666) {
