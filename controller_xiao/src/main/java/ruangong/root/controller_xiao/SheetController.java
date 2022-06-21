@@ -2,16 +2,13 @@ package ruangong.root.controller_xiao;
 
 
 import cn.hutool.json.JSONArray;
-import cn.hutool.json.JSONNull;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import org.springframework.web.bind.annotation.*;
 import ruangong.root.bean.*;
-import ruangong.root.bean.dataflow.Astronaut;
-import ruangong.root.check.Approve;
-import ruangong.root.check.CuserAstronaut;
-import ruangong.root.check.SpaceFederation;
-import ruangong.root.dao.AnswerMapper;
+import ruangong.root.bean.Approve;
+import ruangong.root.bean.CuserAstronaut;
+import ruangong.root.bean.SpaceFederation;
 import ruangong.root.exception.BackException;
 import ruangong.root.exception.ErrorCode;
 import ruangong.root.service_tao.UserService;

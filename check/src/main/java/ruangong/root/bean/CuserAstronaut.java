@@ -1,14 +1,16 @@
-package ruangong.root.check;
+package ruangong.root.bean;
 
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import ruangong.root.bean.dataflow.AIMDiffusionField;
 import ruangong.root.bean.dataflow.Astronaut;
 import ruangong.root.bean.dataflow.SpaceStation;
 import ruangong.root.dao.ApproveMapper;
@@ -68,8 +70,7 @@ public class CuserAstronaut extends Astronaut<Approve> {
             process(selected);
         }
         log(selected);
-        SpaceFederation centralPort = (SpaceFederation) super.centralPort;
-        centralPort.getRegisteredStation(stationBelongsTo).transmit(selected);
+        spaceFederation.getRegisteredStation(stationBelongsTo).transmit(selected);
     }
 
     @Override
@@ -80,7 +81,7 @@ public class CuserAstronaut extends Astronaut<Approve> {
         field.setContent(approve);
         Queue<Integer> sequence = field.getSequence();
         approve.setFlow(JSONUtil.toJsonStr(sequence));
-        approveMapper.update(approve, null);
+        approveMapper.updateById(approve);
     }
 
 

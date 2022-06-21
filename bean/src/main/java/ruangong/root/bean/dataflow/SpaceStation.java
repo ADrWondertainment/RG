@@ -109,6 +109,7 @@ public abstract class SpaceStation<MEMBER extends Astronaut<LOW>, LOW> extends C
         if (prayed != null) {
             if (!prayed.shoot()) {
                 recycle(prayed);
+                combinedFields.remove(temp);
                 return false;
             }
             combinedFields.remove(temp);

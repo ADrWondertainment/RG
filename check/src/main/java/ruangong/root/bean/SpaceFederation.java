@@ -1,4 +1,4 @@
-package ruangong.root.check;
+package ruangong.root.bean;
 
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -46,6 +46,8 @@ public class SpaceFederation extends SpacePort<CuserAstronaut, Approve> {
             List<Integer> members = JSONUtil.toList(station.getMember(), Integer.class);
             for (Integer temp : members) {
                 CuserAstronaut view = cuserAstronautMapper.selectOne(new QueryWrapper<CuserAstronaut>().eq("id", temp));
+                view.setApproveMapper(approveMapper);
+                view.setSpaceFederation(this);
                 registerAstronaut(view, view.getUid());
                 view.setStationBelongsTo(station.getRegisterId());
                 station.attend(view);
@@ -57,7 +59,7 @@ public class SpaceFederation extends SpacePort<CuserAstronaut, Approve> {
         loadAndAssign(init);
     }
 
-    public void loadAndAssign(List<ApproveField> init){
+    public void loadAndAssign(List<ApproveField> init) {
         load(init);
         assign();
     }

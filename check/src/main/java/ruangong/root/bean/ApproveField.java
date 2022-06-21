@@ -1,4 +1,4 @@
-package ruangong.root.check;
+package ruangong.root.bean;
 
 import cn.hutool.json.JSONUtil;
 import ruangong.root.bean.dataflow.AIMDiffusionField;

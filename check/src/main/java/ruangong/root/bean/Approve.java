@@ -1,4 +1,4 @@
-package ruangong.root.check;
+package ruangong.root.bean;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import ruangong.root.bean.Answer;
 
 
 @Data
