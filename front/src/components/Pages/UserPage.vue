@@ -93,7 +93,7 @@ export default {
   mounted() {
     this.userType = sessionStorage.getItem("typeId");
     console.log(this.userType)
-    if (typeof this.userType != "undefined") {
+    if (this.userType != null) {
       this.userTypeStr = "企业用户";
       this.userCompany = sessionStorage["userCompany"];
       if (sessionStorage["userDid"] > 0) {
