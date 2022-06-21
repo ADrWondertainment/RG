@@ -74,6 +74,8 @@ export default {
   methods: {
     formStatus(row, column, cellValue, index) {
       console.log(row);
+      console.log(row.flow != "");
+      console.log(row.flow != null);
       if (row.done === 0) {
         return "未完成，已暂存";
       } else {
