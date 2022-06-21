@@ -281,6 +281,7 @@ export default {
           .then((res) => {
             if (res.data.errorCode == 66666) {
               ElMessage.success("上传成功");
+              this.$router.push('/userInfo')
             }
           });
       } else {
@@ -292,6 +293,7 @@ export default {
           .then((res) => {
             if (res.data.errorCode == 66666) {
               ElMessage.success("上传成功");
+              this.$router.push('/userInfo')
             }
           });
       }
