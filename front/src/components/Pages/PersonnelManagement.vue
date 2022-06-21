@@ -75,12 +75,43 @@
                     label="职位"
                     width="180"
                     align="center"
+            >
+                <template v-if="showManagePosText[scope.$index]" #default="scope">
+                    <el-input  v-model="midPosition[scope.$index].role"
+                               :placeholder="midPosition[scope.$index].role"
+                    />
+                    <el-button @click="finishManagePosition(scope.$index,scope.row.id,midPosition[scope.$index].role)">确认</el-button>
+                </template>
+            </el-table-column>
+            <el-table-column
+                    prop="level"
+                    label="权限"
+                    width="180"
+                    align="center"
             />
             <el-table-column label="操作" align="center">
                 <template #default="scope">
                     <el-button
                             size="small"
-                            @click="startMoveStaff(scope.row.email,scope.row.id)"
+                            @click="startManageRight(scope.$index,scope.row.id)"
+                            :title="this.manageButton[scope.$index]"
+                            type="success"
+                            plain
+                            round
+                    >{{this.manageButton[scope.$index]}}</el-button
+                    >
+                    <el-button
+                            size="small"
+                            @click="startManagePosition(scope.$index,scope.row.id)"
+                            :title="this.positionButton[scope.$index]"
+                            type="success"
+                            plain
+                            round
+                    >{{this.positionButton[scope.$index]}}</el-button
+                    >
+                    <el-button
+                            size="small"
+                            @click="startMoveStaff(scope.row.id,this.did)"
                             title="移动人员"
                             type="success"
                             plain
@@ -109,7 +140,7 @@
                 <div>当前所在部门：{{oldDepart}}</div>
                 <div>请输入待加入的部门名称:
                 </div>
-                <el-input v-model="newDepart" placeholder="请输入待加入的部门名称" />
+                <el-input v-model="newDepart.newname" :placeholder="newDepart.newname" />
                 <el-button @click="finishMoveStaff(this.newDepart.id,this.newDepart.newname)" type="success">确认</el-button>
         </el-dialog>
     </el-card>
@@ -151,7 +182,7 @@
                 //     }
                 //
                 // ]`,
-                oldDepart:"",
+                oldDepart:"未分配",
                 newDepart:{
                     id:0,
                     newname:''
@@ -159,6 +190,8 @@
                 departs: [],
                 showManageDepart: [],
                 showMoveStaff:false,
+                showManagePosText:[],
+                midPosition:[],
                 manageButton: [],
                 showManagePosition: [],
                 positionButton: [],
@@ -218,6 +251,7 @@
                             .then(() => {
                                 alert("删除成功");
                                 this.getDeparts();
+                                this.getId();
                             }).catch(_ => {
                             alert("删除失败");
                         });
@@ -355,17 +389,96 @@
                 this.newDepart.id=id;
             },
             finishMoveStaff(id,depart){
-                axios.post('api/users/',{
-                    id:id,
-                    dept:depart
+                axios.post('api/users/sdept',{
+                    uid:id,
+                    name:depart
                 })
                 .then(_=>{
                     this.showMoveStaff=false;
                     alert("移动成功");
                     this.getId();
+                    this.getDeparts();
                 })
 
-            }
+            },
+            startManageRight(index,id){
+                var i;
+                for(i=0;i<this.staffnum;i++){
+                    if(this.showManageDepart[i].display=="block"){
+                        if(index==i)
+                            continue
+                        this.showManageDepart[i].display="none";
+                        this.manageButton[i]="管理权限";
+                    }
+                }
+                if(this.showManageDepart[index].display=="block") {
+                    this.showManageDepart[index].display = "none";
+                    this.manageButton[index]="管理权限";
+                }
+                else {
+                    this.showManageDepart[index].display = 'block';
+                    this.manageButton[index] = "取消";
+                    // console.log(this.staff);
+                }
+            },
+            finishManageRight(index,id,value){
+                this.manageButton[index]="管理权限";
+                // console.log(index);
+                // console.log(this.showManageDepart[0][index]);
+                // console.log(this.showManageDepart);
+                // console.log(index,id,value);
+                // this.staff[index].level=value;
+                axios.post("api/users/ulevel",{
+                    level:value,
+                    uid:id,
+                }).then(_=>{
+                    alert("编辑成功");
+                    this.getId();
+                }).catch(()=>{
+                    alert("改变失败");
+                })
+
+                this.showManageDepart[index].display="none";
+                // this.getStaffbyId();
+            },
+            startManagePosition(index,id){
+                var i;
+                for(i=0;i<this.staffnum;i++){
+                    if(this.showManagePosText[i].display=="block"){
+                        if(index==i)
+                            continue
+                        this.show
+                        this.positionButton[i]="管理角色";
+                    }
+                }
+                if(this.showManagePosText[index].display=="block") {
+                    this.showManagePosText[index].display = "none";
+                    this.positionButton[index]="管理角色";
+                }
+                else {
+                    this.showManagePosText[index].display = 'block';
+                    this.positionButton[index] = "取消";
+                    // console.log(this.staff);
+                }
+            },
+            finishManagePosition(index,id,value){
+                this.positionButton[index]="管理角色";
+                console.log(index);
+                // console.log(this.showManageDepart[0][index]);
+                // console.log(this.showManageDepart);
+                // console.log(index,id,value);
+                // this.staff[index].pos=value;
+                axios.post('api/users/role',{
+                    role:value,
+                    uid:id
+                }).then(_=>{
+                    alert("编辑职位成功");
+                    this.getId();
+                }).catch(()=>{
+                    alert("编译失败");
+                })
+                this.showManagePosText[index].display="none";
+            },
         }
     }
 </script>
