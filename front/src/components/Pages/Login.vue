@@ -75,6 +75,7 @@ export default {
           console.log(res.data);
           this.userInfo = JSON.parse(res.data.data);
           sessionStorage["level"] = this.userInfo.level || null;
+          console.log(this.userInfo);
           if (res.data.errorCode == 1 || res.data.errorCode == 10050) {
             sessionStorage["isLogin"] = true;
             sessionStorage["userName"] = this.logInfo.userName;
