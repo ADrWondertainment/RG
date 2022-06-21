@@ -73,19 +73,19 @@ export default {
   },
   methods: {
     formStatus(row, column, cellValue, index) {
-      console.log(row)
+      console.log(row);
       if (row.done === 0) {
         return "未完成，已暂存";
       } else {
         if (row.type === 0) {
           return "已完成";
         } else {
-          if (row.pass === 1 || row.flow==='' || row.flow===null) {
+          if (row.pass === 1 || row.flow != "" || row.flow != null) {
             return "审批通过";
-          } else if(row.pass === 0) {
-            return "审批拒绝"
+          } else if (row.pass === 0) {
+            return "审批拒绝";
           } else {
-            return 'group'+JSON.parse(row.flow)[0]+'审核中'
+            return "group" + JSON.parse(row.flow)[0] + "审核中";
           }
         }
       }
