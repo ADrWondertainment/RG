@@ -163,9 +163,9 @@ export default {
     this.formObj = JSON.parse(this.$route.params.json);
 
     this.formContent = this.formObj.originContent;
-    this.formResult = this.formObj.data;
+    this.formResult = this.formObj.data.data;
 
-    console.log(this.formContent);
+    console.log(this.formObj);
     console.log(this.formContent);
     console.log(this.formResult);
     // var formItem;
