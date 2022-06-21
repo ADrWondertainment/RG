@@ -42,7 +42,7 @@
           <el-form-item label="请选择模板类型：">
             <el-select placeholder="模板类型" v-model="form.formType">
               <el-option key="统计表" label="统计表" value="0" />
-              <el-option key="审批表" label="审批表" value="1" />
+              <el-option key="审批表" label="审批表" value="1" v-if="userLevel < 2" />
             </el-select>
           </el-form-item>
         </el-col>
@@ -500,9 +500,19 @@ export default {
           members: [{ id: 5, email: "张三三" }],
         },
       ],
+      userType: '',
+      userLevel: null,
     };
   },
   mounted() {
+    this.userType = sessionStorage.getItem("typeId");
+    console.log(this.userType);
+    if (this.userType != null) {
+      this.userType = "企业";
+      this.userLevel = sessionStorage.getItem("level");
+    } else {
+      this.userType = "普通";
+    }
     this.form.userName = sessionStorage["userName"];
     if (this.$route.params.json) {
       console.log("yes");
@@ -692,7 +702,7 @@ export default {
           axios
             .post("api/templates/modify", {
               json: this.finalForm,
-              id: this.$route.params.id
+              id: this.$route.params.id,
             })
             .then((res) => {
               console.log(res.data);
