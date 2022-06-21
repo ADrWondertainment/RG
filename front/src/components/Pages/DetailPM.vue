@@ -767,28 +767,26 @@
             this.selectedStaff=val;
         },
         confirmInsertStaff(){
-          console.log("当前选中对象",this.selectedStaff);
-          console.log("当前选中对象1",this.selectedStaff[0]);
-          console.log("当前选中id1",this.selectedStaff[0].id,"当前部门",this.thisDepartName[this.thisDepartName.length-1]);
+          // console.log("当前选中对象",this.selectedStaff);
+          // console.log("当前选中对象1",this.selectedStaff[0]);
+          // console.log("当前选中id1",this.selectedStaff[0].id,"当前部门",this.thisDepartName[this.thisDepartName.length-1]);
           // console.log("用ref选中的:",this.$refs.insertStaff.selection);
             this.$nextTick(()=>{
-                for(var i=0;i<this.selectedStaff.length;i++){
+                let user_list;
+                user_list=[];
+                for(var i=0;i<this.selectedStaff.length;i++) {
+                    user_list.push(this.selectedStaff[i].id);
+                }
                     axios.post("api/users/sdept",{
-                        uid:this.selectedStaff[i].id,
+                        uid_list:user_list,
                         name:this.thisDepartName[this.thisDepartName.length-1]
                     })
                     .then(_=>{
-                        // this.getId();
+                        this.getId();
                     })
-                }
-
             })
-          this.showInsertStaff=false;
-          this.$nextTick(()=>{
-            this.getId();
-          })
-
-          // this.selectedStaff.splice(0,this.selectedStaff.length);
+            this.showInsertStaff=false;
+            // this.getId();
         },
         startMoveStaff(id,oldname){
             this.showMoveStaff=true;
