@@ -62,8 +62,6 @@
         </el-table>
 <!--        人员表单-->
         <el-table :data="staffFormInfo" style="width: 100%" height="440">
-            <el-table-column type="selection" width="55" />
-            <el-table-column prop="id" label="编号" width="180" align="center" />
             <el-table-column
                     prop="email"
                     label="姓名"
@@ -76,11 +74,13 @@
                     width="180"
                     align="center"
             >
-                <template v-if="showManagePosText[scope.$index]" #default="scope">
+                <template  #default="scope">
                     <el-input  v-model="midPosition[scope.$index].role"
-                               :placeholder="midPosition[scope.$index].role"
+                               :disabled="midPosition[scope.$index].disabled"
                     />
-                    <el-button @click="finishManagePosition(scope.$index,scope.row.id,midPosition[scope.$index].role)">确认</el-button>
+                    <el-button @click="finishManagePosition(scope.$index,scope.row.id,midPosition[scope.$index].role)"
+                               :style="showManagePosText[scope.$index]"
+                    >确认</el-button>
                 </template>
             </el-table-column>
             <el-table-column
@@ -127,6 +127,20 @@
                             round
                     >删除人员</el-button
                     >
+<!--                    管理权限选择框-->
+                    <el-select :style="showManageDepart[scope.$index]"
+                               v-model="value"
+                               @change="finishManageRight(scope.$index,scope.row.id,value)"
+                               :clearable="false"
+                    >
+                        <!--                        <el-button @click="finishManageRight(scope.$index,scope.row.id,scope.$index.label)">确认</el-button>-->
+                        <el-option
+                                v-for="item in options"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value"
+                        />
+                    </el-select>
                 </template>
             </el-table-column>
         </el-table>
@@ -159,6 +173,7 @@
         components: {EditDepart, AddDepart},
         data() {
             return {
+              test:false,
                 did:0,
                 staffFormInfo: [],
                 formInfo: [],
@@ -183,6 +198,16 @@
                 //
                 // ]`,
                 oldDepart:"未分配",
+                options:[
+                    {
+                        value:"1",
+                        label:"1"
+                    },
+                    {
+                        value:'2',
+                        label:"2"
+                    }
+                ],
                 newDepart:{
                     id:0,
                     newname:''
@@ -352,8 +377,13 @@
                 for (i = 0; i < this.staffnum; i++) {
                     this.showManageDepart.push({"display": "none"});
                     this.manageButton.push("管理权限");
-                    this.showManagePosition.push({"display": "none"});
+                    this.showManagePosText.push({"display": "none"});
                     this.positionButton.push("管理角色");
+                    this.midPosition.push({
+                        id:this.staffFormInfo[i].id,
+                        role:this.staffFormInfo[i].role,
+                        disabled:true
+                    });
                 }
             },
             ToDeleteStaff(index, id) {
@@ -447,16 +477,20 @@
                     if(this.showManagePosText[i].display=="block"){
                         if(index==i)
                             continue
-                        this.show
+                        this.midPosition[i].disabled=true;
+                        this.showManagePosText[i].display="none";
                         this.positionButton[i]="管理角色";
                     }
                 }
                 if(this.showManagePosText[index].display=="block") {
+                    this.midPosition[index].disabled=true;
                     this.showManagePosText[index].display = "none";
                     this.positionButton[index]="管理角色";
                 }
                 else {
                     this.showManagePosText[index].display = 'block';
+                    this.midPosition[index].disabled=false;
+                    console.log("点击后的样式",this.midPosition);
                     this.positionButton[index] = "取消";
                     // console.log(this.staff);
                 }
@@ -478,6 +512,7 @@
                     alert("编译失败");
                 })
                 this.showManagePosText[index].display="none";
+                this.midPosition[index].disabled="true";
             },
         }
     }
