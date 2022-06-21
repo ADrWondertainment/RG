@@ -52,15 +52,20 @@ export default {
     };
   },
   mounted() {
-    axios.post('/api/sheets/answer',{
-        "pageNum": 1,
-        "size": 10
-    }).then(res => {
-      console.log(res.data)
-        if(res.data.errorCode === 66666){
-            this.objList = JSON.parse(res.data).data
+    axios
+      .post("/api/sheets/answer", {
+        pageNum: 1,
+        size: 10,
+      })
+      .then((res) => {
+        console.log(res.data);
+        this.objList = [];
+        if (res.data.errorCode === 66666) {
+          for (let item in res.data.data) {
+            this.objList.push(res.data.data[item]);
+          }
         }
-    })
+      });
 
     // console.log(JSON.parse(this.testStr));
     // this.objList = JSON.parse(this.testStr).data;
@@ -91,7 +96,7 @@ export default {
     },
     toOneForm(row) {
       console.log(row);
-      this.$router.push('/justFillForm/'+ row.id +'/split/yes')
+      this.$router.push("/justFillForm/" + row.id + "/split/yes");
     },
   },
 };
