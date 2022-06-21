@@ -108,10 +108,10 @@ export default {
     },
     toOneForm(row) {
       console.log(row);
-      this.$router.push("/justFillForm/" + row.sid + "/split/yes");
+      this.$router.push("/justFillForm/" + row.id + "/split/yes");
     },
     toContinueFill(row){
-      this.$router.push("/justFillForm/" + row.sid);
+      this.$router.push("/justFillForm/" + row.id);
     }
   },
 };
