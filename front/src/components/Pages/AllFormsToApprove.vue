@@ -10,13 +10,13 @@
       <el-table :data="formInfo" style="width: 100%">
         <el-table-column
           prop="id"
-          label="模板编号"
+          label="表单编号"
           width="180"
           align="center"
         />
         <el-table-column
           prop="name"
-          label="模板名称"
+          label="表单名称"
           width="180"
           align="center"
         />
