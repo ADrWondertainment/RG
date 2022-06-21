@@ -15,6 +15,4 @@ import java.util.List;
 public class JsonBeanSurveysAnswers {
     private int id;
     private List<String> value;
-
-
 }

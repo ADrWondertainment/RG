@@ -54,13 +54,13 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
     public Result insertAnswer(Answer answer, User user) {
 
 
-        if (checkAnswerTime(answer)) {
-            throw new FrontException(ErrorCode.ILLEGAL_ANSWER_TIME, "该问卷回答时间已结束");
-        }
-
-        if (!checkAnswerStatus(answer)) {
-            throw new FrontException(ErrorCode.ANSWER_ALREADY_DONE, "已提交该问卷的答案");
-        }
+//        if (checkAnswerTime(answer)) {
+//            throw new FrontException(ErrorCode.ILLEGAL_ANSWER_TIME, "该问卷回答时间已结束");
+//        }
+//
+//        if (!checkAnswerStatus(answer)) {
+//            throw new FrontException(ErrorCode.ANSWER_ALREADY_DONE, "已提交该问卷的答案");
+//        }
 
 
         boolean insert;
@@ -136,15 +136,15 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
         JSONArray recordsById = PageUtil.getPageRecordsById(uid, pageIndex, sizePerPage,
                 "uid", Answer.class, answerMapper);
 
-        assert recordsById != null;
         for (Object object : recordsById) {
             JSONObject temp = (JSONObject) object;
-            Object data = temp.get("data");
-            JSONArray objects = JSONUtil.parseArray(data);
+            JSONObject data = temp.getJSONObject("data");
+            JSONArray objects = data.getJSONArray("data");
             temp.set("data", objects);
-            Integer sid = temp.get("sid", Integer.class);
+            Integer sid = temp.getInt("sid");
             Sheet sheetFromData = ResultUtil.getBeanFromData(sheetService.getSheetById(sid), Sheet.class);
             temp.putOnce("name", sheetFromData.getName());
+            temp.putOnce("type", sheetFromData.getType());
         }
 
 
@@ -194,13 +194,13 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
     public Result saveTempAnswer(Answer answer, User user) {
 
 
-        if (checkAnswerTime(answer)) {
-            throw new FrontException(ErrorCode.ILLEGAL_ANSWER_TIME, "该问卷回答时间已结束");
-        }
-
-        if (!checkAnswerStatus(answer)) {
-            throw new FrontException(ErrorCode.ANSWER_ALREADY_DONE, "已提交该问卷的答案");
-        }
+//        if (checkAnswerTime(answer)) {
+//            throw new FrontException(ErrorCode.ILLEGAL_ANSWER_TIME, "该问卷回答时间已结束");
+//        }
+//
+//        if (!checkAnswerStatus(answer)) {
+//            throw new FrontException(ErrorCode.ANSWER_ALREADY_DONE, "已提交该问卷的答案");
+//        }
 
         boolean insert;
         int insert1 = 0;
@@ -325,7 +325,7 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
                 result,
                 ErrorCode.ALL_SET,
                 "成功找到答案",
-                answer
+                JSONUtil.toJsonPrettyStr(answer)
         );
 
         return result;

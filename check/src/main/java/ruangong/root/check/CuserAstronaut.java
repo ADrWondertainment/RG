@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import ruangong.root.bean.dataflow.Astronaut;
@@ -54,8 +55,8 @@ public class CuserAstronaut extends Astronaut<Approve> {
     public void approve(String data) {
         getWork();
         JSONObject entries = JSONUtil.parseObj(data);
-        int index = Integer.parseInt((String) entries.get("index"));
-        int pass = Integer.parseInt((String) entries.get("pass"));
+        int index = (int) entries.get("index");
+        int pass = (int) entries.get("pass");
         Approve selected = null;
         for (Approve temp : workList) {
             if (temp.getId() == index) {
@@ -65,9 +66,10 @@ public class CuserAstronaut extends Astronaut<Approve> {
         if (pass == 0) {
             assert selected != null;
             process(selected);
-            log(selected);
         }
-        spaceFederation.getRegisteredStation(stationBelongsTo).transmit(selected);
+        log(selected);
+        SpaceFederation centralPort = (SpaceFederation) super.centralPort;
+        centralPort.getRegisteredStation(stationBelongsTo).transmit(selected);
     }
 
     @Override

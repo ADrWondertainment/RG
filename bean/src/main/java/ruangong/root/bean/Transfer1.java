@@ -12,10 +12,10 @@ import java.util.List;
 @Component
 @Scope("prototype")
 @Data
-public class JsonBeanSurvey {
-    private int sheetId;
-    private Transfer1 answers;
-    private int done;
-    private int pass;
+public class Transfer1 {
+    private List<JsonBeanSurveysAnswers> data;
+    private Integer done;
+    private Integer pass;
     private String flow;
+
 }

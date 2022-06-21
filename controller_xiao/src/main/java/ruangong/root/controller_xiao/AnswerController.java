@@ -1,6 +1,7 @@
 package ruangong.root.controller_xiao;
 
 import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONNull;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import org.springframework.web.bind.annotation.*;
@@ -140,7 +141,19 @@ public class AnswerController {
     public Result collectAnswer(@RequestBody String data, HttpServletRequest httpServletRequest) {
         HttpSession session = httpServletRequest.getSession();
         Integer uid = (Integer) session.getAttribute("id");
+        JSONObject dataJson = JSONUtil.parseObj(data);
+        JSONObject answers = dataJson.getJSONObject("answers");
         Answer strToAnswer = AnswerUtil.strToAnswer(data);
+        strToAnswer.setDone(answers.getInt("done"));
+        strToAnswer.setPass(answers.getInt("pass"));
+        String flow = null;
+        Object flow1 = answers.get("flow");
+        if (flow1.equals(JSONNull.NULL)) {
+            Integer sheetId = dataJson.get("sheetId", Integer.TYPE);
+            Result sheetById = sheetService.getSheetById(sheetId);
+            flow = ResultUtil.getBeanFromData(sheetById, Sheet.class).getFlow();
+            strToAnswer.setFlow(flow);
+        }
         User userByEmail = userService.getUserByEmail((String) session.getAttribute("email"));
         strToAnswer.setUid(uid);
         result = answerService.insertAnswer(strToAnswer, userByEmail);
@@ -159,7 +172,19 @@ public class AnswerController {
     public Result saveAnswer(@RequestBody String data, HttpServletRequest httpServletRequest) {
         HttpSession session = httpServletRequest.getSession();
         Integer uid = (Integer) session.getAttribute("id");
+        JSONObject dataJson = JSONUtil.parseObj(data);
+        JSONObject answers = dataJson.getJSONObject("answers");
         Answer strToAnswer = AnswerUtil.strToAnswer(data);
+        strToAnswer.setDone(answers.getInt("done"));
+        strToAnswer.setPass(answers.getInt("pass"));
+        String flow = null;
+        Object flow1 = answers.get("flow");
+        if (flow1.equals(JSONNull.NULL)) {
+            Integer sheetId = dataJson.get("sheetId", Integer.TYPE);
+            Result sheetById = sheetService.getSheetById(sheetId);
+            flow = ResultUtil.getBeanFromData(sheetById, Sheet.class).getFlow();
+            strToAnswer.setFlow(flow);
+        }
         User userByEmail = userService.getUserByEmail((String) session.getAttribute("email"));
         strToAnswer.setUid(uid);
         result = answerService.saveTempAnswer(strToAnswer, userByEmail);

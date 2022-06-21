@@ -2,6 +2,7 @@ package ruangong.root.controller_xiao;
 
 
 import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONNull;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,7 @@ import ruangong.root.service_tao.UserService;
 import ruangong.root.service_xiao.AnswerService;
 import ruangong.root.service_xiao.SheetService;
 import ruangong.root.service_xiao.PageUtil;
+import ruangong.root.service_xiao.TemplateService;
 import ruangong.root.utils.ResultUtil;
 
 import javax.annotation.Resource;
@@ -42,6 +44,9 @@ public class SheetController {
     private SpaceFederation spaceFederation;
     @Resource
     private Result result;
+
+    @Resource
+    private TemplateService templateService;
 
     /**
      * {
@@ -146,12 +151,35 @@ public class SheetController {
         registeredAstronaut = (CuserAstronaut) spaceFederation.getRegisteredAstronaut(uid);
         registeredAstronaut.getWork();
         List<Approve> workList = registeredAstronaut.getWorkList();
+        JSONArray objects = JSONUtil.parseArray(workList);
+
+        for (int i = 0; i < workList.size(); i++) {
+            Approve temp = workList.get(i);
+
+            Result sheetById = sheetService.getSheetById(temp.getSid());
+            Sheet sheetFromData = ResultUtil.getBeanFromData(sheetById, Sheet.class);
+            String sheetName = sheetFromData.getName();
+            String sheetDescription = sheetFromData.getDescription();
+
+            Result templateById = templateService.getTemplateById(sheetFromData.getTid());
+            Template templateFromData = ResultUtil.getBeanFromData(templateById, Template.class);
+
+            JsonBeanTemplate jsonBeanTemplate = JSONUtil.toBean(templateFromData.getData(), JsonBeanTemplate.class);
+            JSONObject entries = JSONUtil.parseObj(jsonBeanTemplate);
+            JSONArray originContent = JSONUtil.parseArray(entries.get("originContent"));
+
+            JSONObject entries1 = objects.get(i, JSONObject.class).
+                    putOnce("originContent", originContent).
+                    putOnce("name", sheetName).
+                    putOnce("description", sheetDescription);
+            objects.set(i, entries1);
+        }
 
         ResultUtil.quickSet(
                 result,
                 ErrorCode.ALL_SET,
                 "找到所有待审表单",
-                workList
+                objects
         );
         return result;
 

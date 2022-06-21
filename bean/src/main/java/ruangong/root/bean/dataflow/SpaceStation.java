@@ -79,12 +79,16 @@ public abstract class SpaceStation<MEMBER extends Astronaut<LOW>, LOW> extends C
         switch (field.getStatus()) {
             case DISORIENTED:
                 centralPort.disoriented.offer(field);
+                return;
             case DAMAGED:
                 centralPort.damaged.offer(field);
+                return;
             case POWERLESS:
                 centralPort.powerless.offer(field);
+                return;
             case FINISHED:
                 centralPort.finished.offer(field);
+                return;
             case DEPRECATED:
                 centralPort.deprecated.offer(field);
         }

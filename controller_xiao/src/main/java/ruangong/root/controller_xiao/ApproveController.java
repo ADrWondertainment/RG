@@ -48,7 +48,8 @@ public class ApproveController {
 
     @PostMapping("/show")
     public Result showSubmittedApproves(HttpServletRequest httpServletRequest) {
-        Integer id = Integer.parseInt((String) httpServletRequest.getSession().getAttribute("id"));
+        HttpSession session = httpServletRequest.getSession();
+        Integer id = (Integer) session.getAttribute("id");
         Queue<AIMDiffusionField<CuserAstronaut, Approve>> finished = spaceFederation.getFinished();
 
         Queue<ApproveField> allApproves = new LinkedList<>();
@@ -121,7 +122,7 @@ public class ApproveController {
     }
 
     @PostMapping("/set")
-    public Result setGroup(@RequestBody String data){
+    public Result setGroup(@RequestBody String data) {
 
         return null;
     }
