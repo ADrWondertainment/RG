@@ -46,7 +46,7 @@
           <el-row :gutter="20" justify="space-evenly">
             <el-col :span="24">
               <el-form-item :label="item.description">
-                <el-radio-group v-model="formResult.content[index].value">
+                <el-radio-group v-model="formResult.content[index].value[0]">
                   <el-radio
                     v-for="(checkItem, checkItemIndex) in item.value"
                     :key="checkItemIndex"
@@ -77,7 +77,7 @@
           <el-row :gutter="20" justify="space-evenly">
             <el-col :span="24">
               <el-form-item :label="item.description">
-                <el-select v-model="formResult.content[index].value">
+                <el-select v-model="formResult.content[index].value[0]">
                   <el-option
                     v-for="(checkItem, checkItemIndex) in item.value"
                     :key="checkItemIndex"
