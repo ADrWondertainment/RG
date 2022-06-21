@@ -48,7 +48,7 @@
               <el-form-item :label="item.description">
                 <el-radio-group v-model="formResult.content[index].value">
                   <el-radio
-                    v-for="(checkItem, checkItemIndex) in formResult.content[index].value"
+                    v-for="(checkItem, checkItemIndex) in item.value"
                     :key="checkItemIndex"
                     :label="checkItem"
                   ></el-radio>
@@ -63,7 +63,7 @@
           <el-form-item :label="item.description">
             <el-checkbox-group v-model="formResult.content[index].value">
               <el-checkbox
-                v-for="(checkItem, checkItemIndex) in formResult.content[index].value"
+                v-for="(checkItem, checkItemIndex) in item.value"
                 :key="checkItemIndex"
                 :label="checkItem"
               >
@@ -79,7 +79,7 @@
               <el-form-item :label="item.description">
                 <el-select v-model="formResult.content[index].value">
                   <el-option
-                    v-for="(checkItem, checkItemIndex) in formResult.content[index].value"
+                    v-for="(checkItem, checkItemIndex) in item.value"
                     :key="checkItemIndex"
                     :label="checkItem"
                     :value="checkItem"
