@@ -159,6 +159,7 @@ router.beforeEach((to, from) => {
     // }
     else {
         sessionStorage["targetPage"] = to.path;
+        console.log(to.path)
         return { name: 'Login' }
     }
 
