@@ -148,6 +148,7 @@
 
 <script>
 import axios from "axios";
+import { ElMessage } from "element-plus";
 export default {
   data() {
     return {
@@ -245,16 +246,28 @@ export default {
     },
     confirmPass() {
       console.log(this.formObj.id);
-      axios.post("/api/sheets/pass/check", {
-        index: this.formObj.id,
-        pass: 1,
-      });
+      axios
+        .post("/api/sheets/pass/check", {
+          index: this.formObj.id,
+          pass: 1,
+        })
+        .then((res) => {
+          this.passDialog = false;
+          ElMessage.success("提交成功");
+          this.$router.push("/formApprove");
+        });
     },
     confirmRefuse() {
-      axios.post("/api/sheets/pass/check", {
-        index: this.formObj.id,
-        pass: 0,
-      });
+      axios
+        .post("/api/sheets/pass/check", {
+          index: this.formObj.id,
+          pass: 0,
+        })
+        .then((res) => {
+          this.refuseDialog = false;
+          ElMessage.success("提交成功");
+          this.$router.push("/formApprove");
+        });
     },
   },
 };
