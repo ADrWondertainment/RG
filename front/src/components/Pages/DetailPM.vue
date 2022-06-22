@@ -89,7 +89,7 @@
             />
             <el-table-column
                     prop="role"
-                    label="职位"
+                    label="角色"
                     width="180"
                     align="center"
             >
@@ -246,12 +246,18 @@
                         align="center"
                 >
                 </el-table-column>
-<!--                <el-table-column-->
-<!--                        prop="name"-->
-<!--                        label="姓名"-->
-<!--                        width="180"-->
-<!--                        align="center"-->
-<!--                />-->
+                <el-table-column
+                        prop="level"
+                        label="角色"
+                        width="180"
+                        align="center"
+                />
+                <el-table-column
+                        prop="level"
+                        label="权限"
+                        width="180"
+                        align="center"
+                />
             </el-table>
             <template #footer>
               <span class="dialog-footer">
