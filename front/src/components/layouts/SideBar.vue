@@ -18,7 +18,7 @@
     </el-menu-item>
     <el-menu-item index="/allApproves" v-if="userType==='企业'">
       <el-icon><edit /></el-icon>
-      <template #title>填写审批表</template>
+      <template #title>填写表单</template>
     </el-menu-item>
     <el-menu-item index="/formApprove" v-if="userType==='企业' && userLevel <= 2">
       <el-icon><edit /></el-icon>

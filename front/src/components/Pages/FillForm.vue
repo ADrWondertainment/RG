@@ -249,7 +249,7 @@ export default {
       this.$router.push('/manageFormTemplates')
     },
     InstantSubmitForm() {
-      ElMessage.success("上传成功");
+      // ElMessage.success("上传成功");
     },
   },
 };
