@@ -280,7 +280,7 @@ export default {
       console.log(this.tempVar);
       console.log(this.principal);
       this.data[this.tempVar].member.push({
-        id: this.principal.id,
+        id: this.principal.typeId,
         email: this.principal.email,
       });
       // this.tempVar.push({ id: this.principal.id, email: this.principal.email });
