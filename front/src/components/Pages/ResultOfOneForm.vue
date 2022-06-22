@@ -133,6 +133,7 @@ export default {
     let id = this.$route.params.id;
     axios.get("/api/answers/result/" + id).then((res) => {
       if (res.data.errorCode === 66666) {
+        console.log(res.data.data)
         this.formDescriptionObj = JSON.parse(res.data.data);
         this.formObj = JSON.parse(this.formDescriptionObj.originContent);
         this.formResultObj = JSON.parse(this.formDescriptionObj.content);
