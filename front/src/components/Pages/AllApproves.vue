@@ -1,5 +1,5 @@
 <template>
-  <h1>审批表单</h1>
+  <h1>填写表单</h1>
   <el-card>
     <el-table :data="returnList">
       <el-table-column prop="id" label="表单id" />
@@ -23,7 +23,7 @@
             plain
             type="info"
             @click="fillApprove(scope.row.id)"
-            >填写审批表</el-button
+            >填写表单</el-button
           >
         </template>
       </el-table-column>
