@@ -298,6 +298,7 @@ export default {
       let submitData = this.data;
       for (let item in this.data) {
         submitData[item].member = [];
+        console.log(this.data[item].member);
         if (this.data[item].member.length > 0) {
           console.log(this.data[item].member)
           for (let index in this.data[item].member) {
