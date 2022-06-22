@@ -749,7 +749,7 @@
             console.log(res.data);
             console.log(Object.keys(res.data.data).length);
             for (var i = 0; i < Object.keys(res.data.data).length; i++) {
-                if(res.data.data.level==0) {
+                if(res.data.data[i].level==0) {
                     continue
                 }else{
                     this.FstaffFormInfo.push(res.data.data[i]);
