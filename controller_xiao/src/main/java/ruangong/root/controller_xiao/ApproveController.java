@@ -141,8 +141,9 @@ public class ApproveController {
      */
     @PostMapping("/set")
     public Result setGroup(@RequestBody String data, HttpServletRequest httpServletRequest) {
-        String cid = (String) httpServletRequest.getSession().getAttribute("cid");
-        JSONArray rawArray = JSONUtil.parseArray(data);
+        Integer cid = (Integer) httpServletRequest.getSession().getAttribute("cid");
+        JSONObject raw = JSONUtil.parseObj(data);
+        JSONArray rawArray = raw.getJSONArray("submitData");
         List<GroupStation> arrayList = new ArrayList<>();
         for (int i = 0; i < rawArray.size(); i++) {
             JSONObject jsonObject = rawArray.getJSONObject(i);
@@ -151,25 +152,30 @@ public class ApproveController {
             if (id != null) {
                 groupStation.setId((Integer) id);
             }
-            groupStation.setCid(Integer.parseInt(cid));
+            groupStation.setCid(cid);
             groupStation.setLevel(1);
             Object member = jsonObject.get("member");
             if (member == null) {
                 throw new FrontException(ErrorCode.MEMBER_NULL, "group内成员不能为空");
             } else {
-                JSONArray objects = JSONUtil.parseArray((String) member);
+                JSONArray objects = (JSONArray) member;
                 if (objects.isEmpty()) {
                     throw new FrontException(ErrorCode.MEMBER_NULL, "group内成员不能为空");
                 }
             }
-            groupStation.setMember((String) member);
+            groupStation.setMember(JSONUtil.toJsonStr(member));
             arrayList.add(groupStation);
         }
 
         spaceFederation.groupInit(arrayList);
         approveService.logGroupStation(JSONUtil.parseArray(arrayList));
-
-        return null;
+        ResultUtil.quickSet(
+                result,
+                ErrorCode.ALL_SET,
+                "ok",
+                null
+        );
+        return result;
     }
 
 }
