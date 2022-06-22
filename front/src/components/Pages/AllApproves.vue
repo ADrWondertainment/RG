@@ -189,7 +189,7 @@ export default {
       });
     },
     fillApprove(id) {
-      // console.log(id)
+      console.log(id)
       this.$router.push("/justFillForm/" + id + "/split/approve");
     },
     viewFormResult(id) {
