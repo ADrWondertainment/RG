@@ -217,7 +217,7 @@ export default {
       axios
         .post("/api/answers/pre/", {
           sheetId: this.$route.params.FormId,
-          answers: null,
+          answers: {},
         })
         .then((res) => {
           console.log(res.data.data);
@@ -272,7 +272,7 @@ export default {
       axios
         .post("/api/answers/pre/", {
           sheetId: this.$route.params.FormId,
-          answers: null,
+          answers: {},
         })
         .then((res) => {
           console.log(res.data.data);
