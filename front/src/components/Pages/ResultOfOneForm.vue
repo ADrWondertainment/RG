@@ -135,8 +135,8 @@ export default {
       if (res.data.errorCode === 66666) {
         console.log(res.data.data)
         this.formDescriptionObj = JSON.parse(res.data.data);
-        this.formObj = JSON.parse(this.formDescriptionObj.originContent);
-        this.formResultObj = JSON.parse(this.formDescriptionObj.content);
+        this.formObj = this.formDescriptionObj.originContent;
+        this.formResultObj = this.formDescriptionObj.content;
         console.log('formDescriptionObj',this.formDescriptionObj);
         console.log('formObj',this.formObj);
         console.log('formResultObj',this.formResultObj);
