@@ -32,7 +32,7 @@
         <el-button @click="showJoinCompany">申请加入企业</el-button>
       </el-col>
       <el-col :span="8">
-        <el-button @click="showNameDialog">申请加入企业</el-button>
+        <el-button @click="showNameDialog">修改用户昵称</el-button>
       </el-col>
     </el-row>
   </el-card>
