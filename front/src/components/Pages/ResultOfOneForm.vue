@@ -2,7 +2,7 @@
   <h1>表单结果展示</h1>
   <!-- <div>表单名称：{{ formDescriptionObj }}</div> -->
   <el-card>
-    <el-table :data="formResultObj" stripe>
+    <el-table :data="formResultList" stripe>
       <el-table-column type="expand">
         <template #default="props">
           <el-card style="margin-left: 10%; width: 80%">
@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 export default {
   data() {
     return {
@@ -40,6 +40,7 @@ export default {
       formObj: null,
       formResultObj: null,
       formDescriptionObj: null,
+      formResultList: [],
       allValueArray: [],
       testObj: {
         id: "0",
@@ -133,13 +134,13 @@ export default {
     let id = this.$route.params.id;
     axios.get("/api/answers/result/" + id).then((res) => {
       if (res.data.errorCode === 66666) {
-        console.log(res.data.data)
+        console.log(res.data.data);
         this.formDescriptionObj = res.data.data;
         this.formObj = this.formDescriptionObj.originContent;
         this.formResultObj = this.formDescriptionObj.content;
-        console.log('formDescriptionObj',this.formDescriptionObj);
-        console.log('formObj',this.formObj);
-        console.log('formResultObj',this.formResultObj);
+        console.log("formDescriptionObj", this.formDescriptionObj);
+        console.log("formObj", this.formObj);
+        console.log("formResultObj", this.formResultObj);
       }
     });
 
@@ -154,6 +155,7 @@ export default {
     // this.Obj2Array(this.testObj);
     for (let oneFormResult of this.formResultObj) {
       console.log(oneFormResult);
+      this.formResultList.push(this.formResultObj[oneFormResult]);
       this.allValueArray.push(this.Obj2Array(oneFormResult));
     }
     console.log(this.allValueArray);
