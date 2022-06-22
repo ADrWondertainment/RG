@@ -2,7 +2,7 @@
   <h1>表单结果展示</h1>
   <!-- <div>表单名称：{{ formDescriptionObj }}</div> -->
   <el-card>
-    <el-table :data="formResultList" stripe>
+    <el-table :data="formResultObj" stripe>
       <el-table-column type="expand">
         <template #default="props">
           <el-card style="margin-left: 10%; width: 80%">
@@ -153,7 +153,7 @@ export default {
     // console.log(this.formResultObj);
     // console.log(this.allValueArray);
     // this.Obj2Array(this.testObj);
-    for (let oneFormResult of this.formResultObj) {
+    for (let oneFormResult in this.formResultObj) {
       console.log(oneFormResult);
       this.formResultList.push(this.formResultObj[oneFormResult]);
       this.allValueArray.push(this.Obj2Array(oneFormResult));
