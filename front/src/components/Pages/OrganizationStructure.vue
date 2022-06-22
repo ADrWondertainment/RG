@@ -136,7 +136,7 @@
 </template>
 
 <script >
-import { ElMessageBox } from "element-plus";
+import { ElMessage, ElMessageBox } from "element-plus";
 import axios from "axios";
 
 export default {
@@ -160,7 +160,10 @@ export default {
         {
           label: "业务部",
           id: 1,
-          member: [{ id: 1, email: "张三" },{ id: 2, email: "李四" }],
+          member: [
+            { id: 1, email: "张三" },
+            { id: 2, email: "李四" },
+          ],
         },
         {
           label: "市场分析",
@@ -227,7 +230,7 @@ export default {
         },
       ],
 
-      allMembers:[],
+      allMembers: [],
     };
   },
   methods: {
@@ -292,9 +295,26 @@ export default {
 
     // 页面提交
     submit() {
-      axios.post("/api/approves/set", {}).then((res) => {
-        console.log(res.data);
-      });
+      let submitData = this.data;
+      for (let item in this.data) {
+        submitData[item].member = [];
+        if (this.data[item].member.length > 0) {
+          for (let index in this.data[item].member) {
+            submitData[item].member.push(this.data[item].member[index].id);
+          }
+        }
+      }
+      axios
+        .post("/api/approves/set", {
+          submitData,
+        })
+        .then((res) => {
+          console.log(res.data);
+          if (res.data.errorCode === 66666) {
+            ElMessage.success("提交成功");
+            this.getOrg();
+          }
+        });
     },
     getOrg() {
       this.data = [];
