@@ -156,7 +156,7 @@ export default {
     for (let oneFormResult in this.formResultObj) {
       console.log(oneFormResult);
       this.formResultList.push(this.formResultObj[oneFormResult]);
-      this.allValueArray.push(this.Obj2Array(oneFormResult));
+      this.allValueArray.push(this.Obj2Array(this.formResultObj[oneFormResult]));
     }
     console.log(this.allValueArray);
   },
