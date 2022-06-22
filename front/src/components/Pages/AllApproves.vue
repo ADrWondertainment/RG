@@ -40,7 +40,7 @@ export default {
     return {
       formKind: "all",
       returnList: null,
-      formStatus:[],
+      formStatus: [],
       testData: `{
     "errorCode": 66666,
     "message": "查询成功",
@@ -118,8 +118,8 @@ export default {
         size: 10,
       })
       .then((res) => {
-        console.log(res.data)
-        this.returnList = res.data.data
+        console.log(res.data);
+        this.returnList = res.data.data;
         // returnData = JSON.parse(res.data);
         // if (returnData.errorCode === 66666) {
         //   console.log(returnData);
@@ -131,26 +131,24 @@ export default {
     // returnData = JSON.parse(this.testData);
     // this.returnList = returnData.data;
 
-
-    
-    for(let item in this.returnList){
-      this.formStatus.push(false)
+    for (let item in this.returnList) {
+      this.formStatus.push(false);
     }
     // console.log(this.returnList);
   },
   methods: {
-    beforeSwitch(index, row){
+    beforeSwitch(index, row) {
       // 实际上这个是处理switch（change）事件，没有before
-      console.log(row)
-      this.formStatus[index] = true
+      console.log(row);
+      this.formStatus[index] = true;
       // axios.post('url',{
 
       // }).then(res => {
       //   this.formStatus[index] = false
       // })
-      setTimeout(_ => {
-        this.formStatus[index] = false
-      },1000)
+      setTimeout((_) => {
+        this.formStatus[index] = false;
+      }, 1000);
     },
     selectChange(value) {
       console.log(value);
@@ -191,8 +189,8 @@ export default {
       });
     },
     fillApprove(id) {
-      // console.log(id)
-      this.$router.push('/justFillForm/'+ id + "/split/approve")
+      console.log(id);
+      this.$router.push("/justFillForm/" + id);
     },
     viewFormResult(id) {
       this.$router.push({
