@@ -110,7 +110,7 @@ export default {
   mounted() {
     this.userType = sessionStorage.getItem("userType");
     console.log(this.userType);
-    if (this.userType != null) {
+    if (this.userType > 0) {
       this.userTypeStr = "企业用户";
       this.userCompany = sessionStorage["userCompany"];
       if (sessionStorage["userDid"] > 0) {
