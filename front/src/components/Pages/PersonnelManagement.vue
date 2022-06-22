@@ -95,7 +95,7 @@
             <el-table-column label="操作" align="center">
                 <template #default="scope">
                     <el-button
-                            v-if="levelShow&&scope.row.level==0"
+                            v-if="levelShow&&scope.row.level!=0"
                             size="small"
                             @click="startManageRight(scope.$index,scope.row.id)"
                             :title="this.manageButton[scope.$index]"
@@ -105,7 +105,7 @@
                     >{{this.manageButton[scope.$index]}}</el-button
                     >
                     <el-button
-                            v-if="levelShow&&scope.row.level==0"
+                            v-if="levelShow&&scope.row.level!=0"
                             size="small"
                             @click="startManagePosition(scope.$index,scope.row.id)"
                             :title="this.positionButton[scope.$index]"
@@ -115,7 +115,7 @@
                     >{{this.positionButton[scope.$index]}}</el-button
                     >
                     <el-button
-                            v-if="levelShow&&scope.row.level==0"
+                            v-if="levelShow&&scope.row.level!=0"
                             size="small"
                             @click="startMoveStaff(scope.row.id,this.did)"
                             title="移动人员"
@@ -125,7 +125,7 @@
                     >移动人员</el-button
                     >
                     <el-button
-                            v-if="levelShow&&scope.row.level==0"
+                            v-if="levelShow&&scope.row.level!=0"
                             size="small"
                             type="danger"
                             @click="ToDeleteStaff(scope.$index, scope.row.id)"

@@ -793,10 +793,6 @@
           // this.formInfo=res.data.data;
         })
             .catch(()=>{
-                ElMessage({
-                    type: "info",
-                    message: "获取父组件人员失败！",
-                });
         })
       },
         insertStaff(){
