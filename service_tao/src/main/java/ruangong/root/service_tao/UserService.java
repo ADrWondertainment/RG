@@ -30,6 +30,8 @@ public interface UserService extends IService<User> {
 
     public Result changePassword(User user,String newpass);
 
+    public Result changeName(String email,String name);
+
     public Result SelectByName(String name);
 
     public Result SelectByInvite(String invite);

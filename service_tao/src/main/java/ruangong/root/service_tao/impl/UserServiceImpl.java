@@ -192,6 +192,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
+    public Result changeName(String email, String name) {
+        UpdateWrapper<User> wrap = new UpdateWrapper<>();
+        wrap.eq("email", email).set("email", name);
+        userMapper.update(null,wrap);
+        ResultUtil.quickSet(
+                result,
+                ErrorCode.USER_CHANGENAME_SUCCESS,
+                "修改名字成功",
+                1
+        );
+        return result;
+    }
+
+    @Override
     public Result SelectByName(String name) {
         QueryWrapper<Company> wrapper = new QueryWrapper<>();
         wrapper.eq("name", name);

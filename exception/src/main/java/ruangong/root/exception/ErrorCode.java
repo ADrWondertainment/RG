@@ -14,6 +14,7 @@ public class ErrorCode {
     public static final Integer USER_LOGIN_SUCCESS = 10050;
     public static final Integer USER_CHANGEPASS_FAILURE = 10060;
     public static final Integer USER_CHANGEPASS_SUCCESS = 10070;
+    public static final Integer USER_CHANGENAME_SUCCESS = 10071;
     public static final Integer USER_ILLEGAL_ACCESS = 20070;
 
     public static final Integer COMPANY_NAME_DUPLICATED = 10080;

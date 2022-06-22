@@ -101,6 +101,16 @@ public class UserController {
         return result;
     }
 
+    @PostMapping("/changename")
+    public Result changename(HttpServletRequest request,@RequestBody String data){
+        String name = JSONUtil.parseObj(data).get("name",String.class);
+        HttpSession session = request.getSession();
+        String email = (String) session.getAttribute("email");
+        result = userService.changeName(email,name);
+        session.setAttribute("email",name);
+        return result;
+    }
+
     @PostMapping("/companyregister")
     public Result companyregister(@RequestBody String data) {
         JSONObject entries = JSONUtil.parseObj(data);
