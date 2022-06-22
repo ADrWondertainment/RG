@@ -22,7 +22,7 @@
             size="small"
             plain
             type="info"
-            @click="fillApprove(scope.row.sid)"
+            @click="fillApprove(scope.row.id)"
             >填写审批表</el-button
           >
         </template>
