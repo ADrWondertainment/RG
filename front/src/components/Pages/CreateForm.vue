@@ -84,7 +84,7 @@
   </fieldset>
 
   <!-- 定义审批结构 -->
-  <fieldset style="width: 90%" v-show="form.formType === '1'">
+  <!-- <fieldset style="width: 90%" v-show="form.formType === '1'">
     <legend>定义审批流程</legend>
     <el-row :gutter="20">
       <el-button style="margin-left: 60%" @click="addFlowNode"
@@ -105,7 +105,7 @@
         </el-timeline-item>
       </el-timeline>
     </el-row>
-  </fieldset>
+  </fieldset> -->
 
   <!-- 定义表单内容 -->
   <fieldset style="width: 90%; margin-bottom: 700px">
@@ -444,12 +444,12 @@
       type="primary"
       >创建数字输入框</el-button
     >
-    <el-button @click="test" style="padding: 10px" plain type="primary"
+    <!-- <el-button @click="test" style="padding: 10px" plain type="primary"
       >检查、生成json</el-button
-    >
-    <el-button @click="ToFillForm" style="padding: 10px" plain type="primary"
+    > -->
+    <!-- <el-button @click="ToFillForm" style="padding: 10px" plain type="primary"
       >填写表单(测试)</el-button
-    >
+    > -->
     <el-button @click="uploadForm" style="padding: 10px" plain type="primary"
       >上传</el-button
     >
