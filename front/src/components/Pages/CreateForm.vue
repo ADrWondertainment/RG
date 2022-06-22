@@ -42,7 +42,7 @@
           <el-form-item label="请选择模板类型：">
             <el-select placeholder="模板类型" v-model="form.formType">
               <el-option key="统计表" label="统计表" value="0" />
-              <el-option key="审批表" label="审批表" value="1" v-if="userLevel < 2" />
+              <el-option key="审批表" label="审批表" value="1" v-if="userLevel < 2 || userType != null" />
             </el-select>
           </el-form-item>
         </el-col>
