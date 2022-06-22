@@ -214,6 +214,7 @@ export default {
         });
     } else if (this.$route.params.ShowResult === "approve") {
       console.log(this.$route.params.ShowResult);
+      console.log(this.$route.params.FormId);
       axios
         .post("/api/answers/pre/", {
           sheetId: this.$route.params.FormId,
@@ -268,7 +269,7 @@ export default {
         });
     } else {
       console.log("url填写");
-      console.log(this.$route.params.ShowResult);
+      console.log(this.$route.params.FormId);
       axios
         .post("/api/answers/pre/", {
           sheetId: this.$route.params.FormId,
