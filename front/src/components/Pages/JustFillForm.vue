@@ -224,7 +224,8 @@ export default {
           console.log(res.data.data);
           if (res.data.errorCode == 66666) {
             ElMessage.success("获取成功");
-            this.gettenData = JSON.parse(res.data.data.data).data;
+            this.gettenData = JSON.parse(res.data.data);
+            console.log(this.gettenData)
             this.formDescriptionObj = res.data.data;
             console.log(this.gettenData);
             this.formObj = this.formDescriptionObj.originContent;
