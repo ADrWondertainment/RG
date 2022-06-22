@@ -74,4 +74,5 @@ public class ErrorCode {
     public static final Integer ANSWER_ALREADY_DONE = 20200;
     public static final Integer SHEET_TYPE_ERROR = 20210;
     public static final Integer MULTIPLE_ANSWER_INSERTION_ATTEMPTS = 20220;
+    public static final Integer MEMBER_NULL = 30001;
 }

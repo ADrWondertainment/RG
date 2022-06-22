@@ -41,6 +41,13 @@ public class SpaceFederation extends SpacePort<CuserAstronaut, Approve> {
     public void init() {
         super.init();
         List<GroupStation> raw = groupStationMapper.selectList(null);
+        groupInit(raw);        //假想得到的view都是powerless的
+        List<Approve> approves = approveMapper.selectList(new QueryWrapper<Approve>().eq("pass", 1).isNotNull("flow"));
+        List<ApproveField> init = ApproveField.init(this, approves);
+        loadAndAssign(init);
+    }
+
+    public void groupInit(List<GroupStation> raw) {
         for (GroupStation station : raw) {
             super.registerStation(station, station.getId());
             List<Integer> members = JSONUtil.toList(station.getMember(), Integer.class);
@@ -53,10 +60,7 @@ public class SpaceFederation extends SpacePort<CuserAstronaut, Approve> {
                 station.attend(view);
             }
         }
-        //假想得到的view都是powerless的
-        List<Approve> approves = approveMapper.selectList(new QueryWrapper<Approve>().eq("pass", 1).isNotNull("flow"));
-        List<ApproveField> init = ApproveField.init(this, approves);
-        loadAndAssign(init);
+
     }
 
     public void loadAndAssign(List<ApproveField> init) {

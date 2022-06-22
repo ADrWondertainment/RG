@@ -8,22 +8,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ruangong.root.bean.CuserView;
-import ruangong.root.bean.GroupView;
-import ruangong.root.bean.Result;
+import ruangong.root.bean.*;
 import ruangong.root.bean.dataflow.AIMDiffusionField;
-import ruangong.root.bean.Approve;
-import ruangong.root.bean.ApproveField;
-import ruangong.root.bean.CuserAstronaut;
-import ruangong.root.bean.SpaceFederation;
+import ruangong.root.dao.AnswerMapper;
 import ruangong.root.dao.CuserViewMapper;
 import ruangong.root.dao.GroupViewMapper;
 import ruangong.root.exception.ErrorCode;
+import ruangong.root.exception.FrontException;
+import ruangong.root.service_xiao.ApproveService;
 import ruangong.root.utils.ResultUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -43,6 +41,9 @@ public class ApproveController {
 
     @Resource
     private CuserViewMapper cuserViewMapper;
+
+    @Resource
+    private ApproveService approveService;
 
     @PostMapping("/show")
     public Result showSubmittedApproves(HttpServletRequest httpServletRequest) {
@@ -119,8 +120,54 @@ public class ApproveController {
         return result;
     }
 
+    /**
+     * [
+     * {
+     * label: "业务部",
+     * id: 1,
+     * members: [{ id: 1, email: "张三" }],
+     * },
+     * {
+     * label: "市场分析",
+     * id: 2,
+     * members: [],
+     * },
+     * {
+     * label: "信息搜集",
+     * id: 3,
+     * members: [],
+     * },
+     * ]
+     */
     @PostMapping("/set")
-    public Result setGroup(@RequestBody String data) {
+    public Result setGroup(@RequestBody String data, HttpServletRequest httpServletRequest) {
+        String cid = (String) httpServletRequest.getSession().getAttribute("cid");
+        JSONArray rawArray = JSONUtil.parseArray(data);
+        List<GroupStation> arrayList = new ArrayList<>();
+        for (int i = 0; i < rawArray.size(); i++) {
+            JSONObject jsonObject = rawArray.getJSONObject(i);
+            GroupStation groupStation = new GroupStation();
+            Object id = jsonObject.get("id");
+            if (id != null) {
+                groupStation.setId((Integer) id);
+            }
+            groupStation.setCid(Integer.parseInt(cid));
+            groupStation.setLevel(1);
+            Object member = jsonObject.get("member");
+            if (member == null) {
+                throw new FrontException(ErrorCode.MEMBER_NULL, "group内成员不能为空");
+            } else {
+                JSONArray objects = JSONUtil.parseArray((String) member);
+                if (objects.isEmpty()) {
+                    throw new FrontException(ErrorCode.MEMBER_NULL, "group内成员不能为空");
+                }
+            }
+            groupStation.setMember((String) member);
+            arrayList.add(groupStation);
+        }
+
+        spaceFederation.groupInit(arrayList);
+        approveService.logGroupStation(JSONUtil.parseArray(arrayList));
 
         return null;
     }
