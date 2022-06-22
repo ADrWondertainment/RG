@@ -207,6 +207,8 @@ export default {
               ElMessage.warning("改名失败，请检查格式再重试");
             }
           });
+      } else {
+        ElMessage.warning("新名字不能为空");
       }
     },
   },
