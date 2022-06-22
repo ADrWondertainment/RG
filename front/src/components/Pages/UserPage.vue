@@ -31,6 +31,9 @@
       <el-col :span="8">
         <el-button @click="showJoinCompany">申请加入企业</el-button>
       </el-col>
+      <el-col :span="8">
+        <el-button @click="showNameDialog">申请加入企业</el-button>
+      </el-col>
     </el-row>
   </el-card>
 
@@ -65,6 +68,18 @@
       ></el-row
     >
   </el-dialog>
+
+  <el-dialog v-model="changeNameDialog" width="30%">
+    <el-row>
+      <el-col :span="8">请输入新名字</el-col>
+      <el-col :span="16"><el-input v-model="newUserName" /></el-col>
+    </el-row>
+    <el-row style="margin-top: 5px"
+      ><el-col :span="8" :offset="16"
+        ><el-button @click="submitUserName">提交</el-button></el-col
+      ></el-row
+    >
+  </el-dialog>
 </template>
 
 
@@ -75,6 +90,8 @@ export default {
   data() {
     return {
       userName: sessionStorage["userName"],
+      changeNameDialog: false,
+      newUserName: "",
       userType: 0,
       userTypeStr: "",
       userDepartment: "",
@@ -92,7 +109,7 @@ export default {
 
   mounted() {
     this.userType = sessionStorage.getItem("userType");
-    console.log(this.userType)
+    console.log(this.userType);
     if (this.userType != null) {
       this.userTypeStr = "企业用户";
       this.userCompany = sessionStorage["userCompany"];
@@ -112,6 +129,9 @@ export default {
     },
     showJoinCompany() {
       this.joinCompanyDialog = true;
+    },
+    showNameDialog() {
+      this.changeNameDialog = true;
     },
     submitCompanyId() {
       if (this.companyId != "") {
@@ -169,6 +189,24 @@ export default {
         this.password.new = "";
         this.password.validNew = "";
         ElMessage.error("两次输入的密码应该相同");
+      }
+    },
+    submitUserName() {
+      if (this.newUserName != "") {
+        axios
+          .post("/api/users/changename", {
+            name: this.newUserName,
+          })
+          .then((res) => {
+            this.showNameDialog = false;
+            if (res.data.errorCode === 10071) {
+              ElMessage.success("改名成功");
+              this.userName = this.newUserName;
+              sessionStorage["userName"] = this.newUserName;
+            } else {
+              ElMessage.warning("改名失败，请检查格式再重试");
+            }
+          });
       }
     },
   },
