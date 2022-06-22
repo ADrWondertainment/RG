@@ -80,6 +80,7 @@ export default {
           sessionStorage["level"] = this.userInfo.level;
           // console.log(sessionStorage["level"])
           console.log(this.userInfo);
+          console.log('test',null>0)
           if (res.data.errorCode == 1 || res.data.errorCode == 10050) {
             sessionStorage["isLogin"] = true;
             sessionStorage["userName"] = this.logInfo.userName;
@@ -89,7 +90,6 @@ export default {
               if (this.userInfo.did > 0) {
                 sessionStorage["userDid"] = this.userInfo.did;
                 sessionStorage["userDepartment"] = this.userInfo.department;
-                console.log('test',null>0)
               }
             }
 
