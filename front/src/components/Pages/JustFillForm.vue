@@ -202,7 +202,8 @@ export default {
     // console.log(this.$route.params);
     if (
       this.$route.params.ShowResult === "show" ||
-      this.$route.params.ShowResult === "continue"
+      this.$route.params.ShowResult === "continue" ||
+      this.$route.params.ShowResult === null
     ) {
       console.log("查看内容");
       console.log(this.$route.params.ShowResult);
