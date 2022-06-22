@@ -200,7 +200,10 @@ export default {
   mounted() {
     // console.log(this.$route.params.FormId);
     // console.log(this.$route.params);
-    if (this.$route.params.ShowResult === "show") {
+    if (
+      this.$route.params.ShowResult === "show" ||
+      this.$route.params.ShowResult === "continue"
+    ) {
       console.log("查看内容");
       console.log(this.$route.params.ShowResult);
       this.ifDone = true;
@@ -250,7 +253,7 @@ export default {
             ElMessage.error("访问出错");
           }
         });
-    } 
+    }
     // else {
     //   console.log("url填写");
     //   console.log(this.$route.params.FormId);
