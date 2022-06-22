@@ -132,17 +132,29 @@ export default {
   },
   mounted() {
     let id = this.$route.params.id;
-    axios.get("/api/answers/result/" + id).then((res) => {
-      if (res.data.errorCode === 66666) {
-        console.log(res.data.data);
-        this.formDescriptionObj = res.data.data;
-        this.formObj = this.formDescriptionObj.originContent;
-        this.formResultObj = this.formDescriptionObj.content;
-        console.log("formDescriptionObj", this.formDescriptionObj);
-        console.log("formObj", this.formObj);
-        console.log("formResultObj", this.formResultObj);
-      }
-    });
+    axios
+      .get("/api/answers/result/" + id)
+      .then((res) => {
+        if (res.data.errorCode === 66666) {
+          console.log(res.data.data);
+          this.formDescriptionObj = res.data.data;
+          this.formObj = this.formDescriptionObj.originContent;
+          this.formResultObj = this.formDescriptionObj.content;
+          console.log("formDescriptionObj", this.formDescriptionObj);
+          console.log("formObj", this.formObj);
+          console.log("formResultObj", this.formResultObj);
+        }
+      })
+      .then((_) => {
+        for (let oneFormResult in this.formResultObj) {
+          console.log(oneFormResult);
+          this.formResultList.push(this.formResultObj[oneFormResult]);
+          this.allValueArray.push(
+            this.Obj2Array(this.formResultObj[oneFormResult])
+          );
+        }
+        console.log(this.allValueArray);
+      });
 
     // this.formDescriptionObj = JSON.parse(this.testStr);
     // this.formObj = this.formDescriptionObj.data.originContent;
@@ -153,12 +165,6 @@ export default {
     // console.log(this.formResultObj);
     // console.log(this.allValueArray);
     // this.Obj2Array(this.testObj);
-    for (let oneFormResult in this.formResultObj) {
-      console.log(oneFormResult);
-      this.formResultList.push(this.formResultObj[oneFormResult]);
-      this.allValueArray.push(this.Obj2Array(this.formResultObj[oneFormResult]));
-    }
-    console.log(this.allValueArray);
   },
   methods: {
     Obj2Array(obj) {
