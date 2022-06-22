@@ -201,6 +201,7 @@ export default {
             this.showNameDialog = false;
             if (res.data.errorCode === 10071) {
               ElMessage.success("改名成功");
+              this.changeNameDialog = true;
               this.userName = this.newUserName;
               sessionStorage["userName"] = this.newUserName;
             } else {

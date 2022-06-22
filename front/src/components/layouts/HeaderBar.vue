@@ -1,6 +1,6 @@
 <template>
   <el-header height="50px">
-    <span class="top-text"> {{ userName }}，您好 </span>
+    <span class="top-text"> 尊敬的用户，您好 </span>
     <!-- <el-badge :value="200" :max="99" class="item">
       <el-button type="info" :icon="Message" circle />
     </el-badge> -->
