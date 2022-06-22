@@ -215,7 +215,10 @@ export default {
     } else if (this.$route.params.ShowResult === "approve") {
       console.log(this.$route.params.ShowResult);
       axios
-        .post("/api/answers/pre/" + this.$route.params.FormId, {})
+        .post("/api/answers/pre/", {
+          sheetId: this.$route.params.FormId,
+          answers: null,
+        })
         .then((res) => {
           console.log(res.data.data);
           if (res.data.errorCode == 66666) {
@@ -267,7 +270,10 @@ export default {
       console.log("url填写");
       console.log(this.$route.params.ShowResult);
       axios
-        .post("/api/answers/pre/" + this.$route.params.FormId, {})
+        .post("/api/answers/pre/", {
+          sheetId: this.$route.params.FormId,
+          answers: null,
+        })
         .then((res) => {
           console.log(res.data.data);
           if (res.data.errorCode == 66666) {
