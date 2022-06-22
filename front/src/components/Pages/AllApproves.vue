@@ -124,7 +124,7 @@ export default {
         // if (returnData.errorCode === 66666) {
         //   console.log(returnData);
         //   this.returnList = JSON.parse(returnData.data);
-        //   console.log(this.returnList);
+        console.log(this.returnList);
         // }
       });
 
@@ -189,8 +189,8 @@ export default {
       });
     },
     fillApprove(id) {
-      console.log(id);
-      this.$router.push("/justFillForm/" + id);
+      // console.log(id)
+      this.$router.push("/justFillForm/" + id + "/split/approve");
     },
     viewFormResult(id) {
       this.$router.push({
