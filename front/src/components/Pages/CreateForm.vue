@@ -42,7 +42,7 @@
           <el-form-item label="请选择模板类型：">
             <el-select placeholder="模板类型" v-model="form.formType">
               <el-option key="统计表" label="统计表" value="0" />
-              <el-option key="审批表" label="审批表" value="1" v-if="userLevel < 2 || userType != null" />
+              <el-option key="审批表" label="审批表" value="1" v-if="userLevel < 2 && userType == '企业'" />
             </el-select>
           </el-form-item>
         </el-col>
@@ -506,8 +506,8 @@ export default {
   },
   mounted() {
     this.userType = sessionStorage.getItem("typeId");
-    console.log('userType', this.userType)
-    console.log(this.userType);
+    // console.log('userType', this.userType)
+    // console.log(this.userType);
     if (this.userType != null) {
       this.userType = "企业";
       this.userLevel = sessionStorage.getItem("level");
