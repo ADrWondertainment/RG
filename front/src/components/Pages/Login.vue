@@ -77,18 +77,19 @@ export default {
         .then((res) => {
           console.log(res.data);
           this.userInfo = JSON.parse(res.data.data);
-          sessionStorage["level"] = this.userInfo.level || -1;
-          console.log(sessionStorage["level"])
+          sessionStorage["level"] = this.userInfo.level;
+          // console.log(sessionStorage["level"])
           console.log(this.userInfo);
           if (res.data.errorCode == 1 || res.data.errorCode == 10050) {
             sessionStorage["isLogin"] = true;
             sessionStorage["userName"] = this.logInfo.userName;
-            sessionStorage["userType"] = this.userInfo.typeId || -1;
+            sessionStorage["userType"] = this.userInfo.typeId;
             if (this.userInfo.typeId > 0) {
               sessionStorage["userCompany"] = this.userInfo.company;
               if (this.userInfo.did > 0) {
                 sessionStorage["userDid"] = this.userInfo.did;
                 sessionStorage["userDepartment"] = this.userInfo.department;
+                console.log('test',null>0)
               }
             }
 
