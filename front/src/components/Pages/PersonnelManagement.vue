@@ -95,7 +95,7 @@
             <el-table-column label="操作" align="center">
                 <template #default="scope">
                     <el-button
-                            v-if="levelShow"
+                            v-if="levelShow&&scope.row.level==0"
                             size="small"
                             @click="startManageRight(scope.$index,scope.row.id)"
                             :title="this.manageButton[scope.$index]"
@@ -105,7 +105,7 @@
                     >{{this.manageButton[scope.$index]}}</el-button
                     >
                     <el-button
-                            v-if="levelShow"
+                            v-if="levelShow&&scope.row.level==0"
                             size="small"
                             @click="startManagePosition(scope.$index,scope.row.id)"
                             :title="this.positionButton[scope.$index]"
@@ -115,7 +115,7 @@
                     >{{this.positionButton[scope.$index]}}</el-button
                     >
                     <el-button
-                            v-if="levelShow"
+                            v-if="levelShow&&scope.row.level==0"
                             size="small"
                             @click="startMoveStaff(scope.row.id,this.did)"
                             title="移动人员"
@@ -125,7 +125,7 @@
                     >移动人员</el-button
                     >
                     <el-button
-                            v-if="levelShow"
+                            v-if="levelShow&&scope.row.level==0"
                             size="small"
                             type="danger"
                             @click="ToDeleteStaff(scope.$index, scope.row.id)"
@@ -267,9 +267,12 @@
                     console.log(this.formInfo);
                     // console.log(this.departs);
                 })
-                // .catch(()=>{
-                // alert("获取部门失败");
-                // })
+                .catch(()=>{
+                    ElMessage({
+                        type: "info",
+                        message: "获取部门失败！",
+                    });
+                })
             },
             ToDeleteDepart(index, id) {
                 ElMessageBox.confirm("你确定要删除此部门吗", "注意！", {
@@ -284,11 +287,17 @@
                                 fid: 0
                             })
                             .then(() => {
-                                alert("删除成功");
+                                ElMessage({
+                                    type: "info",
+                                    message: "删除成功！",
+                                });
                                 this.getDeparts();
                                 this.getId();
                             }).catch(_ => {
-                            alert("删除失败");
+                            ElMessage({
+                                type: "info",
+                                message: "删除失败！",
+                            });
                         });
                     })
                     .catch(() => {
@@ -323,12 +332,18 @@
                     did: did,
                     dept: name
                 }).then(() => {
-                    alert("编辑成功");
+                    ElMessage({
+                        type: "info",
+                        message: "编辑成功！",
+                    });
                   this.editDepartVisible = false;
                   this.getDeparts();
                 })
                     .catch(_ => {
-                        alert("编辑失败");
+                        ElMessage({
+                            type: "info",
+                            message: "编辑失败！",
+                        });
                     })
                 // this.formInfo[index].name=name
 
@@ -377,9 +392,12 @@
                     this.beforeenter();
                     // this.formInfo=res.data.data;
                 })
-                //     .catch(()=>{
-                //     alert("获取部门人员失败")
-                // })
+                    .catch(()=>{
+                        ElMessage({
+                            type: "info",
+                            message: "获取部门人员失败！",
+                        });
+                })
             },
             beforeenter() {
                 this.staffnum = this.staffFormInfo.length;
@@ -408,11 +426,19 @@
                                 id:id
                             })
                             .then(() => {
-                                alert("删除成功");
+                                ElMessage({
+                                    type: "info",
+                                    message: "删除成功！",
+                                });
                                 this.getId();
                                 // this.formInfo=JSON.parse(this.staff);
                                 // this.beforeenter();
+                            }).catch(_=>{
+                            ElMessage({
+                                type: "info",
+                                message: "删除失败！",
                             });
+                        });
                     })
                     .catch(() => {
                         ElMessage({
@@ -435,9 +461,17 @@
                 })
                 .then(_=>{
                     this.showMoveStaff=false;
-                    alert("移动成功");
+                    ElMessage({
+                        type: "info",
+                        message: "移动成功！",
+                    });
                     this.getId();
                     this.getDeparts();
+                }).catch(_=>{
+                    ElMessage({
+                        type: "info",
+                        message: "移动失败！",
+                    });
                 })
 
             },
@@ -472,10 +506,16 @@
                     level:value,
                     uid:id,
                 }).then(_=>{
-                    alert("编辑成功");
+                    ElMessage({
+                        type: "info",
+                        message: "编辑成功！",
+                    });
                     this.getId();
                 }).catch(()=>{
-                    alert("改变失败");
+                    ElMessage({
+                        type: "info",
+                        message: "编辑失败！",
+                    });
                 })
 
                 this.showManageDepart[index].display="none";
@@ -516,10 +556,16 @@
                     role:value,
                     uid:id
                 }).then(_=>{
-                    alert("编辑职位成功");
+                    ElMessage({
+                        type: "info",
+                        message: "编辑成功！",
+                    });
                     this.getId();
                 }).catch(()=>{
-                    alert("编译失败");
+                    ElMessage({
+                        type: "info",
+                        message: "编辑失败！",
+                    });
                 })
                 this.showManagePosText[index].display="none";
                 this.midPosition[index].disabled="true";

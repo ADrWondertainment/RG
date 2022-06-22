@@ -555,11 +555,20 @@
                             id:id
                         })
                         .then(() => {
-                            alert("删除成功");
+                            ElMessage({
+                                type: "info",
+                                message: "删除成功！",
+                            });
                             this.getId();
                             // this.formInfo=JSON.parse(this.staff);
                             // this.beforeenter();
+                        })
+                    .catch(_=>{
+                        ElMessage({
+                            type: "info",
+                            message: "删除失败！",
                         });
+                    });
                 })
                 .catch(() => {
                     ElMessage({
@@ -602,14 +611,22 @@
                     }
                     console.log(this.departFormInfo);
                     // console.log(this.departs);
+                }).catch(_=>{
+                    ElMessage({
+                        type: "info",
+                        message: "获取部门失败！",
+                    });
                 })
               this.getFatherId();
                 this.beforeenter();
                 // this.formInfo=res.data.data;
             })
-            //     .catch(()=>{
-            //     alert("获取部门人员失败")
-            // })
+                .catch(()=>{
+                    ElMessage({
+                        type: "info",
+                        message: "获取部门人员失败！",
+                    });
+            })
             // console.log("did:",this.did,"fid:",this.fid[this.fid.length-1]);
         },
         startManageRight(index,id){
@@ -643,11 +660,17 @@
                 level:value,
                 uid:id,
             }).then(_=>{
-                alert("编辑成功");
+                ElMessage({
+                    type: "info",
+                    message: "编辑成功！",
+                });
                 this.value=ref('');
                 this.getId();
             }).catch(()=>{
-                alert("改变失败");
+                ElMessage({
+                    type: "info",
+                    message: "编辑失败",
+                });
             })
 
             this.showManageDepart[index].display="none";
@@ -688,10 +711,16 @@
           role:value,
           uid:id
         }).then(_=>{
-          alert("编辑职位成功");
+            ElMessage({
+                type: "info",
+                message: "编辑职位成功！",
+            });
           this.getId();
         }).catch(()=>{
-          alert("编译失败");
+            ElMessage({
+                type: "info",
+                message: "编辑职位失败！",
+            });
         })
         this.showManagePosText[index].display="none";
         this.midPosition[index].disabled="true";
@@ -763,9 +792,12 @@
             }
           // this.formInfo=res.data.data;
         })
-        //     .catch(()=>{
-        //     alert("获取部门人员失败")
-        // })
+            .catch(()=>{
+                ElMessage({
+                    type: "info",
+                    message: "获取父组件人员失败！",
+                });
+        })
       },
         insertStaff(){
             this.showInsertStaff=true;
@@ -795,6 +827,12 @@
                     .then(_=>{
                         this.getId();
                     })
+                .catch(_=>{
+                    ElMessage({
+                        type: "info",
+                        message: "添加人员失败！",
+                    });
+                })
             })
             this.showInsertStaff=false;
             // this.getId();
@@ -812,9 +850,18 @@
             })
                 .then(_=>{
                     this.showMoveStaff=false;
-                    alert("移动成功");
+                    ElMessage({
+                        type: "info",
+                        message: "移动人员成功！",
+                    });
                     this.getId();
                 })
+            .catch(_=>{
+                ElMessage({
+                    type: "info",
+                    message: "移动人员失败！",
+                });
+            })
 
         },
         // 部门部分
@@ -835,12 +882,18 @@
             did: did,
             dept: name
           }).then(() => {
-            alert("编辑成功");
+              ElMessage({
+                  type: "info",
+                  message: "编辑成功！",
+              });
             this.showEditDepart = false;
             this.getId();
           })
               .catch(_ => {
-                alert("编辑失败");
+                  ElMessage({
+                      type: "info",
+                      message: "编辑失败！",
+                  });
               })
 
         },
@@ -857,10 +910,16 @@
                             fid: this.did[this.did.length-1]
                         })
                         .then(() => {
-                            alert("删除成功");
+                            ElMessage({
+                                type: "info",
+                                message: "删除成功!",
+                            });
                             this.getId();
                         }).catch(_ => {
-                        alert("删除失败");
+                        ElMessage({
+                            type: "info",
+                            message: "删除失败！",
+                        });
                     });
                 })
                 .catch(() => {
@@ -879,13 +938,19 @@
                 name:this.depart.name,
                 fid:this.did[this.did.length-1]
             }).then(()=>{
-                alert("新建成功");
+                ElMessage({
+                    type: "info",
+                    message: "新建成功！",
+                });
                 this.showInsertDepart=false;
                 this.getId();
             })
-            //     .catch(_=>{
-            //     alert("创建失败");
-            // });
+                .catch(_=>{
+                    ElMessage({
+                        type: "info",
+                        message: "新建失败！",
+                    });
+            });
         },
         isReserve(bool){
             if(bool){
