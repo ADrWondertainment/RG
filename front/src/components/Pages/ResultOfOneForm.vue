@@ -134,7 +134,7 @@ export default {
     axios.get("/api/answers/result/" + id).then((res) => {
       if (res.data.errorCode === 66666) {
         console.log(res.data.data)
-        this.formDescriptionObj = JSON.parse(res.data.data);
+        this.formDescriptionObj = res.data.data;
         this.formObj = this.formDescriptionObj.originContent;
         this.formResultObj = this.formDescriptionObj.content;
         console.log('formDescriptionObj',this.formDescriptionObj);
