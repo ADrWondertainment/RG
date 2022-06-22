@@ -80,7 +80,7 @@
             </el-table-column>
         </el-table>
 <!--        人员表格-->
-        <el-table :data="formInfo" style="width: 100%" height="440">a
+        <el-table :data="formInfo" style="width: 100%" height="440">
             <el-table-column
                     prop="email"
                     label="姓名"
@@ -117,7 +117,7 @@
             <el-table-column label="操作" align="center">
                 <template #default="scope">
                     <el-button
-                            v-if="levelShow"
+                            v-if="levelShow&&scope.row.level!=0"
                             size="small"
                             @click="startManageRight(scope.$index,scope.row.id)"
                             :title="this.manageButton[scope.$index]"
@@ -127,7 +127,7 @@
                     >{{this.manageButton[scope.$index]}}</el-button
                     >
                     <el-button
-                            v-if="levelShow"
+                            v-if="levelShow&&scope.row.level!=0"
                             size="small"
                             @click="startManagePosition(scope.$index,scope.row.id)"
                             :title="this.positionButton[scope.$index]"
@@ -137,7 +137,7 @@
                     >{{this.positionButton[scope.$index]}}</el-button
                     >
                     <el-button
-                            v-if="levelShow"
+                            v-if="levelShow&&scope.row.level!=0"
                             size="small"
                             @click="startMoveStaff(scope.row.id, this.thisDepartName)"
                             title="移动人员"
@@ -147,7 +147,7 @@
                     >移动人员</el-button
                     >
                     <el-button
-                            v-if="levelShow"
+                            v-if="levelShow&&scope.row.level!=0"
                             size="small"
                             type="danger"
                             @click="ToDeleteStaff(scope.$index, scope.row.id)"
@@ -638,6 +638,7 @@
                 uid:id,
             }).then(_=>{
                 alert("编辑成功");
+                this.value=ref('');
                 this.getId();
             }).catch(()=>{
                 alert("改变失败");
@@ -646,7 +647,7 @@
             this.showManageDepart[index].display="none";
             // this.getStaffbyId();
         },
-      startManagePosition(index,id){
+        startManagePosition(index,id){
         var i;
         for(i=0;i<this.staffnum;i++){
           if(this.showManagePosText[i].display=="block"){
@@ -670,7 +671,7 @@
           // console.log(this.staff);
         }
       },
-      finishManagePosition(index,id,value){
+        finishManagePosition(index,id,value){
         this.positionButton[index]="管理角色";
         console.log(index);
         // console.log(this.showManageDepart[0][index]);
@@ -748,7 +749,11 @@
             console.log(res.data);
             console.log(Object.keys(res.data.data).length);
             for (var i = 0; i < Object.keys(res.data.data).length; i++) {
-              this.FstaffFormInfo.push(res.data.data[i]);
+                if(res.data.data[i].level==0) {
+                    continue
+                }else{
+                    this.FstaffFormInfo.push(res.data.data[i]);
+                }
             }
           // this.formInfo=res.data.data;
         })
