@@ -200,7 +200,7 @@ export default {
   mounted() {
     // console.log(this.$route.params.FormId);
     // console.log(this.$route.params);
-    if (this.$route.params.ShowResult) {
+    if (this.$route.params.ShowResult === "show") {
       console.log("查看内容");
       console.log(this.$route.params.ShowResult);
       this.ifDone = true;
@@ -212,8 +212,60 @@ export default {
           this.formObj = res.data.data.originContent;
           this.formResult.content = JSON.parse(res.data.data.data).data;
         });
+    } else if (this.$route.params.ShowResult === "approve") {
+      console.log(this.$route.params.ShowResult);
+      axios
+        .get("/api/answers/pre/" + this.$route.params.FormId, {})
+        .then((res) => {
+          console.log(res.data.data);
+          if (res.data.errorCode == 66666) {
+            ElMessage.success("获取成功");
+            this.gettenData = JSON.parse(res.data.data.data).data;
+            this.formDescriptionObj = res.data.data;
+            console.log(this.gettenData);
+            this.formObj = this.formDescriptionObj.originContent;
+            console.log(this.formObj);
+            var formItem;
+            // console.log(JSON.parse(this.gettenData.unfinished))
+            // console.log(this.gettenData.unfinished);
+            if (this.formDescriptionObj.done === 1) {
+              this.firstTime = false;
+              this.formResult.content = this.gettenData;
+            } else {
+              this.firstTime = true;
+              console.log("formObj", this.formObj);
+              for (formItem in this.formObj) {
+                // console.log(formItem);
+                // console.log(123456);
+                if (
+                  this.formObj[formItem].type === "single-check" ||
+                  this.formObj[formItem].type === "pull-selector" ||
+                  this.formObj[formItem].type === "input" ||
+                  this.formObj[formItem].type === "date-selector" ||
+                  this.formObj[formItem].type === "num-input"
+                ) {
+                  this.formResult.content.push({
+                    id: formItem,
+                    value: [""],
+                  });
+                } else {
+                  this.formResult.content.push({
+                    id: formItem,
+                    value: [],
+                  });
+                }
+              }
+              console.log(this.formResult.content);
+            }
+          } else if (res.data.errorCode === 20220) {
+            ElMessage.info("您已完成过此表单的填写，请勿重复填写");
+          } else {
+            ElMessage.error("访问出错");
+          }
+        });
     } else {
-      console.log("填写");
+      console.log("url填写");
+      console.log(this.$route.params.ShowResult);
       axios
         .get("/api/answers/one/" + this.$route.params.FormId, {})
         .then((res) => {

@@ -192,7 +192,7 @@ export default {
     },
     fillApprove(id) {
       // console.log(id)
-      this.$router.push('/justFillForm/'+id)
+      this.$router.push('/justFillForm/'+ id + "/split/approve")
     },
     viewFormResult(id) {
       this.$router.push({

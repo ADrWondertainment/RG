@@ -108,7 +108,7 @@ export default {
     },
     toOneForm(row) {
       console.log(row);
-      this.$router.push("/justFillForm/" + row.id + "/split/yes");
+      this.$router.push("/justFillForm/" + row.id + "/split/show");
     },
     toContinueFill(row){
       this.$router.push("/justFillForm/" + row.id);
