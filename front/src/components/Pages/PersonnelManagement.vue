@@ -73,7 +73,7 @@
             />
             <el-table-column
                     prop="role"
-                    label="职位"
+                    label="角色"
                     width="180"
                     align="center"
             >
