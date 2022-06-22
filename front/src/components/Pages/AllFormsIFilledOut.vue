@@ -111,7 +111,7 @@ export default {
       this.$router.push("/justFillForm/" + row.id + "/split/show");
     },
     toContinueFill(row){
-      this.$router.push("/justFillForm/" + row.id);
+      this.$router.push("/justFillForm/" + row.id + "/split/continue");
     }
   },
 };
