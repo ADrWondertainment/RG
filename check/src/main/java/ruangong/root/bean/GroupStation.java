@@ -9,6 +9,9 @@ import ruangong.root.bean.Answer;
 import ruangong.root.bean.dataflow.AIMDiffusionField;
 import ruangong.root.bean.dataflow.SpaceStation;
 
+/**
+ * @author pangx
+ */
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Component

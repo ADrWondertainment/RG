@@ -8,6 +8,9 @@ import ruangong.root.exception.FrontException;
 
 import java.util.List;
 
+/**
+ * @author pangx
+ */
 public class ResultUtil {
 
 

@@ -23,10 +23,10 @@ import java.util.Queue;
 
 /**
  * @author pangx
+ * 一用Lombok就报错，不懂为什么，我猜测是因为继承了抽象类
  */
-//@EqualsAndHashCode(callSuper = true)
-//@Data
-//一用Lombok就报错，不懂为什么，我猜测是因为继承了抽象类
+
+
 @TableName(value = "cuser_view")
 @Component
 @Scope("prototype")

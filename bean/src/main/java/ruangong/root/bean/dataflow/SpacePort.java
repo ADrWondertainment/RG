@@ -6,6 +6,9 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.util.*;
 
+/**
+ * @author pangx
+ */
 @SuppressWarnings("AlibabaAbstractClassShouldStartWithAbstractNaming")
 @Data
 @Component

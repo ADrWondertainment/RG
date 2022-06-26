@@ -5,6 +5,9 @@ import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 import ruangong.root.bean.GroupStation;
 
+/**
+ * @author pangx
+ */
 @Mapper
 @Repository
 public interface GroupStationMapper extends BaseMapper<GroupStation> {

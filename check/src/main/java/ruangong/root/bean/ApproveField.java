@@ -8,6 +8,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+/**
+ * @author pangx
+ */
 public class ApproveField extends AIMDiffusionField<CuserAstronaut, Approve> {
     public static List<ApproveField> init(SpacePort<CuserAstronaut, Approve> centralPort, List<Approve> approves) {
         List<ApproveField> approveFields = new LinkedList<>();

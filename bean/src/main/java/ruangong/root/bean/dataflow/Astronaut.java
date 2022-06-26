@@ -4,6 +4,9 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+/**
+ * @author pangx
+ */
 @SuppressWarnings("AlibabaAbstractClassShouldStartWithAbstractNaming")
 @Data
 public abstract class Astronaut<LOW> implements Certification<LOW> {

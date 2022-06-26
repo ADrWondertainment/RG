@@ -8,6 +8,9 @@ import org.springframework.stereotype.Component;
 import ruangong.root.bean.dataflow.AIMDiffusionField;
 import ruangong.root.bean.dataflow.SpaceStation;
 
+/**
+ * @author pangx
+ */
 @Data
 @Component
 @Scope("prototype")

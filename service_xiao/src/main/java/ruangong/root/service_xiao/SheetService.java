@@ -69,5 +69,12 @@ public interface SheetService extends IService<Sheet> {
      */
     Result checkSheetAnswer(Integer id, Integer pass);
 
+    /**
+     * 通过公司id获得所有审批表单，以分页形式返回数据
+     * @param cid 公司id
+     * @param pageIndex 要查询的分页数据的页码
+     * @param sizePerPage 每一页多少条数据
+     * @return 返回JSONArray格式的分页数据
+     */
     JSONArray getApproveSheetsInPages(Integer cid, Integer pageIndex, Integer sizePerPage);
 }

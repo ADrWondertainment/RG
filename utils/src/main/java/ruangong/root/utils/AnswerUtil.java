@@ -6,6 +6,9 @@ import ruangong.root.bean.JsonBeanSurvey;
 import ruangong.root.exception.ErrorCode;
 import ruangong.root.exception.FrontException;
 
+/**
+ * @author pangx
+ */
 public class AnswerUtil {
 
     public static Answer jsonBeanToAnswer(JsonBeanSurvey jsonBeanSurvey) {

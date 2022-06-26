@@ -12,6 +12,9 @@ import javax.annotation.Resource;
 import java.util.Date;
 
 
+/**
+ * @author pangx
+ */
 public class TemplateUtil {
 
 

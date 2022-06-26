@@ -26,6 +26,9 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author pangx
+ */
 @Service
 @Transactional
 public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template> implements TemplateService {

@@ -45,16 +45,29 @@ public abstract class AIMDiffusionField<MEMBER extends Astronaut<LOW>, LOW> {
     }
 
     public static enum StatusCode {
-        //标识web项目启动时从数据库中提取出的待审批表或存储于group中待审的审批表
+        /**
+         * 标识web项目启动时从数据库中提取出的待审批表或存储于group中待审的审批表
+         */
         POWERLESS,
-        //标识数据即将被转送
+        /**
+         * 标识数据即将被转送
+         */
         ENERGETIC,
-        //标识数据找不到下一个转送目标点
+        /**
+         * 标识数据找不到下一个转送目标点
+         */
         DISORIENTED,
-        //标识数据损毁
+        /**
+         * 标识数据损毁
+         */
         DAMAGED,
-        //标识数据完成所有流程
+        /**
+         * 标识数据完成所有流程
+         */
         FINISHED,
+        /**
+         * 标识数据被舍弃
+         */
         DEPRECATED
     }
 

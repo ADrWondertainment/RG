@@ -9,6 +9,9 @@ import ruangong.root.service_xiao.CuserService;
 
 import javax.annotation.Resource;
 
+/**
+ * @author pangx
+ */
 @Service
 public class CuserServiceImpl implements CuserService {
 

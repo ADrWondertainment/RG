@@ -20,7 +20,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-@SuppressWarnings("AliMissingOverrideAnnotation")
+/**
+ * @author pangx
+ */
 @EqualsAndHashCode(callSuper = true)
 @Component
 @Scope("singleton")
@@ -43,7 +45,7 @@ public class SpaceFederation extends SpacePort<CuserAstronaut, Approve> {
     public void init() {
         super.init();
         List<GroupStation> raw = groupStationMapper.selectList(null);
-        groupInit(raw);        //假想得到的view都是powerless的
+        groupInit(raw);
         List<Approve> approves = approveMapper.selectList(new QueryWrapper<Approve>().eq("pass", 1).isNotNull("flow"));
         List<ApproveField> init = ApproveField.init(this, approves);
         loadAndAssign(init);
