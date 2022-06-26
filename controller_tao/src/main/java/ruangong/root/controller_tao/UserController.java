@@ -35,6 +35,11 @@ public class UserController {
     @Resource
     private Company company;
 
+    /**
+     * 注册
+     * @param data 包含了email和pass的json字符串
+     * @return data:1表示成功
+     */
     @PostMapping("/register")
     public Result reg(@RequestBody String data) {
 
@@ -77,6 +82,11 @@ public class UserController {
         return result;
     }
 
+    /**
+     * 登出
+     * @param request 后端请求session用
+     * @return errorcode=1表示成功
+     */
     @PostMapping("/logout")
     public Result logout(HttpServletRequest request) {
         HttpSession session = request.getSession();
@@ -90,6 +100,12 @@ public class UserController {
         return result;
     }
 
+    /**
+     * 改密码
+     * @param request 后端请求session用
+     * @param data 包含了oldpass和newpass的json字符串
+     * @return data:1表示成功
+     */
     @PostMapping("/changepass")
     public Result changepassword(HttpServletRequest request, @RequestBody String data) {
 
@@ -102,6 +118,12 @@ public class UserController {
         return result;
     }
 
+    /**
+     * 改名
+     * @param request 后端请求session用
+     * @param data 包含了name和email的json字符串
+     * @return data:1表示成功
+     */
     @PostMapping("/changename")
     public Result changename(HttpServletRequest request,@RequestBody String data){
         String name = JSONUtil.parseObj(data).get("name",String.class);
@@ -112,6 +134,11 @@ public class UserController {
         return result;
     }
 
+    /**
+     * 企业注册
+     * @param data 包含了company的json字符串
+     * @return data:1表示成功
+     */
     @PostMapping("/companyregister")
     public Result companyregister(@RequestBody String data) {
         JSONObject entries = JSONUtil.parseObj(data);
@@ -119,6 +146,12 @@ public class UserController {
         return userService.CompanyRegister(company);
     }
 
+    /**
+     * 用户加入企业
+     * @param request 后端请求session用
+     * @param invite 包含了invite的json字符串
+     * @return data:1表示成功
+     */
     @PostMapping("/joincompany")
     public Result joincompany(HttpServletRequest request, @RequestBody String invite) {
         String code = JSONUtil.parseObj(invite).get("invite", String.class);
@@ -132,12 +165,23 @@ public class UserController {
         return result;
     }
 
+    /**
+     * 移除企业用户
+     * @param id 包含了id的json字符串
+     * @return data:1表示成功
+     */
     @PostMapping("/rcuser")
     public Result removecuser(@RequestBody String id) {
         String uid = JSONUtil.parseObj(id).get("id", String.class);
         return userService.RemoveCompanyUser(Integer.parseInt(uid));
     }
 
+    /**
+     * 展示部门
+     * @param request 后端请求session用
+     * @param did 包含了fid的json字符串
+     * @return data:包含了dept类型的部门信息和integer类型的部门人数的json字符串
+     */
     @PostMapping("/showdept")
     public Result showdept(HttpServletRequest request, @RequestBody String did) {
         String fid = JSONUtil.parseObj(did).get("fid", String.class);
@@ -146,6 +190,12 @@ public class UserController {
         return userService.GetCompanyUserList(cid, Integer.parseInt(fid));
     }
 
+    /**
+     * 展示部门人员信息
+     * @param request 后端请求session用
+     * @param did 包含了did的json字符串
+     * @return data:CompanyUser类型的list
+     */
     @PostMapping("/showuserbydept")
     public Result showuserbydept(HttpServletRequest request, @RequestBody String did) {
         String fid = JSONUtil.parseObj(did).get("did", String.class);
@@ -155,6 +205,11 @@ public class UserController {
         return result;
     }
 
+    /**
+     * 根据level获取人员信息
+     * @param request 后端请求session用
+     * @return data:cuser类型的数据
+     */
     @PostMapping("/showbylevel")
     public Result showbylevel(HttpServletRequest request){
         HttpSession session = request.getSession();
@@ -162,7 +217,12 @@ public class UserController {
         return userService.GetCuserByLevel(cid);
     }
 
-
+    /**
+     * 更新角色
+     * @param request 后端请求session用
+     * @param data 包含了uid和role的json字符串
+     * @return data:1表示成功
+     */
     @PostMapping("/role")
     public Result updaterole(HttpServletRequest request, @RequestBody String data) {
         HttpSession session = request.getSession();
@@ -173,6 +233,12 @@ public class UserController {
         return result;
     }
 
+    /**
+     * 设置用户部门
+     * @param request 后端请求session用
+     * @param data 包含了name和uid的json字符串
+     * @return data:1表示成功
+     */
     @PostMapping("/sdept")
     public Result setdeptbyuser(HttpServletRequest request, @RequestBody String data) {
         HttpSession session = request.getSession();
@@ -183,6 +249,12 @@ public class UserController {
         return userService.SetDept(uid, name, cid);
     }
 
+    /**
+     * 批量更改用户部门
+     * @param request 后端请求session用
+     * @param data 包含了uid_list的json字符串
+     * @return errorcode=1表示成功
+     */
     @PostMapping("/sdeptlist")
     public Result setdeptlist(HttpServletRequest request, @RequestBody String data){
         HttpSession session = request.getSession();
@@ -203,8 +275,12 @@ public class UserController {
         return result;
     }
 
-
-
+    /**
+     * 创建部门
+     * @param request 后端请求session用
+     * @param data 包含了name和fid的json字符串
+     * @return data:1表示成功
+     */
     @PutMapping("/cdept")
     public Result createdept(HttpServletRequest request, @RequestBody String data) {
         JSONObject entries = JSONUtil.parseObj(data);
@@ -216,6 +292,11 @@ public class UserController {
         return result;
     }
 
+    /**
+     * 更新企业信息
+     * @param data 包含了did和dept的json字符串
+     * @return data:1表示成功
+     */
     @PostMapping("/udept")
     public Result updatedept(@RequestBody String data) {
         JSONObject entries = JSONUtil.parseObj(data);
@@ -224,6 +305,11 @@ public class UserController {
         return userService.UpdateDept(did, department);
     }
 
+    /**
+     * 删除部门
+     * @param data 包含了did和fid的json字符串
+     * @return data:1表示成功
+     */
     @PostMapping("/ddept")
     public Result deletedept(@RequestBody String data) {
         JSONObject entries = JSONUtil.parseObj(data);
@@ -232,6 +318,11 @@ public class UserController {
         return userService.RemoveDept(did, fid);
     }
 
+    /**
+     * 更新权限
+     * @param data 包含了level和uid的json字符串
+     * @return data:1表示成功
+     */
     @PostMapping("/ulevel")
     public Result updatelevel(@RequestBody String data) {
         JSONObject entries = JSONUtil.parseObj(data);
