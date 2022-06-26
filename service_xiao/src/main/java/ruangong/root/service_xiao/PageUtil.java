@@ -19,6 +19,7 @@ import java.util.HashMap;
 /**
  * @author pangx
  */
+@SuppressWarnings("AlibabaLowerCamelCaseVariableNaming")
 public class PageUtil {
 
 

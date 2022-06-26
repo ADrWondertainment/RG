@@ -246,7 +246,7 @@ SET character_set_client = @saved_cs_client;
 -- Table structure for table `groups`
 --
 
-DROP TABLE IF EXISTS `groups`;
+DROP TABLE IF EXISTS all_groups;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `groups` (
@@ -261,10 +261,10 @@ CREATE TABLE `groups` (
 -- Dumping data for table `groups`
 --
 
-LOCK TABLES `groups` WRITE;
-/*!40000 ALTER TABLE `groups` DISABLE KEYS */;
-INSERT INTO `groups` VALUES (1,1,2),(2,2,3),(3,2,4);
-/*!40000 ALTER TABLE `groups` ENABLE KEYS */;
+LOCK TABLES all_groups WRITE;
+/*!40000 ALTER TABLE all_groups DISABLE KEYS */;
+INSERT INTO all_groups VALUES (1,1,2),(2,2,3),(3,2,4);
+/*!40000 ALTER TABLE all_groups ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -422,7 +422,7 @@ UNLOCK TABLES;
 /*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `group_view` AS select `g`.`id` AS `id`,`g`.`cid` AS `cid`,`gd`.`level` AS `level`,`gd`.`member` AS `member` from (`groups` `g` join `group_details` `gd` on((`g`.`gid` = `gd`.`id`))) */;
+/*!50001 VIEW `group_view` AS select `g`.`id` AS `id`,`g`.`cid` AS `cid`,`gd`.`level` AS `level`,`gd`.`member` AS `member` from (all_groups `g` join `group_details` `gd` on((`g`.`gid` = `gd`.`id`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;

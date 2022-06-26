@@ -30,6 +30,7 @@ import java.util.List;
 /**
  * @author pangx
  */
+@SuppressWarnings("AlibabaLowerCamelCaseVariableNaming")
 @Service
 @Transactional
 public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> implements AnswerService {

@@ -12,6 +12,7 @@ import java.util.Queue;
 /**
  * @author pangx
  */
+@SuppressWarnings({"AlibabaSwitchStatement", "AlibabaAbstractClassShouldStartWithAbstractNaming"})
 @EqualsAndHashCode(callSuper = true)
 @Data
 public abstract class SpaceStation<MEMBER extends Astronaut<LOW>, LOW> extends Cathedral<MEMBER, LOW> implements Sentinel<MEMBER> {
@@ -60,7 +61,9 @@ public abstract class SpaceStation<MEMBER extends Astronaut<LOW>, LOW> extends C
         return dormitory.remove(member);
     }
 
+    @SuppressWarnings("AlibabaSwitchStatement")
     protected void receive(AIMDiffusionField<MEMBER, LOW> field) {
+        //noinspection AlibabaSwitchStatement
         switch (field.getStatus()) {
             case FINISHED:
             case DISORIENTED:

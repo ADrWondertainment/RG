@@ -9,6 +9,7 @@ import java.util.Queue;
 /**
  * @author pangx
  */
+@SuppressWarnings({"AlibabaAbstractClassShouldStartWithAbstractNaming", "AlibabaClassNamingShouldBeCamel"})
 @Data
 public abstract class AIMDiffusionField<MEMBER extends Astronaut<LOW>, LOW> {
     @TableField(exist = false)
@@ -44,7 +45,17 @@ public abstract class AIMDiffusionField<MEMBER extends Astronaut<LOW>, LOW> {
     }
 
     public static enum StatusCode {
-        POWERLESS, ENERGETIC, DISORIENTED, DAMAGED, FINISHED, DEPRECATED
+        //标识web项目启动时从数据库中提取出的待审批表或存储于group中待审的审批表
+        POWERLESS,
+        //标识数据即将被转送
+        ENERGETIC,
+        //标识数据找不到下一个转送目标点
+        DISORIENTED,
+        //标识数据损毁
+        DAMAGED,
+        //标识数据完成所有流程
+        FINISHED,
+        DEPRECATED
     }
 
 }

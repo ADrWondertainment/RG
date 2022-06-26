@@ -21,6 +21,7 @@ import java.util.Map;
 /**
  * @author tao
  */
+@SuppressWarnings("AlibabaLowerCamelCaseVariableNaming")
 @RestController
 @RequestMapping("/users")
 public class UserController {

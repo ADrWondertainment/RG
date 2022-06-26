@@ -216,7 +216,8 @@ public class AnswerController {
                     if (answerService.checkAnswerStatus(o)) {
                         continue;
                     }
-                    String data = o.getData();
+                    String data2 = o.getData();
+                    JSONArray data = JSONUtil.parseObj(data2).getJSONArray("data");
                     JSONArray content1 = JSONUtil.parseArray(data);
                     List<JsonBeanSurveysAnswers> answers = JSONUtil.toList(content1, JsonBeanSurveysAnswers.class);
                     for (int t = 0; t < length; t++) {

@@ -20,7 +20,7 @@ import java.util.List;
 @Component
 @Scope("prototype")
 @Data
-@TableName(value = "groups", autoResultMap = true)
+@TableName(value = "all_groups", autoResultMap = true)
 public class Group {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;

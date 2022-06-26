@@ -1,6 +1,7 @@
 package ruangong.root.controller_xiao;
 
 import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONNull;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -149,7 +150,7 @@ public class ApproveController {
             JSONObject jsonObject = rawArray.getJSONObject(i);
             GroupStation groupStation = new GroupStation();
             Object id = jsonObject.get("id");
-            if (id != null) {
+            if (id != JSONNull.NULL) {
                 groupStation.setId((Integer) id);
             }
             groupStation.setCid(cid);
@@ -167,8 +168,15 @@ public class ApproveController {
             arrayList.add(groupStation);
         }
 
-        spaceFederation.groupInit(arrayList);
-        approveService.logGroupStation(JSONUtil.parseArray(arrayList));
+        JSONArray array = JSONUtil.createArray();
+        for (GroupStation groupStation : arrayList) {
+            JSONObject entries = new JSONObject();
+            entries.putOnce("id", groupStation.getId()).putOnce("cid", groupStation.getCid()).putOnce("level", groupStation.getLevel()).putOnce("member", groupStation.getMember());
+            array.add(entries);
+        }
+        JSONArray objects = approveService.logGroupStation(array);
+        List<GroupStation> temp = JSONUtil.toList(objects, GroupStation.class);
+        spaceFederation.groupInit(temp);
         ResultUtil.quickSet(
                 result,
                 ErrorCode.ALL_SET,

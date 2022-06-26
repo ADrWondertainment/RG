@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.util.*;
 
+@SuppressWarnings("AlibabaAbstractClassShouldStartWithAbstractNaming")
 @Data
 @Component
 public abstract class SpacePort<MEMBER extends Astronaut<LOW>, LOW> {

@@ -33,21 +33,32 @@ public class ApproveServiceImpl implements ApproveService {
     }
 
     @Override
-    public boolean logGroupStation(JSONArray stations) {
+    public JSONArray logGroupStation(JSONArray stations) {
 
         for (int i = 0; i < stations.size(); i++) {
             JSONObject temp = stations.getJSONObject(i);
             GroupDetail groupDetail = new GroupDetail();
             groupDetail.setMember(temp.getStr("member"));
             groupDetail.setLevel(temp.getInt("level"));
-            groupDetailMapper.insert(groupDetail);
 
             Group group = new Group();
             group.setCid(temp.getInt("cid"));
             group.setGid(groupDetail.getId());
-            groupMapper.insert(group);
+
+            if (temp.get("id") == null) {
+                groupDetailMapper.insert(groupDetail);
+                Integer gid = groupDetail.getId();
+                group.setGid(gid);
+                groupMapper.insert(group);
+            } else {
+                Integer id = temp.getInt("id");
+                Integer gid = groupMapper.selectById(id).getGid();
+                groupDetail.setId(gid);
+                groupDetailMapper.updateById(groupDetail);
+            }
+            stations.set(i, temp.set("id", group.getId()));
         }
 
-        return false;
+        return stations;
     }
 }

@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@SuppressWarnings("AlibabaLowerCamelCaseVariableNaming")
 @Service
 @Transactional
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
@@ -648,7 +649,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (!all_dept.isEmpty()) {
             for (Integer i = 0; i < all_dept.size(); i++) {
                 Dept tmp_dept = all_dept.get(i);
-//                List<CompanyUser> tmp_companyUsers = GetComanyUserByDepartment(cid, tmp_dept.getId());
                 List<Integer> tmp_sons = GetAllSon(cid, tmp_dept.getId());
                 int tmp_count = 0;
                 for (Integer tmp_did:

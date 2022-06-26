@@ -19,8 +19,9 @@ public class CuserServiceImpl implements CuserService {
     public Cuser getCuserByTypeId(int id) {
 
         Cuser cuser = cuserMapper.selectById(id);
-        if (cuser == null)
+        if (cuser == null) {
             throw new BackException(ErrorCode.CUSER_ID_UNREGISTERED, "没有找到对应id的企业用户");
+        }
         return cuser;
 
     }

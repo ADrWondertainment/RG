@@ -20,6 +20,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+@SuppressWarnings("AliMissingOverrideAnnotation")
 @EqualsAndHashCode(callSuper = true)
 @Component
 @Scope("singleton")
@@ -37,6 +38,7 @@ public class SpaceFederation extends SpacePort<CuserAstronaut, Approve> {
     private ApproveMapper approveMapper;
 
 
+    @Override
     @PostConstruct
     public void init() {
         super.init();

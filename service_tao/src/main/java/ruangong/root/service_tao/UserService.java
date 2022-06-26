@@ -10,6 +10,7 @@ import java.util.Map;
 /**
  * @author tao
  */
+@SuppressWarnings("AlibabaLowerCamelCaseVariableNaming")
 @Service
 public interface UserService extends IService<User> {
     /**

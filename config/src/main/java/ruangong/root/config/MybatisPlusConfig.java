@@ -16,6 +16,7 @@ import javax.sql.DataSource;
 /**
  * @author pangx
  */
+@SuppressWarnings("AliDeprecation")
 @Configuration
 @MapperScan(basePackages = "ruangong.root.dao")
 public class MybatisPlusConfig {
@@ -33,6 +34,7 @@ public class MybatisPlusConfig {
 
     @Bean
     public ConfigurationCustomizer configurationCustomizer() {
+        //noinspection AliDeprecation
         return configuration -> configuration.setUseDeprecatedExecutor(false);
     }
 
