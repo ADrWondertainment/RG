@@ -110,7 +110,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public Result login(User user) {
         String username = user.getEmail();
         String password = user.getPass();
-
         Result temp_result = GetUserByEmail(username);
         User user_result = (User) temp_result.getData();
 
